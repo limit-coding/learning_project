@@ -1,0 +1,51 @@
+# ===== Python 环境 =====
+backend/venv/
+backend/.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# ===== 数据库文件 =====
+*.db
+*.sqlite
+*.sqlite3
+
+# ===== 向量数据库（本地生成，运行 init_vector_db.py 重建）=====
+backend/chroma_db/
+
+# ===== 环境变量（含 API Key，严禁上传）=====
+.env
+.env.*
+!.env.example
+
+# ===== Node.js =====
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# ===== macOS =====
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ===== IDE =====
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ===== 日志 =====
+*.log
+logs/
+
+# ===== 测试缓存 =====
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ===== Alembic 本地版本（保留 migrations 目录但忽略生成的 .pyc）=====
+backend/alembic/versions/__pycache__/

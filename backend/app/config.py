@@ -6,9 +6,15 @@ class Settings(BaseSettings):
     # Database
     database_url: str = "postgresql://user:password@localhost:5432/zhinan"
 
-    # DeepSeek API
-    deepseek_api_key: str = ""
+    # LLM 配置 - 支持多模型
+    llm_provider: str = "deepseek"
+    llm_api_key: str = ""
+    llm_model: str = "deepseek-chat"
+
+    # API Base URLs
     deepseek_api_base: str = "https://api.deepseek.com/v1"
+    openai_api_base: str = "https://api.openai.com/v1"
+    custom_api_base: str = ""
 
     # Application
     secret_key: str = "your-secret-key-change-in-production"

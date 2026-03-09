@@ -18,9 +18,13 @@ export const getUserProfile = async (profileId: number) => {
   return response.data;
 };
 
-export const getRecommendations = async (profileId: number, topN: number = 5): Promise<Recommendation[]> => {
+export const getRecommendations = async (
+  profileId: number,
+  topN: number = 5,
+  refresh: boolean = false
+): Promise<Recommendation[]> => {
   const response = await api.get(`/recommendations/${profileId}`, {
-    params: { top_n: topN }
+    params: { top_n: topN, refresh }
   });
   return response.data;
 };
