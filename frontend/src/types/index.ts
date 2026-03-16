@@ -27,16 +27,16 @@ export interface Course {
   course_code: string;
   title: string;
   institution: string;
-  description: string;
+  description?: string;
   difficulty_level: string;
-  estimated_hours: number;
+  estimated_hours?: number;
   programming_languages: string[];
   topics: string[];
   prerequisites: string[];
   domain: string;
-  url: string;
-  platform: string;
-  rating: number;
+  url?: string;
+  platform?: string;
+  rating?: number;
 }
 
 export interface ScoreBreakdown {
