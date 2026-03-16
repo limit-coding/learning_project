@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.config import get_settings
-from app.database import engine, Base
-from app.api.routes import router
+from .config import get_settings
+from .database import engine, Base
+from .api.routes import router
 
 settings = get_settings()
 
