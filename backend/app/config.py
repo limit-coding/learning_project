@@ -4,7 +4,7 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     # Database
-    database_url: str = "postgresql://user:password@localhost:5432/zhinan"
+    database_url: str = "postgresql://zhinan:zhinan123@localhost:5432/zhinan"
 
     # LLM 配置 - 支持多模型
     llm_provider: str = "deepseek"
@@ -21,7 +21,11 @@ class Settings(BaseSettings):
     debug: bool = True
 
     # CORS
-    cors_origins: list = ["http://localhost:5173", "http://localhost:3000"]
+    cors_origins: list = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://localhost:8080",
+    ]
 
     class Config:
         env_file = ".env"

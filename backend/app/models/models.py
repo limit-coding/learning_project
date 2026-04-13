@@ -1,0 +1,154 @@
+from sqlalchemy import Column, Integer, String, DateTime, Text, Numeric, JSON, ForeignKey
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
+from app.database import Base
+
+
+class UserProfile(Base):
+    __tablename__ = "user_profiles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    current_knowledge = Column(JSON, nullable=False)
+    learning_goals = Column(JSON, nullable=False)
+    career_direction = Column(JSON, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+class Course(Base):
+    __tablename__ = "courses"
+
+    id = Column(Integer, primary_key=True, index=True)
+    course_code = Column(String(20), unique=True, nullable=False, index=True)
+    title = Column(String(200), nullable=False)
+    institution = Column(String(100))
+    description = Column(Text)
+    difficulty_level = Column(String(20), nullable=False)
+    estimated_hours = Column(Integer)
+    programming_languages = Column(JSON, nullable=False)
+    topics = Column(JSON, nullable=False)
+    prerequisites = Column(JSON)
+    domain = Column(String(50), nullable=False)
+    suitable_for_careers = Column(JSON)
+    url = Column(Text)
+    platform = Column(String(50))
+    rating = Column(Numeric(3, 2))
+    num_reviews = Column(Integer)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+class Recommendation(Base):
+    __tablename__ = "recommendations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    profile_id = Column(Integer, nullable=False, index=True)
+    course_id = Column(Integer, nullable=False, index=True)
+    match_score = Column(Numeric(5, 2), nullable=False)
+    recommendation_reason = Column(Text)
+    score_breakdown = Column(JSON)
+    recommended_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class CourseNode(Base):
+    __tablename__ = "course_nodes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(200), nullable=False)
+    slug = Column(String(100), unique=True, nullable=False, index=True)
+    summary = Column(Text)
+    difficulty = Column(String(20))  # beginner, intermediate, advanced
+    category = Column(String(50))  # cs_core, programming, ai_ml, communication, math, etc.
+    is_active = Column(Integer, default=1)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    # relationships
+    edges_from = relationship("CourseEdge", foreign_keys="CourseEdge.source_node_id", back_populates="source_node")
+    edges_to = relationship("CourseEdge", foreign_keys="CourseEdge.target_node_id", back_populates="target_node")
+    resource_mappings = relationship("ResourceCourseMapping", back_populates="course_node")
+
+
+class CourseEdge(Base):
+    __tablename__ = "course_edges"
+
+    id = Column(Integer, primary_key=True, index=True)
+    source_node_id = Column(Integer, ForeignKey("course_nodes.id"), nullable=False, index=True)
+    target_node_id = Column(Integer, ForeignKey("course_nodes.id"), nullable=False, index=True)
+    relation_type = Column(String(30), default="prerequisite")  # prerequisite, corequisite, recommended
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    source_node = relationship("CourseNode", foreign_keys=[source_node_id], back_populates="edges_from")
+    target_node = relationship("CourseNode", foreign_keys=[target_node_id], back_populates="edges_to")
+
+
+class Resource(Base):
+    __tablename__ = "resources"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(300), nullable=False)
+    url = Column(Text)
+    resource_type = Column(String(30))  # video, article, book, course, lab, tool
+    source = Column(String(100))
+    summary = Column(Text)
+    difficulty = Column(String(20))
+    status = Column(String(20), default="pending")  # pending, approved, rejected
+    submitted_by = Column(String(100))
+    reviewed_by = Column(String(100))
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    resource_mappings = relationship("ResourceCourseMapping", back_populates="resource")
+
+
+class ResourceCourseMapping(Base):
+    __tablename__ = "resource_course_mappings"
+
+    id = Column(Integer, primary_key=True, index=True)
+    resource_id = Column(Integer, ForeignKey("resources.id"), nullable=False, index=True)
+    course_node_id = Column(Integer, ForeignKey("course_nodes.id"), nullable=False, index=True)
+
+    resource = relationship("Resource", back_populates="resource_mappings")
+    course_node = relationship("CourseNode", back_populates="resource_mappings")
+
+
+class Roadmap(Base):
+    __tablename__ = "roadmaps"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_goal = Column(Text, nullable=False)
+    mastered_slugs = Column(JSON, default=[])
+    result = Column(JSON, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class DocumentChunk(Base):
+    __tablename__ = "document_chunks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    resource_id = Column(Integer, ForeignKey("resources.id"), nullable=False, index=True)
+    chunk_index = Column(Integer, nullable=False)
+    content = Column(Text, nullable=False)
+    token_count = Column(Integer, default=0)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class Embedding(Base):
+    __tablename__ = "embeddings"
+
+    id = Column(Integer, primary_key=True, index=True)
+    chunk_id = Column(Integer, ForeignKey("document_chunks.id"), nullable=False, index=True)
+    embedding = Column(Text, nullable=False)  # JSON encoded vector, 后续可迁移到 pgvector
+    model_name = Column(String(100), default="text-embedding-3-small")
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class ReviewLog(Base):
+    __tablename__ = "review_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    resource_id = Column(Integer, ForeignKey("resources.id"), nullable=False, index=True)
+    reviewer = Column(String(100), nullable=False)
+    action = Column(String(20), nullable=False)  # approve, reject
+    comment = Column(Text)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
