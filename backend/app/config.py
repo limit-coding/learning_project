@@ -1,3 +1,4 @@
+from pydantic import field_validator
 from pydantic_settings import BaseSettings
 from functools import lru_cache
 
@@ -26,6 +27,18 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://localhost:8080",
     ]
+
+    @field_validator("cors_origins", mode="before")
+    @classmethod
+    def parse_cors_origins(cls, value):
+        if isinstance(value, str):
+            stripped = value.strip()
+            if not stripped:
+                return []
+            if stripped.startswith("["):
+                return value
+            return [item.strip() for item in stripped.split(",") if item.strip()]
+        return value
 
     class Config:
         env_file = ".env"

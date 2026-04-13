@@ -9,8 +9,10 @@ import type {
   UserProfile,
 } from '../types';
 
+const apiBaseURL = import.meta.env.VITE_API_BASE_URL?.trim() || '/api';
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: apiBaseURL,
   headers: {
     'Content-Type': 'application/json',
   },
