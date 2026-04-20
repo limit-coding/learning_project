@@ -11,7 +11,7 @@ from app.models.models import Course, CourseNode, CourseEdge
 # 确保所有表都创建
 Base.metadata.create_all(bind=engine)
 
-DATA_DIR = Path(__file__).parent.parent.parent / "data"
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 
 def load_courses():

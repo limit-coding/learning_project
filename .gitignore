@@ -1,6 +1,7 @@
 # ===== Python 环境 =====
 backend/venv/
 backend/.venv/
+.venv-markitdown/
 __pycache__/
 *.py[cod]
 *$py.class
@@ -8,6 +9,9 @@ __pycache__/
 .eggs/
 dist/
 build/
+
+# ===== 本地工具与代理目录 =====
+.claude/
 
 # ===== 数据库文件 =====
 *.db
@@ -49,3 +53,13 @@ htmlcov/
 
 # ===== Alembic 本地版本（保留 migrations 目录但忽略生成的 .pyc）=====
 backend/alembic/versions/__pycache__/
+
+# ===== 本地文档与素材（不上传 GitHub）=====
+*.doc
+*.docx
+tools/markitdown_convert.py
+docs/MarkItDown使用说明.md
+docs/images/
+docs/XXX系统*
+docs/系统详细设计-*
+XXX系统详细设计(2).docx
