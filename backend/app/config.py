@@ -41,6 +41,17 @@ class Settings(BaseSettings):
             return [item.strip() for item in stripped.split(",") if item.strip()]
         return value
 
+    @field_validator("debug", mode="before")
+    @classmethod
+    def parse_debug(cls, value):
+        if isinstance(value, str):
+            normalized = value.strip().lower()
+            if normalized in {"1", "true", "yes", "on", "dev", "development", "debug"}:
+                return True
+            if normalized in {"0", "false", "no", "off", "prod", "production", "release"}:
+                return False
+        return value
+
     class Config:
         env_file = str(Path(__file__).resolve().parents[1] / ".env")
         case_sensitive = False
