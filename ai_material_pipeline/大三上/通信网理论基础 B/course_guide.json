@@ -275,12 +275,14 @@
     {
       "title": "Data Networks",
       "type": "参考书",
-      "description": "Bertsekas & Gallager著，数据网络经典教材，排队论讲解深入。"
+      "description": "Bertsekas & Gallager著，数据网络经典教材，排队论讲解深入。",
+      "url": "https://web.mit.edu/dimitrib/www/datanets.html"
     },
     {
       "title": "中国大学MOOC《通信网理论基础》",
       "type": "公开课",
-      "description": "北京邮电大学开设的MOOC课程。"
+      "description": "北京邮电大学开设的MOOC课程。",
+      "url": "https://www.icourse163.org/course/BUPT-1463114161"
     },
     {
       "title": "Computer Networks",

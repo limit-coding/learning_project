@@ -299,7 +299,8 @@
     {
       "title": "MIT OpenCourseWare 16.851 Satellite Engineering",
       "type": "公开课",
-      "description": "MIT卫星工程课程，涵盖卫星系统设计的核心内容。"
+      "description": "MIT卫星工程课程，涵盖卫星系统设计的核心内容。",
+      "url": "https://ocw.mit.edu/courses/16-851-satellite-engineering-fall-2003/"
     }
   ],
   "reviewNotes": [

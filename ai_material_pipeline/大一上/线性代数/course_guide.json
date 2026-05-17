@@ -167,12 +167,14 @@
     {
       "title": "MIT OCW 18.06 线性代数",
       "type": "公开课",
-      "description": "Gilbert Strang主讲，B站有中文字幕版。"
+      "description": "Gilbert Strang主讲，B站有中文字幕版。",
+      "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/"
     },
     {
       "title": "3Blue1Brown《线性代数的本质》",
       "type": "视频课",
-      "description": "用动画建立线性代数的几何直觉，强烈推荐。"
+      "description": "用动画建立线性代数的几何直觉，强烈推荐。",
+      "url": "https://www.bilibili.com/video/BV1Ys411k7yQ/"
     }
   ],
   "reviewNotes": [

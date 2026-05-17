@@ -109,27 +109,139 @@
     }
   ],
   "mindMap": [
-    { "title": "机器表示", "children": ["补码", "浮点数", "位运算", "溢出"] },
-    { "title": "汇编与栈", "children": ["寄存器", "寻址方式", "栈帧", "过程调用", "缓冲区溢出"] },
-    { "title": "处理器", "children": ["指令周期", "流水线", "冒险", "CPI"] },
-    { "title": "性能优化", "children": ["局部性", "循环优化", "分支预测", "缓存友好"] },
-    { "title": "存储层次", "children": ["Cache", "组相联", "替换策略", "DRAM"] },
-    { "title": "链接加载", "children": ["目标文件", "符号解析", "重定位", "动态链接"] },
-    { "title": "异常控制流", "children": ["异常", "系统调用", "进程", "信号"] },
-    { "title": "虚拟内存", "children": ["页表", "TLB", "缺页", "内存分配"] }
+    {
+      "title": "机器表示",
+      "children": [
+        "补码",
+        "浮点数",
+        "位运算",
+        "溢出"
+      ]
+    },
+    {
+      "title": "汇编与栈",
+      "children": [
+        "寄存器",
+        "寻址方式",
+        "栈帧",
+        "过程调用",
+        "缓冲区溢出"
+      ]
+    },
+    {
+      "title": "处理器",
+      "children": [
+        "指令周期",
+        "流水线",
+        "冒险",
+        "CPI"
+      ]
+    },
+    {
+      "title": "性能优化",
+      "children": [
+        "局部性",
+        "循环优化",
+        "分支预测",
+        "缓存友好"
+      ]
+    },
+    {
+      "title": "存储层次",
+      "children": [
+        "Cache",
+        "组相联",
+        "替换策略",
+        "DRAM"
+      ]
+    },
+    {
+      "title": "链接加载",
+      "children": [
+        "目标文件",
+        "符号解析",
+        "重定位",
+        "动态链接"
+      ]
+    },
+    {
+      "title": "异常控制流",
+      "children": [
+        "异常",
+        "系统调用",
+        "进程",
+        "信号"
+      ]
+    },
+    {
+      "title": "虚拟内存",
+      "children": [
+        "页表",
+        "TLB",
+        "缺页",
+        "内存分配"
+      ]
+    }
   ],
   "studySummary": [
-    { "title": "核心概念", "points": ["机器级表示", "程序运行链路", "存储层次", "异常控制流", "虚拟内存"] },
-    { "title": "题型抓手", "points": ["位级运算", "汇编反推 C 代码", "Cache 地址划分", "链接符号解析", "虚拟地址翻译"] },
-    { "title": "易混点", "points": ["有符号/无符号转换", "栈帧边界", "缓存块/组/标记", "用户态/内核态", "虚拟地址/物理地址"] }
+    {
+      "title": "核心概念",
+      "points": [
+        "机器级表示",
+        "程序运行链路",
+        "存储层次",
+        "异常控制流",
+        "虚拟内存"
+      ]
+    },
+    {
+      "title": "题型抓手",
+      "points": [
+        "位级运算",
+        "汇编反推 C 代码",
+        "Cache 地址划分",
+        "链接符号解析",
+        "虚拟地址翻译"
+      ]
+    },
+    {
+      "title": "易混点",
+      "points": [
+        "有符号/无符号转换",
+        "栈帧边界",
+        "缓存块/组/标记",
+        "用户态/内核态",
+        "虚拟地址/物理地址"
+      ]
+    }
   ],
-  "outcomes": ["能读懂简单汇编", "能分析程序性能瓶颈", "能解释程序从源码到运行的完整过程"],
+  "outcomes": [
+    "能读懂简单汇编",
+    "能分析程序性能瓶颈",
+    "能解释程序从源码到运行的完整过程"
+  ],
   "resources": [
-    { "title": "CSAPP 实验清单", "type": "实验", "description": "Data Lab、Bomb Lab、Attack Lab、Cache Lab、Malloc Lab 等经典实验路线。" }
+    {
+      "title": "CSAPP 实验清单",
+      "type": "实验",
+      "description": "Data Lab、Bomb Lab、Attack Lab、Cache Lab、Malloc Lab 等经典实验路线。"
+    }
   ],
   "publicMaterials": [
-    { "title": "Computer Systems: A Programmer's Perspective", "type": "教材", "description": "CSAPP 原版教材，适合作为系统能力主线教材。" },
-    { "title": "CMU 15-213 Introduction to Computer Systems", "type": "公开课", "description": "CSAPP 对应经典课程，配套实验质量很高。", "url": "https://www.cs.cmu.edu/~213/" }
+    {
+      "title": "Computer Systems: A Programmer's Perspective",
+      "type": "教材",
+      "description": "CSAPP 原版教材，适合作为系统能力主线教材。",
+      "url": "https://csapp.cs.cmu.edu/"
+    },
+    {
+      "title": "CMU 15-213 Introduction to Computer Systems",
+      "type": "公开课",
+      "description": "CSAPP 对应经典课程，配套实验质量很高。",
+      "url": "https://www.cs.cmu.edu/~213/"
+    }
   ],
-  "reviewNotes": ["CSAPP 很适合衔接数据结构、计组和操作系统，建议结合实验复习。"]
+  "reviewNotes": [
+    "CSAPP 很适合衔接数据结构、计组和操作系统，建议结合实验复习。"
+  ]
 }

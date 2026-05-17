@@ -319,7 +319,8 @@
     {
       "title": "ITU-R BT.500",
       "type": "官方教程",
-      "description": "主观视频质量评价方法的国际标准文档。"
+      "description": "主观视频质量评价方法的国际标准文档。",
+      "url": "https://www.itu.int/rec/R-REC-BT.500/en"
     },
     {
       "title": "Vision",

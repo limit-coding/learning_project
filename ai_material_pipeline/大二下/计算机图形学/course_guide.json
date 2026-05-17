@@ -287,7 +287,8 @@
     {
       "title": "Real-Time Rendering（第4版）",
       "type": "参考书",
-      "description": "Akenine-Moller等著，实时渲染进阶参考。"
+      "description": "Akenine-Moller等著，实时渲染进阶参考。",
+      "url": "https://www.realtimerendering.com/"
     }
   ],
   "reviewNotes": [

@@ -262,7 +262,8 @@
     {
       "title": "MIT OCW 6.441 Information Theory",
       "type": "公开课",
-      "description": "MIT信息论课程，Gallager教授主讲。"
+      "description": "MIT信息论课程，Gallager教授主讲。",
+      "url": "https://ocw.mit.edu/courses/6-441-information-theory-spring-2010/"
     }
   ],
   "reviewNotes": [

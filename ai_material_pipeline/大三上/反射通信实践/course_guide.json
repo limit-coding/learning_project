@@ -255,12 +255,14 @@
     {
       "title": "Ambient Backscatter论文 (SIGCOMM 2013)",
       "type": "参考书",
-      "description": "Liu et al. 提出Ambient Backscatter的经典论文，理解环境反向散射的理论基础。"
+      "description": "Liu et al. 提出Ambient Backscatter的经典论文，理解环境反向散射的理论基础。",
+      "url": "https://conferences.sigcomm.org/sigcomm/2013/papers/sigcomm/p39.pdf"
     },
     {
       "title": "NI/ADI SDR教学资源",
       "type": "官方教程",
-      "description": "NI和ADI提供的SDR教学资源与实验案例，适合硬件平台搭建参考。"
+      "description": "NI和ADI提供的SDR教学资源与实验案例，适合硬件平台搭建参考。",
+      "url": "https://www.ettus.com/support/sdr-academy/"
     }
   ],
   "reviewNotes": [

@@ -209,12 +209,14 @@
     {
       "title": "MIT 8.01 Classical Mechanics",
       "type": "公开课",
-      "description": "Walter Lewin主讲的经典力学课程。"
+      "description": "Walter Lewin主讲的经典力学课程。",
+      "url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/"
     },
     {
       "title": "费曼物理学讲义 第一卷",
       "type": "参考书",
-      "description": "费曼著，经典物理学参考书，物理直觉极佳。"
+      "description": "费曼著，经典物理学参考书，物理直觉极佳。",
+      "url": "https://www.feynmanlectures.caltech.edu/I_toc.html"
     }
   ],
   "reviewNotes": [
