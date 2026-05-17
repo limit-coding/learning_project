@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   Col,
+  Drawer,
   Layout,
   Row,
   Select,
@@ -15,6 +16,7 @@ import {
   ApartmentOutlined,
   BookOutlined,
   CheckCircleOutlined,
+  CommentOutlined,
   LinkOutlined,
   ReloadOutlined,
   RobotOutlined,
@@ -30,6 +32,7 @@ import {
   type CourseCollege,
   type CourseSemester,
 } from './data/buptCourses';
+import CourseChat from './components/Chat/CourseChat';
 
 const { Header, Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
@@ -38,6 +41,7 @@ const App: React.FC = () => {
   const [selectedCollege, setSelectedCollege] = useState<CourseCollege>('北邮信通院');
   const [selectedSemester, setSelectedSemester] = useState<CourseSemester>('大二下');
   const [selectedSlug, setSelectedSlug] = useState(buptCourseGuides[0].slug);
+  const [chatOpen, setChatOpen] = useState(false);
 
   const collegeSemesters = courseGuidesByCollege[selectedCollege] || courseGuidesBySemester;
   const semesterOptions = courseSemesters.filter((semester) => Boolean(collegeSemesters[semester]?.length));
@@ -91,6 +95,13 @@ const App: React.FC = () => {
           <Tag style={headerTagStyle}>{selectedCollege}</Tag>
           <Tag style={headerTagStyle}>{selectedSemester}</Tag>
           <Tag style={headerTagStyle}>当前：{selectedGuide.shortTitle}</Tag>
+          <Button
+            icon={<CommentOutlined />}
+            onClick={() => setChatOpen(true)}
+            style={ghostButtonStyle}
+          >
+            AI 助手
+          </Button>
           <Button icon={<ReloadOutlined />} onClick={handleReset} style={ghostButtonStyle}>
             重置
           </Button>
@@ -181,6 +192,17 @@ const App: React.FC = () => {
           </Card>
         </Space>
       </Content>
+
+      <Drawer
+        title="AI 课程助手"
+        placement="right"
+        width={480}
+        onClose={() => setChatOpen(false)}
+        open={chatOpen}
+        styles={{ body: { padding: 0, display: 'flex', flexDirection: 'column', height: '100%' } }}
+      >
+        <CourseChat />
+      </Drawer>
     </Layout>
   );
 };
