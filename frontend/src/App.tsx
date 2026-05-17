@@ -193,6 +193,16 @@ const App: React.FC = () => {
         </Space>
       </Content>
 
+      {/* 浮动 AI 助手按钮 */}
+      <Button
+        type="primary"
+        shape="circle"
+        size="large"
+        icon={<CommentOutlined />}
+        onClick={() => setChatOpen(true)}
+        style={floatingButtonStyle}
+      />
+
       <Drawer
         title="AI 课程助手"
         placement="right"
@@ -736,6 +746,20 @@ const materialLinkStyle: React.CSSProperties = {
   padding: 0,
   marginTop: 10,
   color: '#8fb3ff',
+};
+
+const floatingButtonStyle: React.CSSProperties = {
+  position: 'fixed',
+  bottom: 32,
+  right: 32,
+  width: 56,
+  height: 56,
+  fontSize: 24,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  boxShadow: '0 4px 16px rgba(22, 93, 255, 0.4)',
+  zIndex: 1000,
 };
 
 export default App;
