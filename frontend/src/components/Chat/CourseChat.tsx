@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
-import { Input, Button, Card, List, Typography, Spin, Select, Space } from 'antd';
+import { Input, Button, Card, List, Spin, Select, Space } from 'antd';
 import { SendOutlined, RobotOutlined, UserOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import ReactMarkdown from 'react-markdown';
 
-const { Paragraph } = Typography;
 const { TextArea } = Input;
 
 interface Message {
@@ -187,17 +187,75 @@ const CourseChat: React.FC = () => {
                     padding: '12px 16px',
                     borderRadius: '12px',
                     boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                    maxWidth: '100%',
+                    overflow: 'auto',
                   }}
                 >
-                  <Paragraph
-                    style={{
-                      margin: 0,
-                      whiteSpace: 'pre-wrap',
-                      color: msg.role === 'user' ? 'white' : 'inherit',
-                    }}
-                  >
-                    {msg.content}
-                  </Paragraph>
+                  {msg.role === 'user' ? (
+                    <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
+                  ) : (
+                    <div className="markdown-body">
+                      <ReactMarkdown
+                        components={{
+                          table: ({ children }) => (
+                            <table style={{
+                              borderCollapse: 'collapse',
+                              width: '100%',
+                              margin: '8px 0',
+                              fontSize: 13,
+                            }}>{children}</table>
+                          ),
+                          th: ({ children }) => (
+                            <th style={{
+                              border: '1px solid #e8e8e8',
+                              padding: '8px 12px',
+                              backgroundColor: '#fafafa',
+                              fontWeight: 600,
+                              textAlign: 'left',
+                            }}>{children}</th>
+                          ),
+                          td: ({ children }) => (
+                            <td style={{
+                              border: '1px solid #e8e8e8',
+                              padding: '8px 12px',
+                            }}>{children}</td>
+                          ),
+                          h2: ({ children }) => (
+                            <h2 style={{ fontSize: 16, fontWeight: 700, margin: '12px 0 8px', color: '#1a1a1a' }}>{children}</h2>
+                          ),
+                          h3: ({ children }) => (
+                            <h3 style={{ fontSize: 14, fontWeight: 600, margin: '10px 0 6px', color: '#333' }}>{children}</h3>
+                          ),
+                          ul: ({ children }) => (
+                            <ul style={{ paddingLeft: 20, margin: '4px 0' }}>{children}</ul>
+                          ),
+                          ol: ({ children }) => (
+                            <ol style={{ paddingLeft: 20, margin: '4px 0' }}>{children}</ol>
+                          ),
+                          li: ({ children }) => (
+                            <li style={{ margin: '2px 0', lineHeight: 1.6 }}>{children}</li>
+                          ),
+                          p: ({ children }) => (
+                            <p style={{ margin: '4px 0', lineHeight: 1.7 }}>{children}</p>
+                          ),
+                          strong: ({ children }) => (
+                            <strong style={{ fontWeight: 600, color: '#1a1a1a' }}>{children}</strong>
+                          ),
+                          code: ({ children }) => (
+                            <code style={{
+                              background: '#f5f5f5',
+                              padding: '2px 6px',
+                              borderRadius: 4,
+                              fontSize: 13,
+                              color: '#d63384',
+                            }}>{children}</code>
+                          ),
+                        }}
+                      >
+                        {msg.content}
+                      </ReactMarkdown>
+                    </div>
+                  )}
                 </div>
               </div>
             </List.Item>
