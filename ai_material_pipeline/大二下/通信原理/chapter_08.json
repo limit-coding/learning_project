@@ -1,0 +1,111 @@
+{
+  "courseInfo": {
+    "courseName": "通信原理",
+    "courseCode": "BUPT_COMM",
+    "courseSlug": "bupt_communication_principles"
+  },
+  "chapterInfo": {
+    "chapterNumber": "第8章",
+    "chapterTitle": "信道",
+    "pdfPageRange": "273-302",
+    "pageCount": 30
+  },
+  "mindMap": {
+    "nodes": [
+      { "id": "ch8_root", "label": "信道" },
+      { "id": "ch8_def", "label": "信道的定义与分类" },
+      { "id": "ch8_narrow", "label": "狭义信道" },
+      { "id": "ch8_general", "label": "广义信道" },
+      { "id": "ch8_modulation_ch", "label": "调制信道" },
+      { "id": "ch8_coding_ch", "label": "编码信道" },
+      { "id": "ch8_continuous", "label": "连续信道（模拟信道）" },
+      { "id": "ch8_discrete", "label": "离散信道（数字信道）" },
+      { "id": "ch8_semi", "label": "半连续/半离散信道" },
+      { "id": "ch8_constant", "label": "恒参信道" },
+      { "id": "ch8_random", "label": "随参信道" },
+      { "id": "ch8_examples", "label": "通信信道实例" },
+      { "id": "ch8_const_examples", "label": "恒参信道实例" },
+      { "id": "ch8_wired", "label": "有线信道" },
+      { "id": "ch8_optical", "label": "光纤信道" },
+      { "id": "ch8_relay", "label": "无线电视距中继信道" },
+      { "id": "ch8_satellite", "label": "卫星中继信道" },
+      { "id": "ch8_rand_examples", "label": "随参信道实例" },
+      { "id": "ch8_shortwave", "label": "短波电离层反射信道" },
+      { "id": "ch8_troposphere", "label": "对流层散射信道" },
+      { "id": "ch8_mobile", "label": "移动通信信道" },
+      { "id": "ch8_multipath", "label": "多径传播" }
+    ],
+    "edges": [
+      { "source": "ch8_root", "target": "ch8_def", "relation": "包含" },
+      { "source": "ch8_root", "target": "ch8_examples", "relation": "包含" },
+      { "source": "ch8_def", "target": "ch8_narrow", "relation": "按组成分为" },
+      { "source": "ch8_def", "target": "ch8_general", "relation": "按组成分为" },
+      { "source": "ch8_general", "target": "ch8_modulation_ch", "relation": "包含" },
+      { "source": "ch8_general", "target": "ch8_coding_ch", "relation": "包含" },
+      { "source": "ch8_def", "target": "ch8_continuous", "relation": "按信号类型分为" },
+      { "source": "ch8_def", "target": "ch8_discrete", "relation": "按信号类型分为" },
+      { "source": "ch8_def", "target": "ch8_semi", "relation": "按信号类型分为" },
+      { "source": "ch8_def", "target": "ch8_constant", "relation": "按参数特性分为" },
+      { "source": "ch8_def", "target": "ch8_random", "relation": "按参数特性分为" },
+      { "source": "ch8_examples", "target": "ch8_const_examples", "relation": "包含" },
+      { "source": "ch8_examples", "target": "ch8_rand_examples", "relation": "包含" },
+      { "source": "ch8_const_examples", "target": "ch8_wired", "relation": "包含" },
+      { "source": "ch8_const_examples", "target": "ch8_optical", "relation": "包含" },
+      { "source": "ch8_const_examples", "target": "ch8_relay", "relation": "包含" },
+      { "source": "ch8_const_examples", "target": "ch8_satellite", "relation": "包含" },
+      { "source": "ch8_rand_examples", "target": "ch8_shortwave", "relation": "包含" },
+      { "source": "ch8_rand_examples", "target": "ch8_troposphere", "relation": "包含" },
+      { "source": "ch8_rand_examples", "target": "ch8_mobile", "relation": "包含" },
+      { "source": "ch8_shortwave", "target": "ch8_multipath", "relation": "存在现象" },
+      { "source": "ch8_troposphere", "target": "ch8_multipath", "relation": "存在现象" },
+      { "source": "ch8_constant", "target": "ch8_const_examples", "relation": "对应实例" },
+      { "source": "ch8_random", "target": "ch8_rand_examples", "relation": "对应实例" }
+    ]
+  },
+  "keyPoints": [
+    "狭义信道仅指信号的传输媒质",
+    "广义信道除传输媒质外，还包括收发信机、编译码器、调制解调器等设备",
+    "调制信道输入输出为连续信号（模拟信号），编码信道输入输出为离散信号（数字信号）",
+    "恒参信道性质（参数）不随时间变化或基本不随时间变化，一般有线信道可看作恒参信道",
+    "随参信道性质（参数）随时间随机变化，部分无线信道属于随参信道",
+    "多径传播是指发送信号经由不同路径到达接收端，形成多径信号",
+    "短波电离层反射信道具有多径传播和电离层性质随机变化两大特点",
+    "光纤信道具有极宽通频带、损耗低、不受电磁干扰等特点，是典型的恒参信道",
+    "同步卫星轨道高度约35860km，三颗经度相差120°的同步卫星可几乎覆盖全球"
+  ],
+  "formulas": [],
+  "examplesAndProblems": [],
+  "commonMistakes": [
+    "混淆狭义信道与广义信道的范围：狭义信道仅指传输媒质，广义信道还包括相关通信设备",
+    "混淆调制信道与编码信道的信号类型：调制信道为连续信道，编码信道为离散信道",
+    "将卫星中继信道、光纤信道误判为随参信道——它们实为恒参信道",
+    "忽视多径传播是判断随参信道的核心特征之一"
+  ],
+  "examHints": [
+    "复习关注点：信道按组成、信号类型、参数特性的三维分类体系",
+    "复习关注点：恒参信道与随参信道的典型实例判别",
+    "复习关注点：多径传播的成因及其对信道特性的影响"
+  ],
+  "reviewNotes": [
+    "本章文件实际仅包含8.1引言、8.2定义和分类、8.3通信信道实例三节内容",
+    "引言中提到本章将介绍信道容量、信道编码定理等重要概念，但这些内容未出现在当前文件中",
+    "需人工确认：调制信道与编码信道的组成定义与常规教材表述可能存在差异，建议对照课本原文"
+  ],
+  "uncertainItems": [
+    {
+      "item": "文件内容完整性",
+      "detail": "当前文件仅包含第8章的8.1-8.3节（约3页），而元数据显示PDF共30页（273-302）。后续关于信道模型、信道特性对信号传输的影响、信道容量、信道编码定理、分集接收等核心内容缺失，需确认是否为OCR遗漏或文件截断。",
+      "suggestedAction": "核对原始PDF，补充8.4及以后节次的OCR内容"
+    },
+    {
+      "item": "调制信道与编码信道的定义",
+      "detail": "文件中表述为'由调制器、传输媒质、解调器组成的广义信道称为编码信道；由发射机、传输媒质、接收机组成的广义信道称为调制信道'，该表述与多数主流教材（调制信道对应调制器-传输媒质-解调器，编码信道对应编码器-调制信道-译码器）的常规定义不一致，需人工确认是否为原文表述或OCR错误。",
+      "suggestedAction": "对照课本原文或教师讲义确认定义"
+    },
+    {
+      "item": "文件混入第7章内容",
+      "detail": "文件前27页（页面1-27）实际为第7章'信源和信源编码'的内容，仅页面28-30为第8章'信道'内容，需确认文件整理是否正确。",
+      "suggestedAction": "确认markdown文件与PDF的对应关系"
+    }
+  ]
+}

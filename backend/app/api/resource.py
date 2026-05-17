@@ -87,39 +87,6 @@ def get_resource(resource_id: int, db: Session = Depends(get_db)):
 
 @router.post("/resources/submit", response_model=ResourceResponse)
 def submit_resource(data: ResourceCreate, db: Session = Depends(get_db)):
-    """提交新资源"""
-    resource = Resource(
-        title=data.title,
-        url=data.url,
-        resource_type=data.resource_type,
-        source=data.source,
-        summary=data.summary,
-        difficulty=data.difficulty,
-        status="pending",
-    )
-    db.add(resource)
-    db.flush()
-
-    for node_id in data.course_node_ids:
-        mapping = ResourceCourseMapping(
-            resource_id=resource.id,
-            course_node_id=node_id,
-        )
-        db.add(mapping)
-
-    db.commit()
-    db.refresh(resource)
-
-    return ResourceResponse(
-        id=resource.id,
-        title=resource.title,
-        url=resource.url,
-        resource_type=resource.resource_type,
-        source=resource.source,
-        summary=resource.summary,
-        difficulty=resource.difficulty,
-        status=resource.status,
-        submitted_by=resource.submitted_by,
-        created_at=resource.created_at,
-        course_node_ids=data.course_node_ids,
-    )
+    """结项版关闭用户提交入口，资源由 AI 辅助和人工审核后写入种子库。"""
+    _ = (data, db)
+    raise HTTPException(status_code=403, detail="当前版本不开放用户提交资源，请由管理员维护人工审核后的课程资料。")

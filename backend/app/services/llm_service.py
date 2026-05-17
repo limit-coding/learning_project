@@ -24,7 +24,7 @@ class LLMService:
         return settings.deepseek_api_base
 
     async def _call_llm(self, system_prompt: str, user_prompt: str, max_tokens: int = 1000) -> Optional[str]:
-        if not self.api_key:
+        if not self.api_key or self.api_key.startswith("your_"):
             return None
         try:
             async with httpx.AsyncClient(timeout=30.0) as client:

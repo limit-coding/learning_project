@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BUPT Course Guide Draft",
+  "type": "object",
+  "required": [
+    "code",
+    "slug",
+    "title",
+    "shortTitle",
+    "summary",
+    "route",
+    "chapters",
+    "mindMap",
+    "studySummary",
+    "outcomes",
+    "resources",
+    "publicMaterials",
+    "reviewNotes"
+  ],
+  "properties": {
+    "code": { "type": "string" },
+    "slug": { "type": "string" },
+    "title": { "type": "string" },
+    "shortTitle": { "type": "string" },
+    "summary": { "type": "string" },
+    "route": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "chapters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "focus", "checklist"],
+        "properties": {
+          "title": { "type": "string" },
+          "focus": { "type": "string" },
+          "checklist": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "mindMap": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "children"],
+        "properties": {
+          "title": { "type": "string" },
+          "children": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "studySummary": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "points"],
+        "properties": {
+          "title": { "type": "string" },
+          "points": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "outcomes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "resources": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/resourceRecommendation" }
+    },
+    "publicMaterials": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/resourceRecommendation" }
+    },
+    "reviewNotes": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "$defs": {
+    "resourceRecommendation": {
+      "type": "object",
+      "required": ["title", "type", "description"],
+      "properties": {
+        "title": { "type": "string" },
+        "type": { "type": "string" },
+        "description": { "type": "string" },
+        "url": { "type": "string" }
+      }
+    }
+  }
+}

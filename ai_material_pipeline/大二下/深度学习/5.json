@@ -1,0 +1,108 @@
+{
+  "course": {
+    "code": "BUPT_DL_PyTorch",
+    "slug": "bupt-deep-learning-pytorch",
+    "title": "深度学习与PyTorch"
+  },
+  "chapter": {
+    "chapterNo": "第5章",
+    "title": "全连接神经网络",
+    "summary": "本章围绕全连接神经网络（MLP）展开，介绍人工神经网络与全连接神经网络的核心概念、结构组成，详解基于PyTorch搭建MLP分类模型与回归模型的完整流程，包括数据准备、网络搭建、模型训练、可视化分析及模型评估，结合Spambase垃圾邮件数据集（来自UCI机器学习数据库）实现二分类任务，结合California房价数据集实现回归任务，讲解数据标准化的重要性、中间层输出获取方法（含钩子技术），覆盖相关库的使用、网络可视化、损失与精度分析，为后续复杂神经网络学习奠定基础。注：California房价数据集官方下载链接（https://www.dcc.fc.up.pt/~ltorgo/Regression/cal_housing.tgz、https://www.dcc.fc.up.pt/~ltorgo/Regression/cal）均存在网页解析失败问题，核心下载与配置方法以课件内容为准；Graphviz官方下载链接（https://www.graphviz.org/download/）存在字数超限，安装配置以课件所述步骤为准。",
+    "learningGoal": "掌握人工神经网络与全连接神经网络的核心概念及结构，熟练使用PyTorch搭建MLP分类与回归模型，掌握数据预处理（标准化、数据集切分）的方法与意义，学会使用HiddenLayer、PyTorchViz实现网络可视化，掌握模型训练流程、损失与精度分析方法，能通过两种方式获取网络中间层输出并可视化，具备独立完成MLP模型搭建、训练、评估与可视化的能力，了解数据集下载失败的替代解决方案。",
+    "estimatedDifficulty": "中等"
+  },
+  "mindMap": [
+    {
+      "title": "全连接神经网络简介",
+      "children": [
+        "人工神经网络：概念、作用与组成",
+        "人工神经元模型与核心公式（y=f(u+b)，u=Σwᵢxᵢ）",
+        "全连接神经网络（MLP）：概念与结构（输入层、隐藏层、输出层）",
+        "MLP分类（单隐藏层/多隐藏层）及神经元、隐藏层个数确定方法",
+        "搭建MLP所需Python库与PyTorch模块（numpy、pandas、torch等）"
+      ]
+    },
+    {
+      "title": "MLP分类模型（Spambase垃圾邮件数据集）",
+      "children": [
+        "数据集来源（UCI数据库，https://archive.ics.uci.edu/ml/datasets/Spambase）与特征介绍（57个特征+1个目标变量）",
+        "数据预处理：读入、样本统计、训练集/测试集切分（75%/25%）",
+        "数据标准化（MinMaxScaler）及注意事项（训练集拟合、测试集转换）",
+        "MLP分类网络搭建（继承nn.Module，2个隐藏层+1个分类层）",
+        "网络可视化（PyTorchViz的make_dot函数）",
+        "未标准化数据训练：模型不收敛的表现与原因分析",
+        "标准化数据训练：模型收敛效果、测试精度评估（94.18%）",
+        "中间层输出获取：前向传播直接输出、钩子技术，及TSNE降维可视化"
+      ]
+    },
+    {
+      "title": "MLP回归模型（California房价数据集）",
+      "children": [
+        "数据集简介（1990年美国人口普查数据，8个自变量+1个因变量）",
+        "数据集下载：官方链接解析失败，手动下载与本地配置方法",
+        "数据预处理：导入、切分（70%/30%）、标准化（StandardScaler）",
+        "变量相关性分析（热力图可视化）",
+        "MLP回归网络搭建（3个隐藏层，无输出层激活函数）",
+        "模型训练：SGD优化器、MSELoss损失函数，迭代30轮",
+        "训练效果评估：损失函数可视化、平均绝对误差（MAE）计算",
+        "真实值与预测值对比可视化"
+      ]
+    },
+    {
+      "title": "核心实操要点与注意事项",
+      "children": [
+        "数据标准化的重要性（影响模型收敛）",
+        "PyTorch数据加载器（DataLoader）参数设置（batch_size、shuffle等）",
+        "网络搭建规范（继承Module类、forward方法实现）",
+        "钩子技术的原理与使用方法",
+        "常见数据集下载失败的替代解决方案",
+        "模型评估指标（分类：精度；回归：MAE）"
+      ]
+    },
+    {
+      "title": "章节小结",
+      "children": [
+        "MLP在分类与回归任务中的应用逻辑",
+        "PyTorch搭建MLP的核心流程（数据预处理-网络搭建-训练-评估-可视化）",
+        "关键技术点回顾（标准化、中间层输出、网络可视化）"
+      ]
+    }
+  ],
+  "keyPoints": [
+    {
+      "title": "全连接神经网络（MLP）核心结构与原理",
+      "explanation": "MLP又称多层感知机，属于前馈神经网络，由输入层、隐藏层、输出层构成。输入层神经元个数与输入特征数一致，不进行函数处理；隐藏层和输出层对信号加工，隐藏层数量可分为单隐藏层和多隐藏层。人工神经元核心公式为y=f(u+b)，其中u=Σwᵢxᵢ（输入与权重的内积），f为激活函数。神经元数量越多表示能力越强，但易过拟合，需通过验证集测试泛化能力。",
+      "whyImportant": "掌握MLP结构与原理，是搭建分类、回归模型的基础，明确各层作用与神经元设计逻辑，才能合理设计网络结构。"
+    },
+    {
+      "title": "数据标准化的核心意义与实操规范",
+      "explanation": "数据标准化（如MinMaxScaler、StandardScaler）可将特征取值映射到统一范围，解决不同特征尺度差异导致的模型不收敛问题。实操核心规范：用训练集数据进行fit（拟合获取统计指标）+transform（转换），测试集仅进行transform（复用训练集的统计指标），确保训练集与测试集分布一致。未标准化数据训练MLP会导致损失波动、模型不收敛，标准化后可使模型收敛，测试精度显著提升。",
+      "whyImportant": "数据标准化是MLP模型训练的关键前提，直接影响模型收敛效果与预测精度，是实操中必须掌握的核心步骤。"
+    },
+    {
+      "title": "MLP分类模型的搭建与训练流程",
+      "explanation": "以Spambase垃圾邮件数据集（57个特征，二分类）为例，流程为：1. 数据准备（读入、样本统计、训练集/测试集切分）；2. 数据标准化；3. 搭建MLP分类网络（继承nn.Module，2个隐藏层分别含30、10个神经元，分类层用Sigmoid激活函数）；4. 网络可视化（PyTorchViz的make_dot函数）；5. 模型训练（Adam优化器、CrossEntropyLoss损失函数）；6. 模型评估（测试精度）。标准化后模型测试精度可达94.18%。",
+      "whyImportant": "掌握MLP分类模型的完整流程，能独立完成二分类任务，理解网络搭建、训练与评估的核心逻辑，为后续复杂分类任务铺垫。"
+    },
+    {
+      "title": "MLP回归模型的搭建与训练流程",
+      "explanation": "以California房价数据集（8个特征，回归任务）为例，流程为：1. 数据准备（手动下载配置、导入、切分）；2. 数据标准化；3. 相关性分析（热力图）；4. 搭建MLP回归网络（3个隐藏层，分别含100、100、50个神经元，输出层无激活函数）；5. 模型训练（SGD优化器、MSELoss损失函数，迭代30轮）；6. 评估与可视化（损失曲线、MAE、真实值与预测值对比），测试集MAE为0.395，预测效果理想。",
+      "whyImportant": "掌握MLP回归模型的流程，能适配回归任务场景，理解分类与回归模型的网络差异、损失函数选型逻辑，提升实操能力。"
+    },
+    {
+      "title": "网络中间层输出的两种获取方法",
+      "explanation": "方法一：在网络forward方法中直接输出中间隐藏层变量（如fc1、fc2），调用模型时可直接获取；方法二：使用钩子（hook）技术，在不修改网络原始代码的前提下，通过register_forward_hook函数注册钩子，将中间层输出保存到字典中。获取后可通过TSNE降维，用散点图可视化中间层特征分布。",
+      "whyImportant": "获取中间层输出并可视化，能直观理解MLP的特征提取过程，帮助分析网络工作机制，为模型调试与优化提供依据。"
+    },
+    {
+      "title": "数据集下载失败的解决方案",
+      "explanation": "California房价数据集官方下载链接（https://www.dcc.fc.up.pt/~ltorgo/Regression/cal_housing.tgz、https://www.dcc.fc.up.pt/~ltorgo/Regression/cal）均解析失败，解决方案为：手动下载cal_housing.tgz文件，放入sklearn数据默认目录（C:\\Users\\Administrator\\scikit_learn_data\\cal_housing），修改sklearn对应源码文件，指定本地文件路径，即可通过fetch_california_housing()函数导入数据。",
+      "whyImportant": "解决数据集下载失败问题，能确保实操顺利进行，避免因数据无法获取影响模型训练与学习进度。"
+    },
+    {
+      "title": "PyTorch搭建MLP的核心注意事项",
+      "explanation": "1. 网络搭建需继承nn.Module类，在__init__方法中定义网络层，forward方法实现前向传播；2. 数据需转换为32位浮点型张量（输入）和64位整型张量（分类任务标签）；3. 数据加载器（DataLoader）需设置合理的batch_size、shuffle等参数；4. 训练时需先清空梯度（zero_grad）、计算损失（backward）、更新参数（step）；5. 可视化工具（PyTorchViz、HiddenLayer）需正确配置依赖库（Graphviz）。",
+      "whyImportant": "规避实操中的常见错误，确保网络搭建、训练与可视化流程顺畅，提升实操效率与模型训练效果。"
+    }
+  ]
+}

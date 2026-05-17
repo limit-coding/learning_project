@@ -1,591 +1,75 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Button,
   Card,
   Col,
-  Divider,
-  Empty,
-  Input,
   Layout,
-  message,
   Row,
+  Select,
   Space,
   Tag,
+  Timeline,
   Typography,
 } from 'antd';
 import {
-  ArrowRightOutlined,
+  ApartmentOutlined,
   BookOutlined,
-  BranchesOutlined,
-  BulbOutlined,
-  FileTextOutlined,
-  NodeIndexOutlined,
+  CheckCircleOutlined,
+  LinkOutlined,
   ReloadOutlined,
   RobotOutlined,
-  SendOutlined,
-  ThunderboltOutlined,
+  ScheduleOutlined,
 } from '@ant-design/icons';
-import ProfileForm from './components/Profile/ProfileForm';
-import RecommendationList from './components/Recommendations/RecommendationList';
-import RoadmapCanvas from './components/Roadmap/RoadmapCanvas';
 import {
-  generateRoadmap,
-  chatRetrieve,
-  getCourseNodeDetail,
-  getCourseNodes,
-  getRecommendations,
-  getResources,
-} from './services/api';
-import type {
-  ChatRetrieveResponse,
-  CourseNode,
-  CourseNodeDetail,
-  Recommendation,
-  Resource,
-  RoadmapResponse,
-} from './types';
+  buptCourseGuideMap,
+  buptCourseGuides,
+  courseColleges,
+  courseGuidesByCollege,
+  courseGuidesBySemester,
+  courseSemesters,
+  type CourseCollege,
+  type CourseSemester,
+} from './data/buptCourses';
 
 const { Header, Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
 
-type StageStatus = 'done' | 'active' | 'pending';
-
-interface WorkspaceStage {
-  key: string;
-  title: string;
-  description: string;
-  status: StageStatus;
-}
-
-const stagePalette: Record<StageStatus, { bg: string; border: string; text: string; label: string }> = {
-  done: {
-    bg: 'rgba(32, 201, 151, 0.14)',
-    border: 'rgba(32, 201, 151, 0.35)',
-    text: '#9ff0d2',
-    label: '已完成',
-  },
-  active: {
-    bg: 'rgba(255, 196, 61, 0.14)',
-    border: 'rgba(255, 196, 61, 0.36)',
-    text: '#ffe08a',
-    label: '进行中',
-  },
-  pending: {
-    bg: 'rgba(148, 163, 184, 0.12)',
-    border: 'rgba(148, 163, 184, 0.24)',
-    text: '#cbd5e1',
-    label: '待开始',
-  },
-};
-
 const App: React.FC = () => {
-  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [profileId, setProfileId] = useState<number | null>(null);
-  const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
-  const [goalPrompt, setGoalPrompt] = useState('我想补齐 AI 方向基础，并尽快形成一条可执行的学习路径。');
-  const [courseNodes, setCourseNodes] = useState<CourseNode[]>([]);
-  const [roadmap, setRoadmap] = useState<RoadmapResponse | null>(null);
-  const [roadmapLoading, setRoadmapLoading] = useState(false);
-  const [selectedRoadmapSlug, setSelectedRoadmapSlug] = useState<string | null>(null);
-  const [selectedCourseNodeDetail, setSelectedCourseNodeDetail] = useState<CourseNodeDetail | null>(null);
-  const [detailLoading, setDetailLoading] = useState(false);
-  const [fallbackResources, setFallbackResources] = useState<Resource[]>([]);
-  const [question, setQuestion] = useState('这个阶段我应该优先看哪些资料？');
-  const [chatLoading, setChatLoading] = useState(false);
-  const [chatResult, setChatResult] = useState<ChatRetrieveResponse | null>(null);
+  const [selectedCollege, setSelectedCollege] = useState<CourseCollege>('北邮信通院');
+  const [selectedSemester, setSelectedSemester] = useState<CourseSemester>('大二下');
+  const [selectedSlug, setSelectedSlug] = useState(buptCourseGuides[0].slug);
 
-  const hasResults = recommendations.length > 0;
-  const hasRoadmap = Boolean(roadmap?.nodes?.length);
-  const workspaceState = loading || roadmapLoading ? 'loading' : hasResults || hasRoadmap ? 'ready' : 'idle';
+  const collegeSemesters = courseGuidesByCollege[selectedCollege] || courseGuidesBySemester;
+  const semesterOptions = courseSemesters.filter((semester) => Boolean(collegeSemesters[semester]?.length));
+  const semesterGuides = collegeSemesters[selectedSemester] || buptCourseGuides;
 
-  const selectedRecommendation = useMemo(() => {
-    if (!recommendations.length) {
-      return null;
+  const selectedGuide = useMemo(() => {
+    return buptCourseGuideMap[selectedSlug] || semesterGuides[0] || buptCourseGuides[0];
+  }, [selectedSlug, semesterGuides]);
+
+  const handleCollegeChange = (college: CourseCollege) => {
+    const nextSemesters = courseGuidesByCollege[college] || courseGuidesBySemester;
+    const nextSemester = (courseSemesters.find((semester) => nextSemesters[semester]?.length) || '大二下') as CourseSemester;
+    const nextGuides = nextSemesters[nextSemester] || [];
+    setSelectedCollege(college);
+    setSelectedSemester(nextSemester);
+    if (nextGuides[0]) {
+      setSelectedSlug(nextGuides[0].slug);
     }
+  };
 
-    if (selectedCourseId !== null) {
-      const matched = recommendations.find((item) => item.course.id === selectedCourseId);
-      if (matched) {
-        return matched;
-      }
-    }
-
-    return recommendations[0];
-  }, [recommendations, selectedCourseId]);
-
-  const selectedRoadmapNode = useMemo(() => {
-    if (!roadmap?.nodes?.length) {
-      return null;
-    }
-    return roadmap.nodes.find((item) => item.slug === selectedRoadmapSlug) || roadmap.nodes[0];
-  }, [roadmap, selectedRoadmapSlug]);
-
-  const workspaceStages = useMemo<WorkspaceStage[]>(() => {
-    return [
-      {
-        key: 'profile',
-        title: '学习画像',
-        description: hasResults ? '已完成目标解析与基础信息整理' : '填写基础信息、目标方向和职业偏好',
-        status: hasResults ? 'done' : 'active',
-      },
-      {
-        key: 'recommendation',
-        title: '课程推荐',
-        description: hasResults ? `已生成 ${recommendations.length} 条课程推荐结果` : '根据画像生成初始推荐列表',
-        status: hasResults ? 'done' : 'pending',
-      },
-      {
-        key: 'roadmap',
-        title: '路线图草案',
-        description: hasResults ? '已根据推荐结果生成一版学习路径草案' : '等待推荐结果后组织学习路线',
-        status: hasResults ? 'active' : 'pending',
-      },
-    ];
-  }, [hasResults, recommendations.length]);
-
-  const resourceDrafts = useMemo(() => {
-    if (selectedCourseNodeDetail?.resources?.length) {
-      return selectedCourseNodeDetail.resources.map((item) => ({
-        type: item.resource_type || 'resource',
-        title: item.title,
-        description: item.url || '已关联到当前课程节点，可进一步接入资源详情页。',
-      }));
-    }
-
-    if (fallbackResources.length) {
-      return fallbackResources.slice(0, 3).map((item) => ({
-        type: item.resource_type || 'resource',
-        title: item.title,
-        description: item.summary || item.url || '已从真实资源接口拉取。',
-      }));
-    }
-
-    if (!selectedRecommendation && !selectedRoadmapNode) {
-      return [];
-    }
-
-    const title = selectedRoadmapNode?.title || selectedRecommendation?.course.title || '当前节点';
-    const topics = selectedRecommendation?.course.topics || [];
-    const prerequisites = selectedRecommendation?.course.prerequisites || [];
-
-    return [
-      {
-        type: '课程主页',
-        title: `${title} 官方入口`,
-        description: '用于查看课程主页、教学安排和报名方式。',
-      },
-      {
-        type: '知识重点',
-        title: `${title} 核心主题`,
-        description: `围绕 ${topics.slice(0, 2).join('、') || '课程主题'} 建立预习与复习资料集合。`,
-      },
-      {
-        type: '学习动作',
-        title: '下一步建议',
-        description: prerequisites.length
-          ? `建议先检查这些前置：${prerequisites.slice(0, 2).join('、')}`
-          : '当前可以直接开始，优先浏览课程说明与第一讲内容。',
-      },
-    ];
-  }, [fallbackResources, selectedCourseNodeDetail, selectedRecommendation, selectedRoadmapNode]);
-
-  const roadmapSummary = useMemo(() => {
-    if (roadmap?.nodes?.length) {
-      const pathNodes = roadmap.nodes.slice(0, 6);
-      const activeIndex = pathNodes.findIndex((item) => item.slug === selectedRoadmapNode?.slug);
-      const currentIndex = activeIndex >= 0 ? activeIndex : 0;
-      const current = pathNodes[currentIndex];
-      const previous = currentIndex > 0 ? pathNodes[currentIndex - 1] : null;
-      const next = currentIndex < pathNodes.length - 1 ? pathNodes[currentIndex + 1] : null;
-
-      return {
-        totalStages: pathNodes.length,
-        currentStage: currentIndex + 1,
-        currentTitle: current.title,
-        previousTitle: previous?.title ?? '目标澄清 / 基础盘点',
-        nextTitle: next?.title ?? '开始做项目或进入下一轮深入学习',
-        stageFocus: current.summary ? [current.summary] : [current.difficulty || '当前阶段'],
-      };
-    }
-
-    const pathCourses = recommendations.slice(0, 4);
-    if (!pathCourses.length) {
-      return null;
-    }
-    const activeIndex = pathCourses.findIndex((item) => item.course.id === selectedRecommendation?.course.id);
-    const currentIndex = activeIndex >= 0 ? activeIndex : 0;
-    const current = pathCourses[currentIndex];
-    const previous = currentIndex > 0 ? pathCourses[currentIndex - 1] : null;
-    const next = currentIndex < pathCourses.length - 1 ? pathCourses[currentIndex + 1] : null;
-
-    return {
-      totalStages: pathCourses.length,
-      currentStage: currentIndex + 1,
-      currentTitle: current.course.title,
-      previousTitle: previous?.course.title ?? '目标澄清 / 基础盘点',
-      nextTitle: next?.course.title ?? '开始做项目或进入下一轮深入学习',
-      stageFocus: current.course.topics.slice(0, 3),
-    };
-  }, [recommendations, roadmap, selectedRecommendation, selectedRoadmapNode]);
-
-  useEffect(() => {
-    const run = async () => {
-      try {
-        const [nodes, resources] = await Promise.all([
-          getCourseNodes(),
-          getResources({ limit: 6, status: 'approved' }),
-        ]);
-        setCourseNodes(nodes);
-        setFallbackResources(resources);
-      } catch (error) {
-        console.error('初始化课程节点/资源失败:', error);
-      }
-    };
-    run();
-  }, []);
-
-  useEffect(() => {
-    const slug = selectedRoadmapNode?.slug;
-    if (!slug || !courseNodes.length) {
-      setSelectedCourseNodeDetail(null);
-      return;
-    }
-
-    const matched = courseNodes.find((item) => item.slug === slug);
-    if (!matched) {
-      setSelectedCourseNodeDetail(null);
-      return;
-    }
-
-    const run = async () => {
-      setDetailLoading(true);
-      try {
-        const detail = await getCourseNodeDetail(matched.id);
-        setSelectedCourseNodeDetail(detail);
-      } catch (error) {
-        console.error('获取课程节点详情失败:', error);
-        setSelectedCourseNodeDetail(null);
-      } finally {
-        setDetailLoading(false);
-      }
-    };
-    run();
-  }, [courseNodes, selectedRoadmapNode]);
-
-  const handleProfileSuccess = async (id: number) => {
-    setProfileId(id);
-    setLoading(true);
-
-    try {
-      const recs = await getRecommendations(id, 5);
-      setRecommendations(recs);
-      setSelectedCourseId(recs[0]?.course.id ?? null);
-      message.success('工作台已生成首批学习建议。');
-    } catch (error) {
-      console.error('获取推荐失败:', error);
-      message.error('推荐结果加载失败，请稍后重试。');
-    } finally {
-      setLoading(false);
+  const handleSemesterChange = (semester: CourseSemester) => {
+    const nextGuides = collegeSemesters[semester] || [];
+    setSelectedSemester(semester);
+    if (nextGuides[0]) {
+      setSelectedSlug(nextGuides[0].slug);
     }
   };
 
   const handleReset = () => {
-    setRecommendations([]);
-    setProfileId(null);
-    setSelectedCourseId(null);
-    setGoalPrompt('我想补齐 AI 方向基础，并尽快形成一条可执行的学习路径。');
-    setRoadmap(null);
-    setSelectedRoadmapSlug(null);
-    setSelectedCourseNodeDetail(null);
-  };
-
-  const handleGenerateRoadmap = async () => {
-    if (!goalPrompt.trim()) {
-      message.warning('先输入一个学习目标，再生成路线图。');
-      return;
-    }
-
-    setRoadmapLoading(true);
-    try {
-      const result = await generateRoadmap(goalPrompt.trim());
-      setRoadmap(result);
-      setSelectedRoadmapSlug(result.nodes[0]?.slug ?? null);
-      message.success('已接入后端真实路线图接口。');
-    } catch (error) {
-      console.error('生成路线图失败:', error);
-      message.error('路线图生成失败，请检查后端服务或稍后重试。');
-    } finally {
-      setRoadmapLoading(false);
-    }
-  };
-
-  const handleAskQuestion = async () => {
-    if (!question.trim()) {
-      message.warning('先输入一个问题，再开始检索。');
-      return;
-    }
-
-    setChatLoading(true);
-    try {
-      const result = await chatRetrieve(question.trim());
-      setChatResult(result);
-      message.success('已返回基于站内资料的回答。');
-    } catch (error) {
-      console.error('检索问答失败:', error);
-      message.error('检索问答失败，请检查后端服务或稍后重试。');
-    } finally {
-      setChatLoading(false);
-    }
-  };
-
-  const renderRoadmapPanel = () => {
-    if (!hasResults) {
-      return (
-        <Card style={panelCardStyle} bodyStyle={{ padding: 28 }}>
-          <Space direction="vertical" size={18} style={{ width: '100%' }}>
-            <div>
-              <Text style={sectionEyebrowStyle}>Roadmap Preview</Text>
-              <Title level={3} style={sectionTitleStyle}>
-                路线图会在这里展开
-              </Title>
-              <Paragraph style={mutedParagraphStyle}>
-                先在左侧完成学习画像，系统会根据你的目标生成一版分阶段路径。下一版我们会把这里升级成真正的 React Flow 课程图谱。
-              </Paragraph>
-            </div>
-
-            <div style={emptyStateBoxStyle}>
-              <NodeIndexOutlined style={{ fontSize: 28, color: '#8fb3ff' }} />
-              <Text style={{ color: '#cbd5e1', fontSize: 15 }}>
-                还没有生成路径节点
-              </Text>
-            </div>
-          </Space>
-        </Card>
-      );
-    }
-
-    return (
-      <Card style={panelCardStyle} bodyStyle={{ padding: 28 }}>
-        <Space direction="vertical" size={20} style={{ width: '100%' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16, alignItems: 'flex-start' }}>
-            <div>
-              <Text style={sectionEyebrowStyle}>Roadmap Draft</Text>
-              <Title level={3} style={sectionTitleStyle}>
-                学习路径草案
-              </Title>
-              <Paragraph style={mutedParagraphStyle}>
-                当前先用卡片流展示路径结构，后续会替换为真正的节点图和连线交互。
-              </Paragraph>
-            </div>
-            <Tag style={accentTagStyle}>
-              {roadmap?.nodes?.length ? roadmap.nodes.length : Math.min(recommendations.length, 4)} 个阶段
-            </Tag>
-          </div>
-          <RoadmapCanvas
-            recommendations={recommendations}
-            roadmap={roadmap}
-            activeCourseId={selectedRecommendation?.course.id ?? null}
-            activeRoadmapSlug={selectedRoadmapNode?.slug ?? null}
-            onSelectCourse={setSelectedCourseId}
-            onSelectRoadmapNode={setSelectedRoadmapSlug}
-          />
-
-          {roadmapSummary ? (
-            <div style={roadmapSummaryStyle}>
-              <div style={roadmapSummaryHeaderStyle}>
-                <div>
-                  <Text style={detailSectionTitleStyle}>当前路径摘要</Text>
-                  <Title level={4} style={{ color: '#f8fafc', margin: '4px 0 0' }}>
-                    第 {roadmapSummary.currentStage} 阶段：{roadmapSummary.currentTitle}
-                  </Title>
-                </div>
-                <Tag style={accentTagStyle}>{roadmapSummary.totalStages} 段路径</Tag>
-              </div>
-
-              <Row gutter={[12, 12]}>
-                <Col xs={24} md={8}>
-                  <div style={roadmapSummaryCardStyle}>
-                    <Text style={detailSectionTitleStyle}>上一阶段</Text>
-                    <Text style={roadmapSummaryTextStyle}>{roadmapSummary.previousTitle}</Text>
-                  </div>
-                </Col>
-                <Col xs={24} md={8}>
-                  <div style={roadmapSummaryCardStyle}>
-                    <Text style={detailSectionTitleStyle}>当前关注</Text>
-                    <Space wrap size={[8, 8]} style={{ marginTop: 10 }}>
-                      {roadmapSummary.stageFocus.map((topic) => (
-                        <Tag key={topic} style={topicTagStyle}>
-                          {topic}
-                        </Tag>
-                      ))}
-                    </Space>
-                  </div>
-                </Col>
-                <Col xs={24} md={8}>
-                  <div style={roadmapSummaryCardStyle}>
-                    <Text style={detailSectionTitleStyle}>下一阶段</Text>
-                    <Text style={roadmapSummaryTextStyle}>{roadmapSummary.nextTitle}</Text>
-                  </div>
-                </Col>
-              </Row>
-            </div>
-          ) : null}
-        </Space>
-      </Card>
-    );
-  };
-
-  const renderDetailPanel = () => {
-    if (!selectedRecommendation && !selectedRoadmapNode && !selectedCourseNodeDetail) {
-      return (
-        <Card style={panelCardStyle} bodyStyle={{ padding: 28 }}>
-          <Empty
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description={<span style={{ color: '#94a3b8' }}>还没有可展示的课程详情</span>}
-          />
-        </Card>
-      );
-    }
-
-    const course = selectedRecommendation?.course;
-    const scoreBreakdown = selectedRecommendation?.score_breakdown;
-    const recommendationReason = selectedRecommendation?.recommendation_reason;
-    const matchScore = selectedRecommendation?.match_score;
-    const detailTitle = selectedCourseNodeDetail?.title || selectedRoadmapNode?.title || course?.title;
-    const detailSummary =
-      selectedCourseNodeDetail?.summary ||
-      selectedRoadmapNode?.summary ||
-      course?.description ||
-      '当前课程暂无详细描述，可以在下一步接入资源元数据与课程说明。';
-    const detailDifficulty =
-      selectedCourseNodeDetail?.difficulty || selectedRoadmapNode?.difficulty || course?.difficulty_level;
-
-    return (
-      <Card style={panelCardStyle} bodyStyle={{ padding: 28 }}>
-        <Space direction="vertical" size={18} style={{ width: '100%' }}>
-          <div>
-            <Text style={sectionEyebrowStyle}>Artifacts</Text>
-            <Title level={3} style={sectionTitleStyle}>
-              课程详情面板
-            </Title>
-            <Paragraph style={mutedParagraphStyle}>
-              这里对应未来 Workspace 右侧的资源与结果展示区。现在先展示课程摘要、推荐理由和评分拆解。
-            </Paragraph>
-          </div>
-
-          <div style={detailHeroStyle}>
-            <Space direction="vertical" size={10} style={{ width: '100%' }}>
-              <Space wrap size={[8, 8]}>
-                {course?.institution ? <Tag style={accentTagStyle}>{course.institution}</Tag> : null}
-                {detailDifficulty ? <Tag style={softTagStyle}>{detailDifficulty}</Tag> : null}
-                {course?.platform ? <Tag style={softTagStyle}>{course.platform}</Tag> : null}
-                {selectedCourseNodeDetail ? <Tag style={softTagStyle}>真实节点详情</Tag> : null}
-              </Space>
-              <Title level={4} style={{ color: '#f8fafc', margin: 0 }}>
-                {detailTitle}
-              </Title>
-              <Text style={{ color: '#cbd5e1', lineHeight: 1.7 }}>
-                {detailSummary}
-              </Text>
-            </Space>
-          </div>
-
-          {recommendationReason ? (
-            <div style={reasonCardStyle}>
-              <Text style={{ color: '#8fb3ff', fontSize: 12, display: 'block', marginBottom: 8 }}>推荐理由</Text>
-              <Text style={{ color: '#e2e8f0', lineHeight: 1.8 }}>{recommendationReason}</Text>
-            </div>
-          ) : null}
-
-          {scoreBreakdown ? (
-            <Row gutter={[12, 12]}>
-              {[
-                ['语言匹配', scoreBreakdown.language_match],
-                ['难度适配', scoreBreakdown.difficulty_match],
-                ['主题相关', scoreBreakdown.domain_relevance],
-                ['前置满足', scoreBreakdown.prerequisite_fit],
-              ].map(([label, value]) => (
-                <Col span={12} key={label}>
-                  <div style={metricCardStyle}>
-                    <Text style={{ color: '#94a3b8', fontSize: 12 }}>{label}</Text>
-                    <Text style={{ color: '#f8fafc', fontSize: 24, fontWeight: 700 }}>{value}</Text>
-                  </div>
-                </Col>
-              ))}
-            </Row>
-          ) : null}
-
-          <div style={detailSectionStyle}>
-            <Text style={detailSectionTitleStyle}>主题标签</Text>
-            <Space wrap size={[8, 8]}>
-              {(course?.topics || []).map((topic) => (
-                <Tag key={topic} style={topicTagStyle}>
-                  {topic}
-                </Tag>
-              ))}
-              {selectedRoadmapNode?.summary && !course?.topics?.length ? (
-                <Tag style={topicTagStyle}>{selectedRoadmapNode.summary}</Tag>
-              ) : null}
-            </Space>
-          </div>
-
-          <div style={detailSectionStyle}>
-            <Text style={detailSectionTitleStyle}>前置建议</Text>
-            <Space wrap size={[8, 8]}>
-              {selectedCourseNodeDetail?.prerequisites?.length ? (
-                selectedCourseNodeDetail.prerequisites.map((item) => (
-                  <Tag key={item.id} style={softTagStyle}>
-                    {item.title}
-                  </Tag>
-                ))
-              ) : course?.prerequisites?.length ? (
-                course.prerequisites.map((item) => (
-                  <Tag key={item} style={softTagStyle}>
-                    {item}
-                  </Tag>
-                ))
-              ) : (
-                <Tag style={softTagStyle}>可直接开始</Tag>
-              )}
-            </Space>
-          </div>
-
-          <div style={detailSectionStyle}>
-            <Text style={detailSectionTitleStyle}>资源草稿区</Text>
-            <div style={{ display: 'grid', gap: 10 }}>
-              {resourceDrafts.map((item) => (
-                <div key={item.title} style={resourceCardStyle}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginBottom: 8 }}>
-                    <Text style={{ color: '#f8fafc', fontWeight: 600 }}>{item.title}</Text>
-                    <Tag style={softTagStyle}>{item.type}</Tag>
-                  </div>
-                  <Text style={{ color: '#cbd5e1', lineHeight: 1.7 }}>{item.description}</Text>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div style={detailFooterStyle}>
-            <div>
-              <Text style={{ color: '#94a3b8', fontSize: 12, display: 'block' }}>综合匹配度</Text>
-              <Text style={{ color: '#f8fafc', fontSize: 30, fontWeight: 700 }}>
-                {matchScore ? Math.round(matchScore) : detailLoading ? '...' : selectedCourseNodeDetail ? 'NODE' : '--'}
-              </Text>
-            </div>
-            {course?.url ? (
-              <Button type="primary" href={course.url} target="_blank" style={primaryButtonStyle}>
-                查看课程
-              </Button>
-            ) : (
-              <Button style={ghostButtonStyle}>
-                {selectedCourseNodeDetail ? '节点详情已接入' : '资源待接入'}
-              </Button>
-            )}
-          </div>
-        </Space>
-      </Card>
-    );
+    setSelectedCollege('北邮信通院');
+    setSelectedSemester('大二下');
+    setSelectedSlug(buptCourseGuides[0].slug);
   };
 
   return (
@@ -596,372 +80,303 @@ const App: React.FC = () => {
             <RobotOutlined />
           </div>
           <div>
-            <Text style={{ color: '#8fb3ff', fontSize: 12, letterSpacing: 1.2 }}>AI LEARNING WORKSPACE</Text>
+            <Text style={eyebrowStyle}>BUPT COURSE GUIDE</Text>
             <Title level={4} style={{ margin: 0, color: '#f8fafc' }}>
-              AI 学习资源站
+              北邮课程路线系统
             </Title>
           </div>
         </div>
 
         <Space>
-          <Tag style={headerTagStyle}>{profileId ? `画像 #${profileId}` : '未生成画像'}</Tag>
+          <Tag style={headerTagStyle}>{selectedCollege}</Tag>
+          <Tag style={headerTagStyle}>{selectedSemester}</Tag>
+          <Tag style={headerTagStyle}>当前：{selectedGuide.shortTitle}</Tag>
           <Button icon={<ReloadOutlined />} onClick={handleReset} style={ghostButtonStyle}>
-            重新开始
+            重置
           </Button>
         </Space>
       </Header>
 
       <Content style={contentStyle}>
-        <Card style={statusCardStyle} bodyStyle={{ padding: 18 }}>
-          <div style={statusRowStyle}>
-            <div>
-              <Text style={sectionEyebrowStyle}>Workspace State</Text>
-              <Title level={4} style={{ color: '#f8fafc', margin: '4px 0 6px' }}>
-                {workspaceState === 'loading'
-                  ? '正在生成推荐与路径草案'
-                  : workspaceState === 'ready'
-                    ? '工作台已生成首批结果'
-                    : '等待输入学习画像'}
-              </Title>
-              <Text style={{ color: '#94a3b8' }}>
-                {workspaceState === 'loading'
-                  ? '前端正在等待推荐结果返回，右侧结果区会在完成后自动填充。'
-                  : workspaceState === 'ready'
-                    ? '你现在可以查看路线图、切换推荐项，并检查右侧课程与资源草稿区。'
-                    : '先填写左侧画像，或者先写一个目标草稿，再开始生成第一版学习工作流。'}
-              </Text>
-            </div>
-
-            <Space wrap size={[8, 8]}>
-              <Tag style={workspaceState === 'idle' ? stateIdleTagStyle : softTagStyle}>待开始</Tag>
-              <Tag style={workspaceState === 'loading' ? stateLoadingTagStyle : softTagStyle}>生成中</Tag>
-              <Tag style={workspaceState === 'ready' ? stateReadyTagStyle : softTagStyle}>已生成</Tag>
-            </Space>
-          </div>
+        <Card style={heroCardStyle} bodyStyle={{ padding: 28 }}>
+          <Row gutter={[20, 20]} align="middle">
+            <Col xs={24} lg={14}>
+              <Space direction="vertical" size={14} style={{ width: '100%' }}>
+                <Space wrap>
+                  <Tag style={accentTagStyle}>按年级学期整理</Tag>
+                  <Tag style={softTagStyle}>SQLite</Tag>
+                  <Tag style={softTagStyle}>人工整理 + AI 辅助</Tag>
+                </Space>
+                <Title level={2} style={{ color: '#f8fafc', margin: 0 }}>
+                  选一门课，直接看路线
+                </Title>
+                <Paragraph style={mutedParagraphStyle}>
+                  先选择学院，再选择年级学期和课程。当前先整理北邮信通院，后续可以继续追加北邮计算机院等入口。
+                </Paragraph>
+              </Space>
+            </Col>
+            <Col xs={24} lg={10}>
+              <div style={selectorPanelStyle}>
+                <Text style={sectionEyebrowStyle}>Course Entry</Text>
+                <Title level={4} style={sectionTitleStyle}>
+                  选择学院、学期与课程
+                </Title>
+                <Space direction="vertical" size={10} style={{ width: '100%' }}>
+                  <Select
+                    value={selectedCollege}
+                    onChange={handleCollegeChange}
+                    size="large"
+                    style={{ width: '100%' }}
+                    options={courseColleges.map((college) => ({
+                      value: college,
+                      label: college,
+                    }))}
+                  />
+                  <Select
+                    value={selectedSemester}
+                    onChange={handleSemesterChange}
+                    size="large"
+                    style={{ width: '100%' }}
+                    options={semesterOptions.map((semester) => ({
+                      value: semester,
+                      label: `${semester}（${collegeSemesters[semester].length} 门）`,
+                    }))}
+                  />
+                  <Select
+                    value={selectedSlug}
+                    onChange={setSelectedSlug}
+                    size="large"
+                    style={{ width: '100%' }}
+                    options={semesterGuides.map((guide) => ({
+                      value: guide.slug,
+                      label: guide.title,
+                    }))}
+                  />
+                </Space>
+              </div>
+            </Col>
+          </Row>
         </Card>
 
-        <Row gutter={[20, 20]}>
-          <Col xs={24} xl={8}>
-            <Space direction="vertical" size={20} style={{ width: '100%' }}>
-              <Card style={heroCardStyle} bodyStyle={{ padding: 28 }}>
-                <Space direction="vertical" size={18} style={{ width: '100%' }}>
-                  <Space>
-                    <Tag style={accentTagStyle}>Workspace</Tag>
-                    <Tag style={softTagStyle}>Phase 1</Tag>
-                  </Space>
+        <Space direction="vertical" size={20} style={{ width: '100%', marginTop: 20 }}>
+          <Card style={panelCardStyle} bodyStyle={{ padding: 26 }}>
+            <div style={panelHeaderStyle}>
+              <div>
+                <Text style={sectionEyebrowStyle}>Course Mind Map</Text>
+                <Title level={3} style={sectionTitleStyle}>
+                  单课程知识图谱
+                </Title>
+                <Paragraph style={mutedParagraphStyle}>
+                  这里展示当前课程内部的主干知识点和单知识点节点，不再展示五门课之间的关系。
+                </Paragraph>
+              </div>
+              <Tag style={accentTagStyle}>{selectedGuide.shortTitle}</Tag>
+            </div>
 
-                  <div>
-                    <Title level={2} style={{ color: '#f8fafc', marginBottom: 12 }}>
-                      从画像到路线图，先搭出一套能工作的骨架
-                    </Title>
-                    <Paragraph style={mutedParagraphStyle}>
-                      这一版先把现有推荐系统升级成工作台入口。左侧保留画像录入，右侧开始承载路线图草案和结果详情，方便我们继续往 Claude 式 Workspace 演进。
-                    </Paragraph>
-                  </div>
+            <CourseMindMapPanel guide={selectedGuide} />
+          </Card>
 
-                  <Space wrap size={[10, 10]}>
-                    <Tag style={softTagStyle}>
-                      <ThunderboltOutlined /> 推荐引擎复用
-                    </Tag>
-                    <Tag style={softTagStyle}>
-                      <NodeIndexOutlined /> 路线图区预留
-                    </Tag>
-                    <Tag style={softTagStyle}>
-                      <BookOutlined /> 资源详情右栏
-                    </Tag>
-                  </Space>
-                </Space>
-              </Card>
-
-              <Card style={panelCardStyle} bodyStyle={{ padding: 24 }}>
-                <Space direction="vertical" size={14} style={{ width: '100%' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
-                    <div>
-                      <Text style={sectionEyebrowStyle}>Input Panel</Text>
-                      <Title level={4} style={{ margin: '4px 0 0', color: '#f8fafc' }}>
-                        学习画像输入区
-                      </Title>
-                    </div>
-                    <Button
-                      type="primary"
-                      icon={<ArrowRightOutlined />}
-                      onClick={() => {
-                        const element = document.getElementById('workspace-profile-form');
-                        element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }}
-                      style={primaryButtonStyle}
-                    >
-                      开始填写
-                    </Button>
-                  </div>
-                  <Paragraph style={mutedParagraphStyle}>
-                    当前仍复用原有三步表单，下一步会把它改成更像对话流的输入体验。
-                  </Paragraph>
-                </Space>
-              </Card>
-
-              <Card style={panelCardStyle} bodyStyle={{ padding: 24 }}>
-                <Space direction="vertical" size={14} style={{ width: '100%' }}>
-                  <div>
-                    <Text style={sectionEyebrowStyle}>Goal Draft</Text>
-                    <Title level={4} style={{ margin: '4px 0 8px', color: '#f8fafc' }}>
-                      目标输入草稿
-                    </Title>
-                    <Paragraph style={mutedParagraphStyle}>
-                      这块是后续对话式输入区的前身。现在先让你能输入一个更像自然语言任务的目标，后面我们会把它真正接入路径生成接口。
-                    </Paragraph>
-                  </div>
-
-                  <Space wrap size={[8, 8]}>
-                    {[
-                      '两个月补齐机器学习和深度学习基础',
-                      '准备 AI 方向课程设计，想要一条路线图',
-                      '优先学能快速上手项目的课程',
-                    ].map((item) => (
-                      <Tag
-                        key={item}
-                        style={{ ...softTagStyle, cursor: 'pointer' }}
-                        onClick={() => setGoalPrompt(item)}
-                      >
-                        {item}
-                      </Tag>
-                    ))}
-                  </Space>
-
-                  <Input.TextArea
-                    value={goalPrompt}
-                    onChange={(event) => setGoalPrompt(event.target.value)}
-                    autoSize={{ minRows: 4, maxRows: 6 }}
-                    placeholder="输入你的目标，例如：我想补完 DSP 前置课程，并找到对应资料。"
-                    style={goalInputStyle}
-                  />
-
-                  <div style={goalFooterStyle}>
-                    <Text style={{ color: '#94a3b8' }}>
-                      当前状态：前端已预留目标输入区，等待后端 `roadmaps/generate` 接口接入。
-                    </Text>
-                    <Button
-                      icon={<SendOutlined />}
-                      style={ghostButtonStyle}
-                      onClick={handleGenerateRoadmap}
-                      loading={roadmapLoading}
-                    >
-                      生成路线
-                    </Button>
-                  </div>
-                </Space>
-              </Card>
-
-              <Card id="workspace-profile-form" style={panelCardStyle} bodyStyle={{ padding: 22 }}>
-                <ProfileForm onSuccess={handleProfileSuccess} />
-              </Card>
-
-              <Card style={panelCardStyle} bodyStyle={{ padding: 24 }}>
-                <Space direction="vertical" size={14} style={{ width: '100%' }}>
-                  <div>
-                    <Text style={sectionEyebrowStyle}>Pipeline</Text>
-                    <Title level={4} style={{ margin: '4px 0 0', color: '#f8fafc' }}>
-                      当前工作流
-                    </Title>
-                  </div>
-                  {workspaceStages.map((stage) => {
-                    const palette = stagePalette[stage.status];
-                    return (
-                      <div
-                        key={stage.key}
-                        style={{
-                          background: palette.bg,
-                          border: `1px solid ${palette.border}`,
-                          borderRadius: 16,
-                          padding: 16,
-                        }}
-                      >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginBottom: 8 }}>
-                          <Text style={{ color: '#f8fafc', fontWeight: 600 }}>{stage.title}</Text>
-                          <Tag style={{ ...softTagStyle, color: palette.text }}>{palette.label}</Tag>
-                        </div>
-                        <Text style={{ color: '#cbd5e1' }}>{stage.description}</Text>
-                      </div>
-                    );
-                  })}
-                </Space>
-              </Card>
-
-              <Card style={panelCardStyle} bodyStyle={{ padding: 24 }}>
-                <Space direction="vertical" size={14} style={{ width: '100%' }}>
-                  <div>
-                    <Text style={sectionEyebrowStyle}>Ask Library</Text>
-                    <Title level={4} style={{ margin: '4px 0 8px', color: '#f8fafc' }}>
-                      资料检索问答
-                    </Title>
-                    <Paragraph style={mutedParagraphStyle}>
-                      这里已经接真实 `/chat/retrieve` 接口。你可以直接问“当前阶段先看什么资料”或者“这门课的前置是什么”。
-                    </Paragraph>
-                  </div>
-
-                  <Space wrap size={[8, 8]}>
-                    {[
-                      '这个阶段先看哪些资料？',
-                      '这条路径里最关键的前置是什么？',
-                      '当前节点适合先做什么实践？',
-                    ].map((item) => (
-                      <Tag key={item} style={{ ...softTagStyle, cursor: 'pointer' }} onClick={() => setQuestion(item)}>
-                        {item}
-                      </Tag>
-                    ))}
-                  </Space>
-
-                  <Input.TextArea
-                    value={question}
-                    onChange={(event) => setQuestion(event.target.value)}
-                    autoSize={{ minRows: 3, maxRows: 5 }}
-                    placeholder="输入问题，例如：我现在应该先看哪些资料来完成这一阶段？"
-                    style={goalInputStyle}
-                  />
-
-                  <div style={goalFooterStyle}>
-                    <Text style={{ color: '#94a3b8' }}>
-                      当前会基于站内资源和文档切片返回答案与来源。
-                    </Text>
-                    <Button
-                      icon={<SendOutlined />}
-                      style={ghostButtonStyle}
-                      onClick={handleAskQuestion}
-                      loading={chatLoading}
-                    >
-                      开始检索
-                    </Button>
-                  </div>
-                </Space>
-              </Card>
-            </Space>
-          </Col>
-
-          <Col xs={24} xl={16}>
-            <Space direction="vertical" size={20} style={{ width: '100%' }}>
-              {renderRoadmapPanel()}
-
-              <Row gutter={[20, 20]}>
-                <Col xs={24} xxl={14}>
-                  <Card style={panelCardStyle} bodyStyle={{ padding: 28 }}>
-                    <Space direction="vertical" size={16} style={{ width: '100%' }}>
-                      <div>
-                        <Text style={sectionEyebrowStyle}>Recommendations</Text>
-                        <Title level={3} style={sectionTitleStyle}>
-                          推荐结果区
-                        </Title>
-                        <Paragraph style={mutedParagraphStyle}>
-                          继续复用现有推荐结果组件，把它作为工作台中的一个结果视图，而不是整个系统的唯一主页面。
-                        </Paragraph>
-                      </div>
-                      <Divider style={{ borderColor: 'rgba(148, 163, 184, 0.12)', margin: 0 }} />
-                      <RecommendationList
-                        recommendations={recommendations}
-                        loading={loading}
-                        activeCourseId={selectedRecommendation?.course.id ?? null}
-                        onSelectCourse={setSelectedCourseId}
-                      />
-                    </Space>
-                  </Card>
-                </Col>
-
-                <Col xs={24} xxl={10}>{renderDetailPanel()}</Col>
-              </Row>
-
-              <Card style={panelCardStyle} bodyStyle={{ padding: 24 }}>
-                <Space direction="vertical" size={16} style={{ width: '100%' }}>
-                  <div>
-                    <Text style={sectionEyebrowStyle}>RAG Answer</Text>
-                    <Title level={3} style={sectionTitleStyle}>
-                      检索回答区
-                    </Title>
-                    <Paragraph style={mutedParagraphStyle}>
-                      这一块直接展示后端 `/chat/retrieve` 的答案和来源，不再只是前端占位。
-                    </Paragraph>
-                  </div>
-
-                  {chatResult ? (
-                    <>
-                      <div style={reasonCardStyle}>
-                        <Text style={{ color: '#8fb3ff', fontSize: 12, display: 'block', marginBottom: 8 }}>
-                          回答
-                        </Text>
-                        <Text style={{ color: '#e2e8f0', lineHeight: 1.85 }}>{chatResult.answer}</Text>
-                      </div>
-
-                      <div style={detailSectionStyle}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'center' }}>
-                          <Text style={detailSectionTitleStyle}>来源片段</Text>
-                          <Tag style={chatResult.has_enough_context ? stateReadyTagStyle : stateIdleTagStyle}>
-                            {chatResult.has_enough_context ? '资料充分' : '资料不足'}
-                          </Tag>
-                        </div>
-
-                        <div style={{ display: 'grid', gap: 10 }}>
-                          {chatResult.sources.map((source) => (
-                            <div key={source.chunk_id} style={resourceCardStyle}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginBottom: 8 }}>
-                                <Text style={{ color: '#f8fafc', fontWeight: 600 }}>{source.resource_title}</Text>
-                                <Tag style={softTagStyle}>score {source.score}</Tag>
-                              </div>
-                              <Text style={{ color: '#cbd5e1', lineHeight: 1.7 }}>{source.content}</Text>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <div style={emptyStateBoxStyle}>
-                      <FileTextOutlined style={{ fontSize: 28, color: '#8fb3ff' }} />
-                      <Text style={{ color: '#cbd5e1', fontSize: 15 }}>左侧发起一次检索问答后，这里会显示答案和来源。</Text>
-                    </div>
-                  )}
-                </Space>
-              </Card>
-
-              <Card style={panelCardStyle} bodyStyle={{ padding: 24 }}>
-                <Row gutter={[16, 16]}>
-                  {[
-                    {
-                      icon: <BulbOutlined />,
-                      title: '下一步 1',
-                      text: '把右侧路线图草案替换成真正的 React Flow 节点图。',
-                    },
-                    {
-                      icon: <FileTextOutlined />,
-                      title: '下一步 2',
-                      text: '把课程详情扩展成资源详情，接入 Repo、PDF、视频与文档片段。',
-                    },
-                    {
-                      icon: <BranchesOutlined />,
-                      title: '下一步 3',
-                      text: '让左侧输入从表单升级为目标驱动的对话流。',
-                    },
-                  ].map((item) => (
-                    <Col xs={24} md={8} key={item.title}>
-                      <div style={futureCardStyle}>
-                        <div style={futureIconStyle}>{item.icon}</div>
-                        <Title level={5} style={{ color: '#f8fafc', marginBottom: 8 }}>
-                          {item.title}
-                        </Title>
-                        <Text style={{ color: '#cbd5e1', lineHeight: 1.7 }}>{item.text}</Text>
-                      </div>
-                    </Col>
-                  ))}
-                </Row>
-              </Card>
-            </Space>
-          </Col>
-        </Row>
+          <Card style={panelCardStyle} bodyStyle={{ padding: 26 }}>
+            <CourseGuidePanel guide={selectedGuide} />
+          </Card>
+        </Space>
       </Content>
     </Layout>
   );
 };
 
+interface CourseGuidePanelProps {
+  guide: (typeof buptCourseGuides)[number];
+}
+
+const CourseMindMapPanel: React.FC<{ guide: (typeof buptCourseGuides)[number] }> = ({ guide }) => {
+  const branches = guide.mindMap.slice(0, 8);
+  const centerNode = { x: 465, y: 430, width: 270, height: 150 };
+  const branchPositions = [
+    { x: 430, y: 28, width: 340, height: 190 },
+    { x: 48, y: 150, width: 348, height: 204 },
+    { x: 804, y: 150, width: 348, height: 204 },
+    { x: 48, y: 410, width: 348, height: 204 },
+    { x: 804, y: 410, width: 348, height: 204 },
+    { x: 48, y: 670, width: 348, height: 204 },
+    { x: 804, y: 670, width: 348, height: 204 },
+    { x: 430, y: 810, width: 340, height: 190 },
+  ];
+  const graphHeight = 1040;
+  const centerPoint = {
+    x: centerNode.x + centerNode.width / 2,
+    y: centerNode.y + centerNode.height / 2,
+  };
+
+  return (
+    <div style={courseMindMapScrollStyle}>
+      <div style={{ ...courseMindMapGraphStyle, height: graphHeight }}>
+        <svg viewBox={`0 0 1200 ${graphHeight}`} style={mindLineSvgStyle} aria-hidden="true">
+          <defs>
+            <linearGradient id="mind-line" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="rgba(56, 189, 248, 0.62)" />
+              <stop offset="100%" stopColor="rgba(129, 140, 248, 0.5)" />
+            </linearGradient>
+          </defs>
+          {branches.map((branch, index) => {
+            const position = branchPositions[index];
+            const target = {
+              x: position.x + position.width / 2,
+              y: position.y + position.height / 2,
+            };
+            const controlOffset = target.x < centerPoint.x ? -120 : target.x > centerPoint.x ? 120 : 0;
+
+            return (
+              <path
+                key={branch.title}
+                d={`M ${centerPoint.x} ${centerPoint.y} C ${centerPoint.x + controlOffset} ${centerPoint.y}, ${target.x - controlOffset} ${target.y}, ${target.x} ${target.y}`}
+                stroke="url(#mind-line)"
+                strokeWidth="3"
+                fill="none"
+                strokeLinecap="round"
+                opacity={0.9}
+              />
+            );
+          })}
+        </svg>
+
+        <div
+          style={{
+            ...mindCenterNodeStyle,
+            left: centerNode.x,
+            top: centerNode.y,
+            width: centerNode.width,
+            height: centerNode.height,
+          }}
+        >
+          <ApartmentOutlined style={{ color: '#bae6fd', fontSize: 26 }} />
+          <Text style={mindCenterTitleStyle}>{guide.title}</Text>
+          <Space wrap size={[6, 6]} style={{ justifyContent: 'center' }}>
+            {guide.route.slice(0, 4).map((item, index) => (
+              <Tag key={item} style={centerRouteTagStyle}>
+                {index + 1}. {item}
+              </Tag>
+            ))}
+          </Space>
+        </div>
+
+        {branches.map((branch, index) => {
+          const position = branchPositions[index];
+          return (
+            <div
+              key={branch.title}
+              style={{
+                ...mindGraphBranchStyle,
+                left: position.x,
+                top: position.y,
+                width: position.width,
+                height: position.height,
+              }}
+            >
+              <div style={mindGraphBranchHeaderStyle}>
+                <span style={mindGraphBranchDotStyle}>{index + 1}</span>
+                <Text style={mindGraphBranchTitleStyle}>{branch.title}</Text>
+              </div>
+              <div style={mindGraphKnowledgeGridStyle}>
+                {branch.children.slice(0, 5).map((child) => (
+                  <div key={child} style={mindGraphKnowledgeNodeStyle}>
+                    {child}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const CourseGuidePanel: React.FC<CourseGuidePanelProps> = ({ guide }) => {
+  return (
+    <Space direction="vertical" size={18} style={{ width: '100%' }}>
+      <div style={panelHeaderStyle}>
+        <div>
+          <Text style={sectionEyebrowStyle}>Course Detail</Text>
+          <Title level={3} style={sectionTitleStyle}>
+            {guide.title}
+          </Title>
+          <Paragraph style={mutedParagraphStyle}>{guide.summary}</Paragraph>
+        </div>
+        <Tag style={accentTagStyle}>{guide.shortTitle}</Tag>
+      </div>
+
+      <div style={routeStripStyle}>
+        {guide.route.map((item, index) => (
+          <div key={item} style={routeItemStyle}>
+            <span style={routeDotStyle}>{index + 1}</span>
+            <Text style={{ color: '#e2e8f0', fontSize: 13 }}>{item}</Text>
+          </div>
+        ))}
+      </div>
+
+      <div style={detailSectionStyle}>
+        <Text style={detailSectionTitleStyle}>
+          <ScheduleOutlined /> 章节重点
+        </Text>
+        <Timeline
+          style={{ marginTop: 14 }}
+          items={guide.chapters.map((chapter) => ({
+            color: '#38bdf8',
+            children: (
+              <div style={chapterBlockStyle}>
+                <Text style={{ color: '#f8fafc', fontWeight: 650 }}>{chapter.title}</Text>
+                <Paragraph style={{ color: '#cbd5e1', margin: '8px 0', lineHeight: 1.7 }}>
+                  {chapter.focus}
+                </Paragraph>
+                <div style={checklistGridStyle}>
+                  {chapter.checklist.map((item) => (
+                    <div key={item} style={checklistItemStyle}>
+                      <CheckCircleOutlined /> {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ),
+          }))}
+        />
+      </div>
+
+      <div style={detailSectionStyle}>
+        <Text style={detailSectionTitleStyle}>
+          <BookOutlined /> 公开课与资料推荐
+        </Text>
+        <div style={materialGridStyle}>
+          {guide.publicMaterials.map((item) => (
+            <div key={`${item.type}-${item.title}`} style={materialCardStyle}>
+              <div style={materialCardHeaderStyle}>
+                <Text style={{ color: '#f8fafc', fontWeight: 650, lineHeight: 1.45 }}>{item.title}</Text>
+                <Tag style={accentTagStyle}>{item.type}</Tag>
+              </div>
+              <Text style={{ color: '#cbd5e1', lineHeight: 1.7 }}>{item.description}</Text>
+              {item.url ? (
+                <Button
+                  type="link"
+                  href={item.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  icon={<LinkOutlined />}
+                  style={materialLinkStyle}
+                >
+                  查看资料
+                </Button>
+              ) : null}
+            </div>
+          ))}
+        </div>
+      </div>
+    </Space>
+  );
+};
+
 const appLayoutStyle: React.CSSProperties = {
   minHeight: '100vh',
-  background:
-    'radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), transparent 30%), radial-gradient(circle at top right, rgba(129, 140, 248, 0.14), transparent 24%), linear-gradient(180deg, #07111f 0%, #0b1220 38%, #101826 100%)',
+  background: 'linear-gradient(180deg, #07111f 0%, #0d1726 45%, #101826 100%)',
 };
 
 const headerStyle: React.CSSProperties = {
@@ -970,7 +385,7 @@ const headerStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  background: 'rgba(7, 17, 31, 0.72)',
+  background: 'rgba(7, 17, 31, 0.86)',
   borderBottom: '1px solid rgba(148, 163, 184, 0.12)',
   position: 'sticky',
   top: 0,
@@ -993,189 +408,53 @@ const brandIconStyle: React.CSSProperties = {
   justifyContent: 'center',
   color: '#f8fafc',
   fontSize: 20,
-  background: 'linear-gradient(135deg, #38bdf8 0%, #6366f1 100%)',
-  boxShadow: '0 14px 28px rgba(56, 189, 248, 0.22)',
+  background: 'linear-gradient(135deg, #0891b2 0%, #4f46e5 100%)',
 };
 
 const contentStyle: React.CSSProperties = {
-  padding: '24px',
-};
-
-const statusCardStyle: React.CSSProperties = {
-  marginBottom: 20,
-  borderRadius: 24,
-  overflow: 'hidden',
-  border: '1px solid rgba(148, 163, 184, 0.12)',
-  background: 'linear-gradient(145deg, rgba(12, 21, 36, 0.96), rgba(16, 27, 44, 0.94))',
-  boxShadow: '0 18px 38px rgba(2, 6, 23, 0.18)',
-};
-
-const statusRowStyle: React.CSSProperties = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  gap: 16,
+  padding: 24,
 };
 
 const heroCardStyle: React.CSSProperties = {
-  borderRadius: 24,
+  borderRadius: 18,
   overflow: 'hidden',
   border: '1px solid rgba(125, 211, 252, 0.18)',
-  background: 'linear-gradient(145deg, rgba(14, 24, 40, 0.96), rgba(17, 30, 48, 0.96))',
-  boxShadow: '0 26px 48px rgba(2, 6, 23, 0.28)',
-};
-
-const panelCardStyle: React.CSSProperties = {
-  borderRadius: 24,
-  overflow: 'hidden',
-  border: '1px solid rgba(148, 163, 184, 0.12)',
-  background: 'rgba(9, 16, 28, 0.88)',
+  background: 'linear-gradient(145deg, rgba(14, 24, 40, 0.98), rgba(17, 30, 48, 0.96))',
   boxShadow: '0 22px 42px rgba(2, 6, 23, 0.24)',
 };
 
-const detailHeroStyle: React.CSSProperties = {
+const panelCardStyle: React.CSSProperties = {
   borderRadius: 18,
-  padding: 20,
-  background: 'linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.94))',
-  border: '1px solid rgba(125, 211, 252, 0.16)',
+  overflow: 'hidden',
+  border: '1px solid rgba(148, 163, 184, 0.12)',
+  background: 'rgba(9, 16, 28, 0.9)',
+  boxShadow: '0 18px 34px rgba(2, 6, 23, 0.2)',
 };
 
-const reasonCardStyle: React.CSSProperties = {
-  borderRadius: 18,
-  padding: 18,
-  background: 'rgba(59, 130, 246, 0.08)',
-  border: '1px solid rgba(96, 165, 250, 0.16)',
-};
-
-const metricCardStyle: React.CSSProperties = {
+const selectorPanelStyle: React.CSSProperties = {
   borderRadius: 16,
-  padding: 16,
-  background: 'rgba(15, 23, 42, 0.78)',
-  border: '1px solid rgba(148, 163, 184, 0.12)',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 8,
-};
-
-const futureCardStyle: React.CSSProperties = {
-  height: '100%',
-  borderRadius: 18,
   padding: 18,
-  background: 'rgba(15, 23, 42, 0.72)',
+  background: 'rgba(15, 23, 42, 0.76)',
   border: '1px solid rgba(148, 163, 184, 0.12)',
 };
 
-const futureIconStyle: React.CSSProperties = {
-  width: 38,
-  height: 38,
-  borderRadius: 12,
+const panelHeaderStyle: React.CSSProperties = {
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  justifyContent: 'space-between',
+  gap: 16,
+  alignItems: 'flex-start',
+  marginBottom: 16,
+};
+
+const eyebrowStyle: React.CSSProperties = {
   color: '#8fb3ff',
-  fontSize: 18,
-  background: 'rgba(59, 130, 246, 0.12)',
-  marginBottom: 12,
-};
-
-const emptyStateBoxStyle: React.CSSProperties = {
-  minHeight: 220,
-  borderRadius: 18,
-  border: '1px dashed rgba(148, 163, 184, 0.24)',
-  background: 'rgba(15, 23, 42, 0.34)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexDirection: 'column',
-  gap: 12,
-};
-
-const detailSectionStyle: React.CSSProperties = {
-  display: 'grid',
-  gap: 10,
-};
-
-const detailFooterStyle: React.CSSProperties = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  gap: 16,
-  alignItems: 'center',
-  paddingTop: 6,
-};
-
-const resourceCardStyle: React.CSSProperties = {
-  borderRadius: 16,
-  padding: 14,
-  background: 'rgba(15, 23, 42, 0.72)',
-  border: '1px solid rgba(148, 163, 184, 0.12)',
-};
-
-const roadmapSummaryStyle: React.CSSProperties = {
-  padding: 18,
-  borderRadius: 18,
-  background: 'rgba(15, 23, 42, 0.58)',
-  border: '1px solid rgba(148, 163, 184, 0.12)',
-};
-
-const roadmapSummaryHeaderStyle: React.CSSProperties = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  gap: 12,
-  alignItems: 'center',
-  marginBottom: 14,
-};
-
-const roadmapSummaryCardStyle: React.CSSProperties = {
-  height: '100%',
-  borderRadius: 16,
-  padding: 14,
-  background: 'rgba(9, 16, 28, 0.72)',
-  border: '1px solid rgba(148, 163, 184, 0.12)',
-};
-
-const roadmapSummaryTextStyle: React.CSSProperties = {
-  color: '#e2e8f0',
-  display: 'block',
-  marginTop: 10,
-  lineHeight: 1.7,
-};
-
-const primaryButtonStyle: React.CSSProperties = {
-  borderRadius: 999,
-  border: 'none',
-  height: 42,
-  padding: '0 18px',
-  fontWeight: 600,
-  background: 'linear-gradient(135deg, #38bdf8 0%, #6366f1 100%)',
-  boxShadow: '0 14px 30px rgba(56, 189, 248, 0.22)',
-};
-
-const ghostButtonStyle: React.CSSProperties = {
-  borderRadius: 999,
-  height: 40,
-  padding: '0 16px',
-  color: '#e2e8f0',
-  border: '1px solid rgba(148, 163, 184, 0.18)',
-  background: 'rgba(15, 23, 42, 0.68)',
-};
-
-const goalInputStyle: React.CSSProperties = {
-  borderRadius: 18,
-  background: 'rgba(15, 23, 42, 0.78)',
-  color: '#e2e8f0',
-  border: '1px solid rgba(148, 163, 184, 0.16)',
-};
-
-const goalFooterStyle: React.CSSProperties = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  gap: 16,
+  fontSize: 12,
+  letterSpacing: 1.2,
 };
 
 const sectionEyebrowStyle: React.CSSProperties = {
   color: '#8fb3ff',
-  fontSize: 12,
+  fontSize: 11,
   letterSpacing: 1.1,
   textTransform: 'uppercase',
 };
@@ -1186,68 +465,255 @@ const sectionTitleStyle: React.CSSProperties = {
 };
 
 const mutedParagraphStyle: React.CSSProperties = {
-  color: '#94a3b8',
+  color: '#a4b1c4',
   marginBottom: 0,
-  lineHeight: 1.8,
+  lineHeight: 1.75,
 };
 
-const detailSectionTitleStyle: React.CSSProperties = {
-  color: '#94a3b8',
-  fontSize: 12,
-  letterSpacing: 0.4,
+const headerTagStyle: React.CSSProperties = {
+  borderRadius: 999,
+  padding: '5px 12px',
+  color: '#dbeafe',
+  background: 'rgba(30, 41, 59, 0.72)',
+  border: '1px solid rgba(148, 163, 184, 0.18)',
+};
+
+const softTagStyle: React.CSSProperties = {
+  borderRadius: 999,
+  padding: '4px 10px',
+  color: '#cbd5e1',
+  background: 'rgba(30, 41, 59, 0.78)',
+  border: '1px solid rgba(71, 85, 105, 0.35)',
 };
 
 const accentTagStyle: React.CSSProperties = {
   borderRadius: 999,
   padding: '4px 12px',
-  background: 'rgba(56, 189, 248, 0.14)',
-  color: '#8fdcff',
-  border: '1px solid rgba(56, 189, 248, 0.2)',
+  color: '#bae6fd',
+  background: 'rgba(14, 165, 233, 0.14)',
+  border: '1px solid rgba(56, 189, 248, 0.28)',
 };
 
-const softTagStyle: React.CSSProperties = {
+const ghostButtonStyle: React.CSSProperties = {
   borderRadius: 999,
-  padding: '4px 12px',
-  background: 'rgba(148, 163, 184, 0.12)',
-  color: '#dbe7ff',
+  height: 40,
+  color: '#e2e8f0',
+  border: '1px solid rgba(148, 163, 184, 0.18)',
+  background: 'rgba(15, 23, 42, 0.68)',
+};
+
+const routeStripStyle: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+  gap: 10,
+};
+
+const routeItemStyle: React.CSSProperties = {
+  minHeight: 54,
+  borderRadius: 14,
+  padding: '10px 12px',
+  display: 'flex',
+  alignItems: 'center',
+  gap: 10,
+  background: 'rgba(15, 23, 42, 0.68)',
   border: '1px solid rgba(148, 163, 184, 0.12)',
 };
 
-const topicTagStyle: React.CSSProperties = {
+const routeDotStyle: React.CSSProperties = {
+  width: 24,
+  height: 24,
   borderRadius: 999,
-  padding: '4px 12px',
-  background: 'rgba(30, 41, 59, 0.92)',
-  color: '#cbd5e1',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: '#bae6fd',
+  background: 'rgba(14, 165, 233, 0.18)',
+  fontSize: 12,
+  fontWeight: 750,
+  flexShrink: 0,
+};
+
+const detailSectionStyle: React.CSSProperties = {
+  borderRadius: 16,
+  padding: 16,
+  background: 'rgba(15, 23, 42, 0.58)',
+  border: '1px solid rgba(148, 163, 184, 0.12)',
+};
+
+const detailSectionTitleStyle: React.CSSProperties = {
+  color: '#dbeafe',
+  fontSize: 13,
+  fontWeight: 700,
+};
+
+const chapterBlockStyle: React.CSSProperties = {
+  borderRadius: 14,
+  padding: 14,
+  background: 'rgba(30, 41, 59, 0.62)',
+  border: '1px solid rgba(71, 85, 105, 0.3)',
+};
+
+const checklistGridStyle: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+  gap: 8,
+};
+
+const checklistItemStyle: React.CSSProperties = {
+  minHeight: 36,
+  borderRadius: 12,
+  padding: '8px 10px',
+  display: 'flex',
+  alignItems: 'flex-start',
+  gap: 8,
+  color: '#dbeafe',
+  fontSize: 13,
+  lineHeight: 1.55,
+  background: 'rgba(30, 41, 59, 0.78)',
   border: '1px solid rgba(71, 85, 105, 0.35)',
 };
 
-const headerTagStyle: React.CSSProperties = {
+const courseMindMapGraphStyle: React.CSSProperties = {
+  position: 'relative',
+  minWidth: 1200,
+  borderRadius: 20,
+  overflow: 'hidden',
+  background:
+    'linear-gradient(180deg, rgba(15, 23, 42, 0.78), rgba(15, 23, 42, 0.46))',
+  border: '1px solid rgba(148, 163, 184, 0.12)',
+};
+
+const courseMindMapScrollStyle: React.CSSProperties = {
+  overflowX: 'auto',
+  paddingBottom: 4,
+};
+
+const mindLineSvgStyle: React.CSSProperties = {
+  position: 'absolute',
+  inset: 0,
+  width: '100%',
+  height: '100%',
+};
+
+const mindCenterNodeStyle: React.CSSProperties = {
+  position: 'absolute',
+  borderRadius: 20,
+  padding: 16,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 10,
+  background: 'linear-gradient(145deg, rgba(8, 47, 73, 0.82), rgba(30, 41, 59, 0.72))',
+  border: '1px solid rgba(56, 189, 248, 0.32)',
+  boxShadow: '0 22px 50px rgba(2, 6, 23, 0.32)',
+};
+
+const mindCenterTitleStyle: React.CSSProperties = {
+  color: '#f8fafc',
+  fontWeight: 800,
+  textAlign: 'center',
+  fontSize: 16,
+  lineHeight: 1.3,
+};
+
+const centerRouteTagStyle: React.CSSProperties = {
   borderRadius: 999,
-  padding: '4px 12px',
-  background: 'rgba(56, 189, 248, 0.1)',
-  color: '#8fdcff',
-  border: '1px solid rgba(56, 189, 248, 0.18)',
+  padding: '3px 8px',
+  color: '#dbeafe',
+  background: 'rgba(15, 23, 42, 0.7)',
+  border: '1px solid rgba(125, 211, 252, 0.16)',
+  fontSize: 11,
 };
 
-const stateIdleTagStyle: React.CSSProperties = {
-  ...softTagStyle,
-  color: '#f8d27c',
-  background: 'rgba(255, 196, 61, 0.12)',
-  border: '1px solid rgba(255, 196, 61, 0.24)',
+const mindGraphBranchStyle: React.CSSProperties = {
+  position: 'absolute',
+  borderRadius: 16,
+  padding: 14,
+  overflowY: 'auto',
+  background: 'linear-gradient(145deg, rgba(30, 41, 59, 0.94), rgba(8, 47, 73, 0.72))',
+  border: '1px solid rgba(71, 85, 105, 0.38)',
+  boxShadow: '0 18px 36px rgba(2, 6, 23, 0.22)',
 };
 
-const stateLoadingTagStyle: React.CSSProperties = {
-  ...softTagStyle,
-  color: '#8fdcff',
-  background: 'rgba(56, 189, 248, 0.14)',
-  border: '1px solid rgba(56, 189, 248, 0.2)',
+const mindGraphBranchHeaderStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 8,
+  marginBottom: 10,
 };
 
-const stateReadyTagStyle: React.CSSProperties = {
-  ...softTagStyle,
-  color: '#9ff0d2',
-  background: 'rgba(32, 201, 151, 0.14)',
-  border: '1px solid rgba(32, 201, 151, 0.24)',
+const mindGraphBranchDotStyle: React.CSSProperties = {
+  width: 22,
+  height: 22,
+  borderRadius: 999,
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: '#082f49',
+  fontSize: 12,
+  fontWeight: 800,
+  background: '#7dd3fc',
+  boxShadow: '0 0 0 4px rgba(56, 189, 248, 0.12)',
+  flexShrink: 0,
+};
+
+const mindGraphBranchTitleStyle: React.CSSProperties = {
+  color: '#f8fafc',
+  fontWeight: 760,
+  fontSize: 15,
+  lineHeight: 1.35,
+};
+
+const mindGraphKnowledgeGridStyle: React.CSSProperties = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: 8,
+};
+
+const mindGraphKnowledgeNodeStyle: React.CSSProperties = {
+  borderRadius: 12,
+  padding: '7px 9px',
+  flex: '1 1 136px',
+  color: '#dbeafe',
+  background: 'rgba(8, 47, 73, 0.5)',
+  border: '1px solid rgba(56, 189, 248, 0.16)',
+  fontSize: 12,
+  lineHeight: 1.45,
+};
+
+const materialGridStyle: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+  gap: 12,
+  marginTop: 12,
+};
+
+const materialCardStyle: React.CSSProperties = {
+  minHeight: 146,
+  borderRadius: 14,
+  padding: 14,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  background: 'rgba(8, 47, 73, 0.34)',
+  border: '1px solid rgba(56, 189, 248, 0.16)',
+};
+
+const materialCardHeaderStyle: React.CSSProperties = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
+  gap: 10,
+  marginBottom: 8,
+};
+
+const materialLinkStyle: React.CSSProperties = {
+  alignSelf: 'flex-start',
+  padding: 0,
+  marginTop: 10,
+  color: '#8fb3ff',
 };
 
 export default App;

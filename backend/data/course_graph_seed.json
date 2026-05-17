@@ -1,142 +1,37 @@
 [
   {
-    "title": "Python 编程基础",
-    "slug": "python_basics",
-    "summary": "Python 语言基础语法、数据结构、面向对象编程",
-    "difficulty": "beginner",
-    "category": "programming"
-  },
-  {
-    "title": "C 语言程序设计",
-    "slug": "c_programming",
-    "summary": "C 语言基础、指针、内存管理、数据结构",
-    "difficulty": "beginner",
-    "category": "programming"
-  },
-  {
-    "title": "高等数学",
-    "slug": "calculus",
-    "summary": "微积分、级数、多元函数、常微分方程",
-    "difficulty": "beginner",
-    "category": "math"
-  },
-  {
-    "title": "线性代数",
-    "slug": "linear_algebra",
-    "summary": "矩阵运算、向量空间、特征值、线性变换",
-    "difficulty": "beginner",
-    "category": "math"
-  },
-  {
-    "title": "概率论与数理统计",
-    "slug": "probability_statistics",
-    "summary": "概率基础、随机变量、统计推断、假设检验",
-    "difficulty": "intermediate",
-    "category": "math"
-  },
-  {
-    "title": "数据结构与算法",
-    "slug": "data_structures_algorithms",
-    "summary": "链表、树、图、排序、搜索、动态规划",
-    "difficulty": "intermediate",
-    "category": "cs_core"
-  },
-  {
-    "title": "计算机组成原理",
-    "slug": "computer_architecture",
-    "summary": "CPU 结构、指令系统、存储系统、I/O 系统",
-    "difficulty": "intermediate",
-    "category": "cs_core"
-  },
-  {
-    "title": "操作系统",
-    "slug": "operating_systems",
-    "summary": "进程管理、内存管理、文件系统、I/O 管理",
-    "difficulty": "intermediate",
-    "category": "cs_core"
-  },
-  {
-    "title": "计算机网络",
-    "slug": "computer_networks",
-    "summary": "TCP/IP 协议栈、路由、传输层、应用层协议",
-    "difficulty": "intermediate",
-    "category": "cs_core"
-  },
-  {
-    "title": "数据库系统",
-    "slug": "database_systems",
-    "summary": "关系模型、SQL、事务处理、索引优化",
-    "difficulty": "intermediate",
-    "category": "cs_core"
-  },
-  {
     "title": "离散数学",
-    "slug": "discrete_math",
-    "summary": "集合论、图论、组合数学、数理逻辑",
-    "difficulty": "beginner",
-    "category": "math"
-  },
-  {
-    "title": "信号与系统",
-    "slug": "signals_systems",
-    "summary": "连续/离散信号分析、傅里叶变换、拉普拉斯变换、系统响应",
+    "slug": "bupt_discrete_math",
+    "summary": "命题逻辑、集合关系、图论、组合计数与递推，是算法与计算机理论课程的基础。",
     "difficulty": "intermediate",
-    "category": "communication"
+    "category": "math_core"
   },
   {
-    "title": "数字信号处理",
-    "slug": "digital_signal_processing",
-    "summary": "离散傅里叶变换、滤波器设计、频谱分析、DSP 应用",
+    "title": "程序设计基础实训",
+    "slug": "bupt_programming_practice",
+    "summary": "从需求拆解到代码交付，训练 C/C++ 工程实现、调试、文档和答辩能力。",
+    "difficulty": "intermediate",
+    "category": "programming"
+  },
+  {
+    "title": "计算机原理与组成（微机原理）",
+    "slug": "bupt_computer_organization",
+    "summary": "围绕 CPU、指令、存储、总线、I/O 和中断理解计算机硬件如何执行程序。",
     "difficulty": "advanced",
-    "category": "communication"
+    "category": "cs_core"
   },
   {
     "title": "通信原理",
-    "slug": "communication_principles",
-    "summary": "调制解调、信道编码、多路复用、通信系统设计",
+    "slug": "bupt_communication_principles",
+    "summary": "掌握调制解调、数字基带、信道噪声、误码率和信道编码等通信系统核心概念。",
     "difficulty": "advanced",
     "category": "communication"
   },
   {
-    "title": "机器学习基础",
-    "slug": "machine_learning",
-    "summary": "监督学习、无监督学习、模型评估、特征工程",
-    "difficulty": "intermediate",
-    "category": "ai_ml"
-  },
-  {
-    "title": "深度学习",
-    "slug": "deep_learning",
-    "summary": "神经网络、CNN、RNN、Transformer、训练技巧",
+    "title": "深度学习（PyTorch）",
+    "slug": "bupt_deep_learning_pytorch",
+    "summary": "用 PyTorch 学习神经网络、CNN、序列模型、Transformer 和训练调参实践。",
     "difficulty": "advanced",
     "category": "ai_ml"
-  },
-  {
-    "title": "自然语言处理",
-    "slug": "nlp",
-    "summary": "文本预处理、词向量、序列模型、大语言模型",
-    "difficulty": "advanced",
-    "category": "ai_ml"
-  },
-  {
-    "title": "计算机视觉",
-    "slug": "computer_vision",
-    "summary": "图像处理、目标检测、图像分割、视觉 Transformer",
-    "difficulty": "advanced",
-    "category": "ai_ml"
-  },
-  {
-    "title": "算法设计与分析",
-    "slug": "algorithm_design",
-    "summary": "分治、贪心、动态规划、图算法、NP 完全性",
-    "difficulty": "advanced",
-    "category": "cs_core"
-  },
-  {
-    "title": "软件工程",
-    "slug": "software_engineering",
-    "summary": "需求分析、系统设计、测试、项目管理、DevOps",
-    "difficulty": "intermediate",
-    "category": "cs_core"
   }
 ]

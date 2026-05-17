@@ -1,0 +1,93 @@
+{
+  "course": {
+    "code": "BUPT_DL_PyTorch",
+    "slug": "bupt-deep-learning-pytorch",
+    "title": "深度学习与PyTorch"
+  },
+  "chapter": {
+    "chapterNo": "第4章",
+    "title": "基于PyTorch的可视化工具",
+    "summary": "本章围绕PyTorch相关可视化工具展开，详解四大核心可视化工具（HiddenLayer、PyTorchViz、tensorboardX、Visdom）的安装方法、核心功能及实操流程，覆盖网络结构可视化、训练过程可视化、各类数据可视化（图像、散点图、折线图等），介绍工具依赖库（Graphviz）的安装与配置，结合MNIST手写字体、鸢尾花数据集给出实操示例，帮助学习者通过可视化工具理解网络结构、监督训练过程、分析训练结果，为后续复杂模型调试与优化奠定基础。注：Graphviz相关部分存在网页解析失败情况，核心安装方法以课件内容为准。",
+    "learningGoal": "掌握四大核心可视化工具的安装与核心用法，能使用HiddenLayer、PyTorchViz实现网络结构可视化，运用tensorboardX、HiddenLayer可视化模型训练过程，熟练使用Visdom实现多种类型数据的可视化，掌握Graphviz依赖库的安装与配置要点，具备通过可视化工具分析网络结构、监控训练过程的能力。",
+    "estimatedDifficulty": "中等"
+  },
+  "mindMap": [
+    {
+      "title": "可视化工具基础",
+      "children": [
+        "PyTorch可视化工具的核心作用",
+        "四大核心工具分类（网络结构/训练过程/通用可视化）",
+        "工具依赖库（Graphviz）的作用",
+        "可视化工具的适用场景对比"
+      ]
+    },
+    {
+      "title": "网络结构可视化工具",
+      "children": [
+        "HiddenLayer库：安装、build_graph()函数用法",
+        "PyTorchViz库：安装、make_dot()函数用法",
+        "Graphviz库：安装（含系统环境配置）、重启开发环境",
+        "MNIST卷积网络结构可视化实操示例"
+      ]
+    },
+    {
+      "title": "训练过程可视化工具",
+      "children": [
+        "tensorboardX库：安装、SummaryWriter及常用函数",
+        "tensorboardX实操：损失、精度、图像、权重分布可视化",
+        "tensorboard查看可视化结果的步骤（终端命令+浏览器访问）",
+        "HiddenLayer库：History、Canvas类可视化训练过程"
+      ]
+    },
+    {
+      "title": "Visdom可视化工具",
+      "children": [
+        "Visdom库：安装、Github地址及核心特点",
+        "常用可视化函数（vis.image、vis.scatter等）及功能",
+        "Visdom服务器启动步骤（终端命令+浏览器访问）",
+        "实操示例：散点图、折线图、热力图、图像、文本可视化"
+      ]
+    },
+    {
+      "title": "实操核心与注意事项",
+      "children": [
+        "各工具实操代码规范与易错点",
+        "环境配置（依赖库、系统变量）注意事项",
+        "不同可视化需求的工具选型",
+        "Graphviz网页解析失败的替代安装方案"
+      ]
+    }
+  ],
+  "keyPoints": [
+    {
+      "title": "网络结构可视化核心工具用法",
+      "explanation": "HiddenLayer库通过build_graph()函数可快速可视化网络结构，需传入网络实例和输入张量，支持主题设置与图像保存；PyTorchViz库通过make_dot()函数可视化网络执行图，需传入网络输出和参数字典，可指定保存路径与格式。两者均依赖Graphviz库，Windows系统需下载64位版本，安装时勾选添加系统PATH，重启开发环境后方可使用。",
+      "whyImportant": "网络结构可视化能直观呈现层与层的连接关系、参数情况，帮助排查网络搭建错误，快速理解网络结构设计逻辑，是模型调试的基础。"
+    },
+    {
+      "title": "tensorboardX库核心用法与实操",
+      "explanation": "tensorboardX用于连接TensorBoard实现PyTorch训练过程可视化，需先安装protobuf、tensorboardX依赖包，通过SummaryWriter创建日志编写器，调用add_scalar()、add_image()、add_histogram()等函数，分别可视化损失、图像、权重分布。训练结束后，通过终端命令tensorboard --logdir=日志路径启动服务，浏览器访问指定地址查看结果。",
+      "whyImportant": "训练过程可视化能实时监控损失变化、精度提升、权重分布，帮助分析模型训练效果，及时调整超参数，是模型优化的关键手段。"
+    },
+    {
+      "title": "Visdom库核心特性与实操要点",
+      "explanation": "Visdom是Facebook专为PyTorch开发的通用可视化工具，支持张量和Numpy数组直接操作，灵活度高。需先安装visdom库，通过python -m visdom.server启动服务器，浏览器访问localhost:8097查看结果。常用函数包括vis.scatter（散点图）、vis.line（折线图）、vis.heatmap（热力图）等，可通过win参数指定窗口、env参数指定环境，实现多类型数据可视化。",
+      "whyImportant": "Visdom支持实时、多类型数据可视化，可灵活组织可视化窗口与环境，适配不同场景下的数据展示需求，是科研与实操中常用的可视化工具。"
+    },
+    {
+      "title": "Graphviz库的安装与配置核心",
+      "explanation": "Graphviz是HiddenLayer、PyTorchViz的依赖库，负责生成可视化图像。官方下载地址为https://www.graphviz.org/download/，Windows系统推荐下载64位版本（对应链接存在解析失败问题，可通过官方网站重新获取），安装时需勾选“Add Graphviz to the system PATH for all users”，配置系统环境变量，重启VSCode等开发环境后生效。",
+      "whyImportant": "Graphviz是网络结构可视化的核心依赖，其安装与配置是否正确，直接决定HiddenLayer、PyTorchViz工具能否正常使用，是可视化实操的前提。"
+    },
+    {
+      "title": "四大可视化工具的选型逻辑",
+      "explanation": "HiddenLayer：简洁易用，适合简单网络结构与训练过程可视化，适配Jupyter Notebook；PyTorchViz：轻量级，专注于网络执行图可视化；tensorboardX：功能全面，适合复杂模型训练过程的详细监控，但操作稍繁琐；Visdom：灵活度高，支持多类型数据实时可视化，适合科研与快速实操。",
+      "whyImportant": "掌握工具选型逻辑，能根据可视化需求（网络结构/训练过程/数据类型）选择合适工具，提升可视化效率，贴合不同场景的使用需求。"
+    },
+    {
+      "title": "可视化实操常见易错点及解决方法",
+      "explanation": "易错点1：Graphviz安装后未配置环境变量，导致工具调用失败，解决方法为重新安装并勾选PATH配置，重启开发环境；易错点2：tensorboardX日志路径设置错误，导致无法查看结果，解决方法为确保log_dir路径正确，终端命令中logdir参数与日志路径一致；易错点3：Visdom服务器未启动，导致可视化图像无法显示，解决方法为执行启动命令，确保浏览器访问正确地址。",
+      "whyImportant": "规避常见易错点，能减少实操中的故障排查时间，确保可视化工具正常使用，提升学习与实操效率。"
+    }
+  ]
+}

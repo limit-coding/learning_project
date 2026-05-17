@@ -1,0 +1,97 @@
+[
+  {
+    "slug": "bupt_discrete_math",
+    "resources": [
+      {
+        "title": "离散数学第 1-2 章知识卡片",
+        "resource_type": "knowledge_card",
+        "source": "AI 辅助 + 人工整理",
+        "summary": "命题逻辑、谓词逻辑、集合、关系与函数的概念对照，适合课前预习和考前速查。",
+        "difficulty": "intermediate"
+      },
+      {
+        "title": "图论与组合计数题型清单",
+        "resource_type": "exercise_set",
+        "source": "人工整理",
+        "summary": "覆盖欧拉/哈密顿、树、平面图、鸽巢原理、容斥和递推，配套典型解题入口。",
+        "difficulty": "advanced"
+      }
+    ]
+  },
+  {
+    "slug": "bupt_programming_practice",
+    "resources": [
+      {
+        "title": "实训项目交付检查表",
+        "resource_type": "checklist",
+        "source": "人工整理",
+        "summary": "包含需求说明、模块划分、异常处理、测试用例、README、演示脚本和答辩准备。",
+        "difficulty": "intermediate"
+      },
+      {
+        "title": "C/C++ 调试与文件处理笔记",
+        "resource_type": "note",
+        "source": "AI 辅助 + 人工整理",
+        "summary": "整理 gdb/断点、日志、内存错误、文件读写、结构体与类设计的常见坑。",
+        "difficulty": "intermediate"
+      }
+    ]
+  },
+  {
+    "slug": "bupt_computer_organization",
+    "resources": [
+      {
+        "title": "CPU 数据通路与控制信号总结",
+        "resource_type": "mind_map",
+        "source": "AI 辅助 + 人工整理",
+        "summary": "用取指、译码、执行、访存、写回串起指令系统、ALU、寄存器、控制器和总线。",
+        "difficulty": "advanced"
+      },
+      {
+        "title": "存储系统与 I/O 中断复习表",
+        "resource_type": "knowledge_card",
+        "source": "人工整理",
+        "summary": "对比 Cache、主存、外存、DMA、中断响应流程和常考计算题。",
+        "difficulty": "advanced"
+      }
+    ]
+  },
+  {
+    "slug": "bupt_communication_principles",
+    "resources": [
+      {
+        "title": "通信原理公式与物理意义对照表",
+        "resource_type": "knowledge_card",
+        "source": "AI 辅助 + 人工整理",
+        "summary": "把调制、带宽、功率谱、噪声、信噪比和误码率公式按使用场景整理。",
+        "difficulty": "advanced"
+      },
+      {
+        "title": "数字基带与数字调制章节路线",
+        "resource_type": "chapter_route",
+        "source": "人工整理",
+        "summary": "先掌握码型、无码间串扰和眼图，再进入 ASK/FSK/PSK、匹配滤波和误码率。",
+        "difficulty": "advanced"
+      }
+    ]
+  },
+  {
+    "slug": "bupt_deep_learning_pytorch",
+    "resources": [
+      {
+        "title": "PyTorch 入门实验路线",
+        "resource_type": "lab",
+        "source": "AI 辅助 + 人工整理",
+        "summary": "从 Tensor、Dataset/DataLoader、autograd 到 MLP/CNN 训练闭环，适合作为第一周实践。",
+        "difficulty": "intermediate"
+      },
+      {
+        "title": "训练调参与复现实验清单",
+        "resource_type": "checklist",
+        "source": "人工整理",
+        "summary": "覆盖学习率、batch size、归一化、过拟合判断、随机种子、日志和模型保存。",
+        "difficulty": "advanced"
+      }
+    ]
+  }
+]

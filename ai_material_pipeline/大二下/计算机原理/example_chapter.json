@@ -1,0 +1,74 @@
+{
+  "course": {
+    "code": "BUPT_COMM",
+    "slug": "bupt_communication_principles",
+    "title": "通信原理"
+  },
+  "chapter": {
+    "chapterNo": "第 1 章",
+    "title": "通信系统模型",
+    "summary": "本章建立通信系统的基本组成、性能指标和后续章节的整体框架。",
+    "learningGoal": "理解通信系统从信息源到接收端的基本链路，以及带宽、功率、信噪比、误码率等指标的意义。",
+    "estimatedDifficulty": "基础"
+  },
+  "mindMap": [
+    {
+      "title": "系统模型",
+      "children": ["信息源", "发送设备", "信道", "噪声", "接收设备"]
+    },
+    {
+      "title": "性能指标",
+      "children": ["有效性", "可靠性", "带宽", "信噪比", "误码率"]
+    }
+  ],
+  "keyPoints": [
+    {
+      "title": "通信系统模型",
+      "explanation": "用模块化方式描述信息如何从发送端传到接收端。",
+      "whyImportant": "后续调制、编码、噪声分析都建立在这个模型上。"
+    }
+  ],
+  "formulas": [],
+  "examplesAndProblems": [
+    {
+      "type": "概念题",
+      "topic": "通信系统组成",
+      "description": "根据系统框图说明各模块作用。",
+      "solvingHint": "先确定信息源、信道、噪声和接收端，再说明性能指标。"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "把有效性和可靠性混在一起。",
+      "correction": "有效性通常关注传输速率和带宽利用，可靠性关注差错概率。"
+    }
+  ],
+  "chapterChecklist": [
+    "能画出通信系统基本框图",
+    "能解释有效性和可靠性的区别",
+    "能说明信噪比和误码率为什么重要"
+  ],
+  "examHints": [
+    "复习时关注系统框图和性能指标含义"
+  ],
+  "connections": [
+    {
+      "from": "信道与噪声",
+      "to": "后续噪声分析和误码率计算",
+      "relation": "前置"
+    }
+  ],
+  "suggestedResources": [
+    {
+      "title": "MIT 6.02 Digital Communication Systems",
+      "type": "公开课",
+      "description": "可用于理解通信系统抽象层次。",
+      "url": "https://ocw.mit.edu/courses/6-02-introduction-to-eecs-ii-digital-communication-systems-fall-2012/"
+    }
+  ],
+  "reviewNotes": [
+    "需要核对本章是否对应北邮教材第 1 章标题"
+  ],
+  "uncertainItems": []
+}
+

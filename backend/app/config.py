@@ -6,7 +6,7 @@ from pathlib import Path
 
 class Settings(BaseSettings):
     # Database
-    database_url: str = "postgresql://zhinan:zhinan123@localhost:5432/zhinan"
+    database_url: str = "sqlite:///./zhinan.db"
 
     # LLM 配置 - 支持多模型
     llm_provider: str = "deepseek"

@@ -3,7 +3,6 @@ import {
   Button,
   Card,
   Form,
-  Input,
   Select,
   Space,
   Typography,
@@ -37,22 +36,22 @@ const steps: StepMeta[] = [
   {
     key: 'knowledge',
     title: '当前基础',
-    description: '描述你现在会什么、做到什么程度',
-    hint: '这会影响推荐算法对难度和前置条件的判断。',
+    description: '选择你已掌握的基础，系统只面向北邮大二下课程推荐',
+    hint: '不开放自由填写，避免把范围扩散到无关课程。',
     icon: <UserOutlined />,
   },
   {
     key: 'goals',
-    title: '学习目标',
-    description: '说明你真正想学什么、想达成什么',
-    hint: '这里决定推荐内容的主题方向和优先级。',
+    title: '本学期重点',
+    description: '选择这五门课里你最想优先突破的方向',
+    hint: '推荐结果会围绕计组、通原、深度学习、离散、实训排序。',
     icon: <AimOutlined />,
   },
   {
     key: 'career',
-    title: '职业方向',
-    description: '给系统一个更具体的输出导向',
-    hint: '会影响推荐理由和路径排序。',
+    title: '输出导向',
+    description: '选择你更关心考试、实验、项目还是长期能力',
+    hint: '系统会据此调整推荐理由和章节路线侧重点。',
     icon: <CompassOutlined />,
   },
 ];
@@ -133,11 +132,12 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onSuccess }) => {
                 style={fieldStyle}
                 popupMatchSelectWidth={false}
               >
-                <Option value="Python">Python</Option>
-                <Option value="C++">C++</Option>
-                <Option value="Java">Java</Option>
-                <Option value="JavaScript">JavaScript</Option>
                 <Option value="C">C</Option>
+                <Option value="C++">C++</Option>
+                <Option value="Python">Python</Option>
+                <Option value="MATLAB">MATLAB</Option>
+                <Option value="汇编">汇编基础</Option>
+                <Option value="无代码">暂不考虑编程</Option>
               </Select>
             </Form.Item>
 
@@ -147,21 +147,27 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onSuccess }) => {
               rules={[{ required: true, message: '请选择你的技能水平' }]}
             >
               <Select placeholder="选择你当前所处阶段" style={fieldStyle}>
-                <Option value="beginner">🌱 初学者 - 刚开始接触编程</Option>
-                <Option value="intermediate">🌿 中级 - 有一定项目经验</Option>
-                <Option value="advanced">🌳 高级 - 熟练掌握多种技术</Option>
+                <Option value="beginner">基础较薄弱 - 需要从第一章补起</Option>
+                <Option value="intermediate">正常跟课 - 能完成作业但需要路线</Option>
+                <Option value="advanced">基础较好 - 更关注拔高和总结</Option>
               </Select>
             </Form.Item>
 
             <Form.Item label="已完成课程" name="completed_courses">
               <Select
-                mode="tags"
-                placeholder="输入已完成课程，可自由补充"
+                mode="multiple"
+                placeholder="选择已经比较稳的前置基础"
                 style={fieldStyle}
                 popupMatchSelectWidth={false}
               >
-                <Option value="CS50">CS50</Option>
-                <Option value="Andrew Ng ML">Andrew Ng 机器学习</Option>
+                <Option value="C 语言程序设计">C 语言程序设计</Option>
+                <Option value="数据结构基础">数据结构基础</Option>
+                <Option value="高等数学">高等数学</Option>
+                <Option value="线性代数">线性代数</Option>
+                <Option value="概率论基础">概率论基础</Option>
+                <Option value="信号与系统">信号与系统</Option>
+                <Option value="Python 编程">Python 编程</Option>
+                <Option value="数字逻辑基础">数字逻辑基础</Option>
               </Select>
             </Form.Item>
           </>
@@ -177,30 +183,35 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onSuccess }) => {
             >
               <Select
                 mode="multiple"
-                placeholder="选择你想优先突破的方向"
+                placeholder="选择你本学期想优先突破的课程"
                 style={fieldStyle}
                 popupMatchSelectWidth={false}
               >
-                <Option value="deep_learning">🧠 深度学习</Option>
-                <Option value="computer_vision">👁️ 计算机视觉</Option>
-                <Option value="nlp">💬 自然语言处理</Option>
-                <Option value="reinforcement_learning">🎮 强化学习</Option>
-                <Option value="generative_ai">✨ 生成式 AI</Option>
+                <Option value="computer_architecture">计算机原理与组成（微机原理）</Option>
+                <Option value="communication_principles">通信原理</Option>
+                <Option value="deep_learning">深度学习（PyTorch）</Option>
+                <Option value="discrete_math">离散数学</Option>
+                <Option value="programming_practice">程序设计基础实训</Option>
               </Select>
             </Form.Item>
 
             <Form.Item label="具体主题" name="specific_topics">
               <Select
-                mode="tags"
-                placeholder="例如：Transformers、GAN、Diffusion"
+                mode="multiple"
+                placeholder="选择当前最卡的知识点"
                 style={fieldStyle}
                 popupMatchSelectWidth={false}
               >
-                <Option value="CNN">卷积神经网络</Option>
-                <Option value="transformers">Transformers</Option>
-                <Option value="GAN">生成对抗网络</Option>
-                <Option value="BERT">BERT</Option>
-                <Option value="diffusion">扩散模型</Option>
+                <Option value="cpu_datapath">CPU 数据通路</Option>
+                <Option value="memory">存储系统</Option>
+                <Option value="modulation">调制解调</Option>
+                <Option value="noise_ber">噪声与误码率</Option>
+                <Option value="pytorch">PyTorch 训练闭环</Option>
+                <Option value="cnn">CNN</Option>
+                <Option value="logic">逻辑证明</Option>
+                <Option value="graph_theory">图论</Option>
+                <Option value="debugging">调试与测试</Option>
+                <Option value="project_delivery">项目交付</Option>
               </Select>
             </Form.Item>
           </>
@@ -210,11 +221,16 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onSuccess }) => {
         return (
           <>
             <Form.Item
-              label="目标职位"
+              label="本学期目标"
               name="target_role"
-              rules={[{ required: true, message: '请输入目标职位' }]}
+              rules={[{ required: true, message: '请选择本学期目标' }]}
             >
-              <Input placeholder="例如：AI 工程师、算法研究员" style={fieldStyle} />
+              <Select placeholder="选择一个主要输出目标" style={fieldStyle}>
+                <Option value="考试稳过并争取高分">考试稳过并争取高分</Option>
+                <Option value="实验和课程设计稳定交付">实验和课程设计稳定交付</Option>
+                <Option value="保研/竞赛方向夯实基础">保研/竞赛方向夯实基础</Option>
+                <Option value="AI/通信/系统方向长期能力">AI/通信/系统方向长期能力</Option>
+              </Select>
             </Form.Item>
 
             <Form.Item
@@ -223,17 +239,20 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onSuccess }) => {
               rules={[{ required: true, message: '请选择偏好的编程语言' }]}
             >
               <Select placeholder="选择你偏好的主力语言" style={fieldStyle}>
-                <Option value="Python">🐍 Python</Option>
-                <Option value="C++">⚡ C++</Option>
-                <Option value="Java">☕ Java</Option>
+                <Option value="C">C</Option>
+                <Option value="C++">C++</Option>
+                <Option value="Python">Python</Option>
+                <Option value="MATLAB">MATLAB</Option>
+                <Option value="无代码">无代码</Option>
               </Select>
             </Form.Item>
 
-            <Form.Item label="目标行业" name="industry">
-              <Select placeholder="选择你希望靠近的场景" style={fieldStyle}>
-                <Option value="tech">💻 科技</Option>
-                <Option value="research">🔬 学术研究</Option>
-                <Option value="finance">💰 金融</Option>
+            <Form.Item label="推荐侧重点" name="industry">
+              <Select placeholder="选择你希望系统优先展示的内容" style={fieldStyle}>
+                <Option value="exam">考试复习</Option>
+                <Option value="lab">实验实践</Option>
+                <Option value="project">项目交付</Option>
+                <Option value="foundation">知识体系</Option>
               </Select>
             </Form.Item>
           </>
@@ -249,7 +268,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onSuccess }) => {
       <Space direction="vertical" size={18} style={{ width: '100%' }}>
         <div style={stepHeaderStyle}>
           <div>
-            <Text style={eyebrowStyle}>Learning Profile</Text>
+            <Text style={eyebrowStyle}>BUPT Sophomore Profile</Text>
             <Title level={3} style={{ color: '#f8fafc', margin: '6px 0 8px', fontWeight: 650 }}>
               {currentStep.title}
             </Title>
@@ -312,7 +331,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onSuccess }) => {
           form={form}
           layout="vertical"
           onFinish={onFinish}
-          initialValues={{ industry: 'tech' }}
+          initialValues={{ industry: 'exam' }}
           style={{ width: '100%' }}
         >
           <div style={formPanelStyle}>{renderStepContent()}</div>

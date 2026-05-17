@@ -1,0 +1,310 @@
+{
+  "courseInfo": {
+    "courseName": "通信原理",
+    "courseCode": "BUPT_COMM",
+    "courseSlug": "bupt_communication_principles"
+  },
+  "chapterInfo": {
+    "chapterNumber": "第6章",
+    "chapterTitle": "数字频带传输",
+    "pdfPageRange": "191-238",
+    "pageCount": 48
+  },
+  "knowledgeStructure": {
+    "sections": [
+      {
+        "sectionNumber": "6.2.4",
+        "sectionTitle": "差分移相键控（DPSK）",
+        "subsections": [
+          "DPSK信号的产生：差分编码 + 2PSK调制",
+          "DPSK信号的平均功率谱密度：与2PSK相同",
+          "DPSK信号的解调及其误比特率：差分相干解调（非相干）与相干解调+差分译码"
+        ]
+      },
+      {
+        "sectionNumber": "6.3",
+        "sectionTitle": "四相移相键控",
+        "subsections": [
+          "6.3.1 QPSK：正交调制、串并变换、格雷码相位逻辑、功率谱、最佳接收及误比特率",
+          "6.3.2 DQPSK：四进制差分编码，解决载波四重相位模糊",
+          "6.3.3 OQPSK：I/Q支路时间偏移以降低包络起伏"
+        ]
+      },
+      {
+        "sectionNumber": "6.4",
+        "sectionTitle": "M进制数字调制",
+        "subsections": [
+          "6.4.1 数字调制信号的矢量表示：正交信号空间、星座图、欧氏距离、相关系数",
+          "6.4.2 统计判决理论：MAP准则、ML准则、最小平均错判概率",
+          "6.4.3 加性白高斯噪声干扰下M进制确定信号的最佳接收：相关解调器与匹配滤波器等价性",
+          "6.4.4 MASK：一维矢量表示、功率谱、最佳接收及误符率",
+          "6.4.5 MPSK：二维矢量表示、功率谱、最佳接收及误符率",
+          "6.4.6 MQAM：二维矢量表示、矩形星座、功率谱、最佳接收及误符率",
+          "6.4.7 MFSK：正交MFSK、功率谱、最佳接收及误符率"
+        ]
+      },
+      {
+        "sectionNumber": "6.5",
+        "sectionTitle": "恒包络连续相位调制",
+        "subsections": [
+          "6.5.1 MSK：h=1/2的连续相位2FSK、相位路径、功率谱、正交调制表示"
+        ]
+      }
+    ]
+  },
+  "mindMap": {
+    "root": "数字频带传输",
+    "nodes": [
+      {
+        "id": "1",
+        "label": "相位键控",
+        "children": [
+          { "id": "1.1", "label": "2PSK最佳接收", "children": [] },
+          { "id": "1.2", "label": "DPSK：差分编码解决相位模糊，差分相干/相干解调", "children": [] },
+          { "id": "1.3", "label": "QPSK：两路正交2PSK，串并变换，格雷码相位逻辑", "children": [] },
+          { "id": "1.4", "label": "DQPSK：四进制差分编码解决四重相位模糊", "children": [] },
+          { "id": "1.5", "label": "OQPSK：I/Q错开降低包络起伏，性能同QPSK", "children": [] }
+        ]
+      },
+      {
+        "id": "2",
+        "label": "M进制数字调制",
+        "children": [
+          { "id": "2.1", "label": "理论基础：信号矢量表示 + 统计判决理论（MAP/ML）", "children": [] },
+          { "id": "2.2", "label": "MASK：一维调制，频带利用率提高，抗噪性能较差", "children": [] },
+          { "id": "2.3", "label": "MPSK：二维圆上分布，M>2时抗噪优于MASK", "children": [] },
+          { "id": "2.4", "label": "MQAM：二维矩形星座，M>4时抗噪优于MPSK", "children": [] },
+          { "id": "2.5", "label": "MFSK：正交多维调制，以频带换功率，频带利用率随M增加而下降", "children": [] }
+        ]
+      },
+      {
+        "id": "3",
+        "label": "恒包络连续相位调制",
+        "children": [
+          { "id": "3.1", "label": "MSK：h=1/2的CP-2FSK，包络恒定，旁瓣衰减快", "children": [] }
+        ]
+      }
+    ]
+  },
+  "keyPoints": [
+    "DPSK利用相邻比特载波相位差传递绝对码，可解决2PSK相干解调的载波相位模糊问题",
+    "DPSK差分相干解调不需要载波同步电路，属于非相干检测",
+    "在Pb很小时，DPSK的平均误比特率近似等于2倍2PSK的平均误比特率",
+    "QPSK可看作同相和正交两路2PSK的线性叠加，每路符号速率减半",
+    "QPSK采用格雷码相位逻辑，相邻符号仅相差1个比特，可减小误比特率",
+    "在相同信息速率、发送功率和噪声功率谱密度条件下，QPSK与2PSK平均误比特率相同，而带宽窄一半",
+    "OQPSK将I路和Q路信号在时间上错开，以降低包络起伏，其功率谱和误比特率与QPSK相同",
+    "M进制调制可提高频带利用率，但需以增加平均发射功率为代价",
+    "MASK的信号空间是一维的，MPSK的信号空间是二维圆上分布，MQAM充分利用二维平面",
+    "在相同Eb/N0和相同M条件下，MPSK的抗噪声性能优于MASK",
+    "在M>4情况下，MQAM的抗噪声性能优于MPSK，实际常用16QAM、64QAM等",
+    "MFSK以增加信号频带来换取误码率的降低，适用于信道频带不受限、功率受限场景",
+    "正交MFSK的相邻载频间隔为1/(2Ts)，频带利用率随M增加而减小",
+    "MSK是调制指数h=1/2的连续相位2FSK，包络恒定，功率谱旁瓣比OQPSK衰减更快",
+    "信号波形的矢量表示与统计判决理论相结合，可解决M进制数字调制的最佳设计问题",
+    "MAP准则使平均错判概率最小，各先验概率相等时等价于ML准则",
+    "匹配滤波器与相关解调器在采样时刻输出等价，均可实现最佳接收"
+  ],
+  "formulas": [
+    {
+      "id": "F6.2.49",
+      "name": "2PSK最佳接收平均误比特率",
+      "latex": "P_b = \\frac{1}{2} \\text{erfc}\\left(\\sqrt{\\frac{E_b}{N_0}}\\right)",
+      "context": "加性白高斯噪声信道条件下2PSK最佳接收"
+    },
+    {
+      "id": "F6.2.50",
+      "name": "DPSK差分编码",
+      "latex": "d_n = b_n \\oplus d_{n-1}",
+      "context": "将输入二进制序列进行差分编码得到相对码序列"
+    },
+    {
+      "id": "F6.2.52",
+      "name": "DPSK相干解调差分译码平均错判概率",
+      "latex": "P_{ed} = 2P_b(1-P_b)",
+      "context": "相干解调后差分译码的DPSK平均错判概率"
+    },
+    {
+      "id": "F6.2.53",
+      "name": "DPSK近似误比特率",
+      "latex": "P_{ed} \\approx 2P_b",
+      "context": "在Pb很小时，DPSK平均误比特率近似为2倍2PSK误比特率"
+    },
+    {
+      "id": "F6.3.1",
+      "name": "QPSK信号表示式",
+      "latex": "s_i(t) = A\\cos(\\omega_c t + \\theta_i), \\quad i=1,2,3,4; \\ 0 \\le t \\le T_s",
+      "context": "四相移相键控信号的正弦载波有4个可能离散相位状态"
+    },
+    {
+      "id": "F6.3.9",
+      "name": "QPSK最佳接收平均误比特率",
+      "latex": "P_b = \\frac{1}{2} \\text{erfc}\\left(\\sqrt{\\frac{E_b}{N_0}}\\right) = Q\\left(\\sqrt{\\frac{2E_b}{N_0}}\\right)",
+      "context": "加性白高斯噪声信道条件下QPSK与2PSK平均误比特率相同"
+    },
+    {
+      "id": "F6.4.4",
+      "name": "信号能量",
+      "latex": "E_s = \\int_{-\\infty}^{+\\infty} s^2(t) \\, dt",
+      "context": "确定实信号具有有限能量的定义"
+    },
+    {
+      "id": "F6.4.21",
+      "name": "信号矢量相关系数",
+      "latex": "\\rho_{mk} = \\frac{\\langle s_m, s_k \\rangle}{\\sqrt{E_m \\cdot E_k}}",
+      "context": "两个实信号波形或信号矢量之间的相关系数"
+    },
+    {
+      "id": "F6.4.23",
+      "name": "信号矢量欧氏距离",
+      "latex": "d_{mk} = |s_m - s_k|",
+      "context": "两信号波形或两信号矢量之间的欧氏距离"
+    },
+    {
+      "id": "F6.4.24",
+      "name": "等能量信号欧氏距离",
+      "latex": "d_{mk} = \\sqrt{2E(1-\\rho_{mk})}",
+      "context": "各信号波形等能量情况下的欧氏距离"
+    },
+    {
+      "id": "F6.4.55",
+      "name": "MAP准则",
+      "latex": "\\hat{s} = \\arg\\max_{s_i} P(s_i) \\cdot p(r|s_i)",
+      "context": "最大后验概率准则，使平均错判概率最小"
+    },
+    {
+      "id": "F6.4.57",
+      "name": "ML准则",
+      "latex": "\\hat{s} = \\arg\\max_{s_i} p(r|s_i)",
+      "context": "最大似然准则，在各先验概率相等时等价于MAP准则"
+    },
+    {
+      "id": "F6.4.78",
+      "name": "MASK平均功率谱密度",
+      "latex": "P_s(f) = \\frac{A^2}{4}[P_b(f-f_c) + P_b(f+f_c)]",
+      "context": "MASK信号平均功率谱密度是将MPAM基带功率谱搬移到载频"
+    },
+    {
+      "id": "F6.4.122",
+      "name": "MPSK相邻信号矢量欧氏距离",
+      "latex": "d_{\\min} = 2\\sqrt{E_g} \\sin\\frac{\\pi}{M}",
+      "context": "MPSK相邻星座点之间的最小欧氏距离"
+    },
+    {
+      "id": "F6.4.139",
+      "name": "MPSK误符率上界",
+      "latex": "P_M < \\text{erfc}\\left(\\sqrt{\\frac{E_s}{N_0}} \\sin\\frac{\\pi}{M}\\right)",
+      "context": "加性白高斯噪声干扰下MPSK最佳接收的平均误符率上界"
+    },
+    {
+      "id": "F6.4.152",
+      "name": "MQAM频带利用率",
+      "latex": "\\frac{R_b}{B} = \\frac{\\log_2 M}{1+\\alpha}",
+      "context": "基带采用滚降系数为α的根号升余弦滤波时MQAM的频带利用率"
+    },
+    {
+      "id": "F6.4.171",
+      "name": "正交MFSK主瓣带宽",
+      "latex": "B = \\frac{M+3}{2T_s}",
+      "context": "正交MFSK信号的主瓣带宽"
+    },
+    {
+      "id": "F6.4.172",
+      "name": "正交MFSK频带利用率",
+      "latex": "\\frac{R_b}{B} = \\frac{2\\log_2 M}{M} \\ \\text{bit/s/Hz}",
+      "context": "正交MFSK的频带利用率随M增加而减小"
+    },
+    {
+      "id": "F6.5.1",
+      "name": "MSK调制指数",
+      "latex": "h = \\frac{2\\Delta f}{R_b} = \\frac{1}{2}",
+      "context": "MSK是调制指数为0.5的连续相位2FSK"
+    }
+  ],
+  "examplesAndProblems": [
+    {
+      "id": "E6.2.2",
+      "type": "例题",
+      "description": "差分编码及差分移相键控：展示绝对码、相对码、电平变换、载波相位及相邻比特相位差的对应关系",
+      "relatedConcepts": ["DPSK", "差分编码", "相位差传输"]
+    },
+    {
+      "id": "E6.3.1",
+      "type": "例题",
+      "description": "QPSK中的串并变换及I(t)、Q(t)基带波形图：展示二进制序列经串并变换后分成两路速率减半的序列",
+      "relatedConcepts": ["QPSK", "串并变换", "同相支路", "正交支路"]
+    },
+    {
+      "id": "E6.4.1",
+      "type": "例题",
+      "description": "OOK信号波形的矢量表示：一维矢量表示及星座图",
+      "relatedConcepts": ["OOK", "信号矢量表示", "星座图", "欧氏距离"]
+    },
+    {
+      "id": "E6.4.2",
+      "type": "例题",
+      "description": "正交2FSK信号波形的矢量表示：二维矢量表示及星座图",
+      "relatedConcepts": ["2FSK", "正交信号", "信号矢量表示", "星座图"]
+    },
+    {
+      "id": "E6.4.3",
+      "type": "例题",
+      "description": "2PSK信号波形的矢量表示：一维矢量表示及星座图",
+      "relatedConcepts": ["2PSK", "信号矢量表示", "星座图", "相关系数"]
+    },
+    {
+      "id": "E6.5.1",
+      "type": "例题",
+      "description": "MSK正交调制表示式中的基带波形形成过程（文件提及但未完整展示）",
+      "relatedConcepts": ["MSK", "正交调制", "预编码"]
+    },
+    {
+      "id": "T6.4",
+      "type": "题型",
+      "description": "MASK/MPSK/MQAM/MFSK的频带利用率与误码性能对比分析",
+      "relatedConcepts": ["M进制调制", "频带利用率", "误符率", "功率效率"]
+    },
+    {
+      "id": "T6.5",
+      "type": "题型",
+      "description": "利用信号矢量表示与统计判决理论推导或分析最佳接收机结构",
+      "relatedConcepts": ["矢量表示", "MAP准则", "ML准则", "匹配滤波器", "相关解调器"]
+    }
+  ],
+  "examHints": [
+    "复习关注点：DPSK差分编码原理及差分相干解调与相干解调的性能差异",
+    "复习关注点：QPSK串并变换原理、格雷码相位逻辑及其误比特率与2PSK的关系",
+    "复习关注点：OQPSK与QPSK的异同，特别是包络起伏与功率谱/误码率的关系",
+    "复习关注点：信号矢量表示的基本概念（正交基函数、投影、星座图、欧氏距离、相关系数）",
+    "复习关注点：MAP准则与ML准则的物理意义及等价条件",
+    "复习关注点：匹配滤波器与相关解调器在最佳接收中的等价性",
+    "复习关注点：MASK、MPSK、MQAM、MFSK四种M进制调制的频带利用率对比",
+    "复习关注点：MPSK与MQAM的误符率性能对比，特别是M>4时MQAM的优势",
+    "复习关注点：MFSK以带宽换功率的特点，适用于何种信道条件",
+    "复习关注点：MSK的调制指数、相位连续性、正交调制表示及功率谱特点"
+  ],
+  "commonMistakes": [
+    "混淆DPSK差分相干解调与相干解调+差分译码两种方案的误比特率表达式",
+    "误认为QPSK误比特率优于2PSK，实际上在相同条件下二者相同",
+    "忽略格雷码相位逻辑对QPSK/MPSK误比特率的影响",
+    "混淆MASK（一维）、MPSK（二维圆上）、MQAM（二维平面）的信号空间分布",
+    "误认为M增加时所有M进制调制的抗噪声性能都下降，忽略MFSK的特殊性",
+    "将MAP准则与ML准则的适用条件混淆，忘记ML需要等先验概率前提",
+    "混淆MFSK与MSK的概念，MSK不是M进制FSK而是二进制CP-2FSK"
+  ],
+  "uncertainItems": [
+    "文件从2PSK最佳接收开始，疑似缺少6.1节及6.2节前面关于2ASK/2FSK/2PSK基础调制的完整内容",
+    "大量公式因OCR识别不清或损坏（如6.2.54、6.3.5、6.4.101、6.4.105、6.4.154、6.4.155等），无法准确提取",
+    "OQPSK的I/Q支路偏移时间OCR显示为乱码（疑似为Tb/2，但无法完全确认）",
+    "文件末尾MSK部分内容不完整（例6.5.1未展示，最佳接收部分缺失）",
+    "MASK误符率精确公式、MQAM误符率精确公式因OCR损坏严重，仅保留可辨认的核心形式"
+  ],
+  "reviewNotes": [
+    "本章文件为OCR文本，开头部分疑似缺失（缺少6.1节及6.2节前面关于2ASK/2FSK/2PSK基础调制的内容）",
+    "大量公式因OCR质量问题损坏，关键公式需对照教材人工确认",
+    "需人工确认：MPSK误符率上界公式中的系数和自变量形式",
+    "需人工确认：MQAM最小欧氏距离及误符率公式的精确表达式",
+    "需人工确认：MSK部分末尾是否还有最佳接收、误码率等内容在原文中存在但本文件未包含",
+    "需人工确认：OQPSK的I/Q支路偏移时间参数"
+  ]
+}

@@ -31,7 +31,8 @@ const positions = [
   { x: 40, y: 36 },
   { x: 300, y: 168 },
   { x: 86, y: 314 },
-  { x: 346, y: 456 },
+  { x: 346, y: 460 },
+  { x: 84, y: 590 },
 ];
 
 const RoadmapCanvas: React.FC<RoadmapCanvasProps> = ({
@@ -80,7 +81,7 @@ const RoadmapCanvas: React.FC<RoadmapCanvasProps> = ({
 
   return (
     <div style={canvasStyle}>
-      <svg viewBox="0 0 560 620" style={svgStyle} preserveAspectRatio="none" aria-hidden="true">
+      <svg viewBox="0 0 560 760" style={svgStyle} preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <linearGradient id="roadmap-line" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="rgba(56, 189, 248, 0.75)" />
@@ -186,7 +187,7 @@ const RoadmapCanvas: React.FC<RoadmapCanvasProps> = ({
 
 const canvasStyle: React.CSSProperties = {
   position: 'relative',
-  minHeight: 620,
+  minHeight: 760,
   borderRadius: 22,
   overflow: 'hidden',
   background:

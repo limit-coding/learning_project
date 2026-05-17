@@ -1,0 +1,81 @@
+{
+  "course": {
+    "code": "BUPT_DL_PyTorch",
+    "slug": "bupt-deep-learning-pytorch",
+    "title": "深度学习与PyTorch"
+  },
+  "chapter": {
+    "chapterNo": "第2章",
+    "title": "PyTorch快速入门（下）",
+    "summary": "本章围绕PyTorch实操核心内容展开，介绍PyTorch的张量特性、自动微分原理及实操方法，详解torch.nn模块中卷积层、池化层、激活函数、循环层、全连接层的功能、参数及应用示例，阐述PyTorch中数据操作与预处理的核心方法，覆盖高维数组、图像、文本三种数据类型的预处理流程与实操代码，为后续PyTorch网络搭建与模型训练奠定实操基础。",
+    "learningGoal": "掌握PyTorch张量的基本操作与自动微分的实现流程，熟练运用torch.nn模块中各类常用层（卷积、池化、激活函数等），掌握不同类型数据（高维数组、图像、文本）的预处理方法与实操代码，具备PyTorch基础实操能力，能独立完成简单的数据预处理与层操作。",
+    "estimatedDifficulty": "中等"
+  },
+  "mindMap": [
+    {
+      "title": "PyTorch自动微分",
+      "children": [
+        "torch.autograd模块核心功能",
+        "张量可微分设置（requires_grad=True）",
+        "自动微分计算示例（y=sum(x²+2x+1)求导）",
+        "backward()方法用法与梯度获取",
+        "叶节点与非叶节点的梯度差异"
+      ]
+    },
+    {
+      "title": "torch.nn模块核心层",
+      "children": [
+        "卷积层（Conv1d/Conv2d等）：作用、参数与实操",
+        "池化层（MaxPool/AvgPool等）：作用、参数与实操",
+        "激活函数（Sigmoid/Tanh/ReLU等）：公式与应用",
+        "循环层（RNN/LSTM/GRU等）：参数与输入输出格式",
+        "全连接层（nn.Linear）：参数与应用场景"
+      ]
+    },
+    {
+      "title": "PyTorch数据操作与预处理",
+      "children": [
+        "常用数据预处理类（TensorDataset、DataLoader等）",
+        "高维数组预处理（类型转换、批量加载）",
+        "图像数据预处理（数据集导入、transforms操作）",
+        "文本数据预处理（分词、词汇表构建、批量加载）"
+      ]
+    },
+    {
+      "title": "实操核心要点",
+      "children": [
+        "卷积层输出尺寸计算公式",
+        "池化层与卷积层的区别（无重叠移动）",
+        "不同数据类型的张量格式要求",
+        "数据加载器（DataLoader）参数设置"
+      ]
+    }
+  ],
+  "keyPoints": [
+    {
+      "title": "PyTorch自动微分核心原理",
+      "explanation": "通过torch.autograd模块实现任意标量值函数的自动求导，只需为张量设置requires_grad=True，即可跟踪其所有计算过程，调用backward()方法可自动计算梯度，梯度信息存储在张量的grad属性中。仅计算图上的叶节点可通过backward()获得梯度，非叶节点（如计算结果y）无梯度信息。示例中y=sum(x²+2x+1)的梯度为2x+2，与理论计算一致。",
+      "whyImportant": "自动微分是PyTorch模型训练的核心基础，掌握其用法才能实现模型参数的自动更新，是后续反向传播与模型优化的前提。"
+    },
+    {
+      "title": "卷积层核心用法与参数",
+      "explanation": "卷积层通过卷积核与输入数据的内积运算提取特征，PyTorch中常用Conv2d处理图像数据，核心参数包括in_channels（输入通道数）、out_channels（输出特征图数）、kernel_size（卷积核大小）、stride（步长）、padding（填充）等。输入张量格式为(N, Cin, Hin, Win)，输出尺寸可通过公式计算，padding可保持输入输出尺寸一致。",
+      "whyImportant": "卷积层是卷积神经网络的核心组件，掌握其参数与用法，才能实现图像特征提取，是后续CNN模型搭建的关键。"
+    },
+    {
+      "title": "池化层的作用与分类",
+      "explanation": "池化层的核心作用是对卷积后的特征进行降维、压缩信息，缓解内存压力，分为最大值池化（MaxPool）、平均值池化（AvgPool）、自适应池化（AdaptiveAvgPool）等。池化窗口无重叠移动，与卷积层不同，可通过kernel_size和stride控制输出尺寸，自适应池化可直接指定输出尺寸。",
+      "whyImportant": "池化层能减少模型参数，防止过拟合，同时保留核心特征，是深度学习网络中不可或缺的组件，直接影响模型性能。"
+    },
+    {
+      "title": "常用激活函数对比",
+      "explanation": "Sigmoid输出范围(0,1)，输入远离原点时梯度趋近于0，影响参数更新；Tanh输出范围(-1,1)，以0为中心，性能优于Sigmoid，但同样存在梯度消失问题；ReLU输出max(0,x)，计算速度快，无梯度消失问题，是最常用的激活函数；Softplus是ReLU的平滑近似，可导且保留ReLU优势。",
+      "whyImportant": "激活函数为网络引入非线性，解决线性模型无法拟合复杂数据的问题，掌握不同激活函数的特点，能根据场景合理选型。"
+    },
+    {
+      "title": "不同类型数据的预处理流程",
+      "explanation": "高维数组需转换为torch.float32张量，通过TensorDataset和DataLoader实现批量加载；图像数据需通过transforms进行尺寸调整、归一化等操作，可从datasets模块导入数据集或从文件夹读取；文本数据需分词、构建词汇表，转换为固定长度的张量，通过BucketIterator实现批量加载。",
+      "whyImportant": "数据预处理是模型训练的前提，高质量的预处理能提升模型训练效果，掌握不同数据类型的预处理方法，可适配各类深度学习任务。"
+    }
+  ]
+}

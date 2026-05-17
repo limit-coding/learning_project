@@ -1,0 +1,634 @@
+{
+  "courseInfo": {
+    "courseName": "通信原理",
+    "courseCode": "BUPT_COMM",
+    "courseSlug": "bupt_communication_principles",
+    "chapterNumber": "第4章",
+    "chapterTitle": "模拟通信系统"
+  },
+  "mindMap": {
+    "nodes": [
+      {
+        "id": "4.0",
+        "label": "模拟通信系统",
+        "category": "章节根节点"
+      },
+      {
+        "id": "4.1",
+        "label": "系统模型与复信号表示",
+        "category": "基础"
+      },
+      {
+        "id": "4.1.1",
+        "label": "超外差结构与系统模型",
+        "category": "基础"
+      },
+      {
+        "id": "4.1.2",
+        "label": "复包络与I/Q调制解调",
+        "category": "基础"
+      },
+      {
+        "id": "4.2",
+        "label": "幅度调制（线性调制）",
+        "category": "核心知识"
+      },
+      {
+        "id": "4.2.1",
+        "label": "DSB-SC",
+        "category": "核心知识"
+      },
+      {
+        "id": "4.2.2",
+        "label": "AM（包络调制）",
+        "category": "核心知识"
+      },
+      {
+        "id": "4.2.3",
+        "label": "SSB",
+        "category": "核心知识"
+      },
+      {
+        "id": "4.2.4",
+        "label": "VSB",
+        "category": "核心知识"
+      },
+      {
+        "id": "4.2.5",
+        "label": "载波同步",
+        "category": "核心知识"
+      },
+      {
+        "id": "4.3",
+        "label": "角度调制（非线性调制）",
+        "category": "核心知识"
+      },
+      {
+        "id": "4.3.1",
+        "label": "FM与PM原理",
+        "category": "核心知识"
+      },
+      {
+        "id": "4.3.2",
+        "label": "FM频谱与卡松公式",
+        "category": "核心知识"
+      },
+      {
+        "id": "4.3.3",
+        "label": "FM调制与解调实现",
+        "category": "核心知识"
+      },
+      {
+        "id": "4.4",
+        "label": "抗噪声性能分析",
+        "category": "核心知识"
+      },
+      {
+        "id": "4.4.1",
+        "label": "线性调制相干解调信噪比",
+        "category": "核心知识"
+      },
+      {
+        "id": "4.4.2",
+        "label": "AM包络检波",
+        "category": "核心知识"
+      },
+      {
+        "id": "4.4.3",
+        "label": "FM解调信噪比与门限效应",
+        "category": "核心知识"
+      },
+      {
+        "id": "4.4.4",
+        "label": "预加重与去加重",
+        "category": "扩展"
+      },
+      {
+        "id": "4.5",
+        "label": "频分复用",
+        "category": "应用"
+      }
+    ],
+    "edges": [
+      {
+        "from": "4.0",
+        "to": "4.1",
+        "relation": "包含"
+      },
+      {
+        "from": "4.0",
+        "to": "4.2",
+        "relation": "包含"
+      },
+      {
+        "from": "4.0",
+        "to": "4.3",
+        "relation": "包含"
+      },
+      {
+        "from": "4.0",
+        "to": "4.4",
+        "relation": "包含"
+      },
+      {
+        "from": "4.0",
+        "to": "4.5",
+        "relation": "包含"
+      },
+      {
+        "from": "4.1",
+        "to": "4.1.1",
+        "relation": "包含"
+      },
+      {
+        "from": "4.1",
+        "to": "4.1.2",
+        "relation": "包含"
+      },
+      {
+        "from": "4.2",
+        "to": "4.2.1",
+        "relation": "包含"
+      },
+      {
+        "from": "4.2",
+        "to": "4.2.2",
+        "relation": "包含"
+      },
+      {
+        "from": "4.2",
+        "to": "4.2.3",
+        "relation": "包含"
+      },
+      {
+        "from": "4.2",
+        "to": "4.2.4",
+        "relation": "包含"
+      },
+      {
+        "from": "4.2",
+        "to": "4.2.5",
+        "relation": "包含"
+      },
+      {
+        "from": "4.3",
+        "to": "4.3.1",
+        "relation": "包含"
+      },
+      {
+        "from": "4.3",
+        "to": "4.3.2",
+        "relation": "包含"
+      },
+      {
+        "from": "4.3",
+        "to": "4.3.3",
+        "relation": "包含"
+      },
+      {
+        "from": "4.4",
+        "to": "4.4.1",
+        "relation": "包含"
+      },
+      {
+        "from": "4.4",
+        "to": "4.4.2",
+        "relation": "包含"
+      },
+      {
+        "from": "4.4",
+        "to": "4.4.3",
+        "relation": "包含"
+      },
+      {
+        "from": "4.4",
+        "to": "4.4.4",
+        "relation": "包含"
+      },
+      {
+        "from": "4.1.2",
+        "to": "4.2.1",
+        "relation": "应用于"
+      },
+      {
+        "from": "4.1.2",
+        "to": "4.2.2",
+        "relation": "应用于"
+      },
+      {
+        "from": "4.1.2",
+        "to": "4.2.3",
+        "relation": "应用于"
+      },
+      {
+        "from": "4.2.1",
+        "to": "4.2.2",
+        "relation": "衍生出"
+      },
+      {
+        "from": "4.2.1",
+        "to": "4.2.3",
+        "relation": "衍生出"
+      },
+      {
+        "from": "4.2.5",
+        "to": "4.2.1",
+        "relation": "支持"
+      },
+      {
+        "from": "4.2.5",
+        "to": "4.2.3",
+        "relation": "支持"
+      },
+      {
+        "from": "4.3.1",
+        "to": "4.3.2",
+        "relation": "导出"
+      },
+      {
+        "from": "4.3.1",
+        "to": "4.3.3",
+        "relation": "指导"
+      },
+      {
+        "from": "4.2",
+        "to": "4.4.1",
+        "relation": "性能分析对象"
+      },
+      {
+        "from": "4.3",
+        "to": "4.4.3",
+        "relation": "性能分析对象"
+      },
+      {
+        "from": "4.4.3",
+        "to": "4.4.4",
+        "relation": "需要"
+      }
+    ]
+  },
+  "keyPoints": [
+    "模拟通信系统基本模型：调制器→AWGN信道→解调器，接收信号r(t)=s(t)+n_w(t)",
+    "复包络s_L(t)=I(t)+jQ(t)=A(t)e^{jθ(t)}是分析带通信号的核心工具，信息可携带于I、Q、A或θ中",
+    "幅度调制是线性调制（满足叠加原理），角度调制是非线性调制",
+    "DSB-SC将m(t)携带在同相分量，带宽B=2W，不含载频线谱，只能采用相干解调",
+    "AM（包络调制）将m(t)携带在包络A(t)中，调幅系数a≤1，可用包络检波实现非相干解调",
+    "AM调制效率η=1/(1+C_m/a²)，峰均比C_m越高、调幅系数a越小，效率越低",
+    "SSB只保留一个边带，带宽B=W，可由DSB-SC经滤波法或正交调制法产生",
+    "VSB是SSB的实用变体，要求滤波器在载频处具有互补对称性：H(f+f_c)+H(f-f_c)=1（|f|≤f_c）",
+    "相干解调要求收端建立同步载波；载波同步方法有插入导频法、平方环法、科斯塔斯环法",
+    "平方环法和科斯塔斯环法存在相位模糊（π反相）问题，可能导致解调输出反极性",
+    "PM相位θ(t)=K_p m(t)；FM瞬时频偏(1/2π)θ'(t)=K_f m(t)，二者可通过微分/积分互换",
+    "FM带宽由卡松公式估算：B≈2(β_f+1)W=2(Δf_max+W)，β_f为调频指数",
+    "窄带调频NBFM（β_f很小）带宽近似2W，可视为Q路DSB-SC叠加正交载波",
+    "在理想相干解调下，SSB与DSB-SC的输出信噪比相同，均为P_R/(N_0 W)",
+    "AM相干解调输出信噪比为ηP_R/(N_0 W)，大信噪比下包络检波性能近似相同",
+    "FM大信噪比解调输出信噪比为(3β_f²/C_m)(P_R/(N_0 W))，抗噪声性能优于线性调制",
+    "FM存在门限效应：输入信噪比低于门限时，输出信噪比急剧恶化",
+    "FM解调输出噪声呈抛物线功率谱，高频处信噪比差，可用预加重/去加重技术改善",
+    "频分复用FDM利用模拟调制的频谱搬移特性使多路信号共享信道，接收端用滤波器分离",
+    "复合调制指FDM后的基带信号再进行FM调制（如FDM/FM），立体声调频广播是典型应用"
+  ],
+  "formulas": [
+    {
+      "id": "4.1.1",
+      "name": "接收信号模型",
+      "expression": "r(t)=s(t)+n_w(t)",
+      "conditions": "AWGN信道"
+    },
+    {
+      "id": "4.1.2",
+      "name": "解调器输入信号",
+      "expression": "y(t)=s(t)+n(t)",
+      "conditions": "理想带通滤波后"
+    },
+    {
+      "id": "4.1.3",
+      "name": "复包络定义",
+      "expression": "s_L(t)=I(t)+jQ(t)=A(t)e^{jθ(t)}",
+      "conditions": ""
+    },
+    {
+      "id": "4.1.4",
+      "name": "带通信号复包络表示",
+      "expression": "s(t)=Re{s_L(t)e^{j(2πf_c t+φ_c)}}",
+      "conditions": ""
+    },
+    {
+      "id": "4.2.1",
+      "name": "DSB-SC复包络",
+      "expression": "s_L(t)=A_c m(t)",
+      "conditions": ""
+    },
+    {
+      "id": "4.2.2",
+      "name": "DSB-SC时域信号",
+      "expression": "s(t)=A_c m(t)cos(2πf_c t)",
+      "conditions": ""
+    },
+    {
+      "id": "4.2.3",
+      "name": "DSB-SC频谱",
+      "expression": "S(f)=(A_c/2)[M(f-f_c)+M(f+f_c)]",
+      "conditions": ""
+    },
+    {
+      "id": "4.2.5",
+      "name": "DSB-SC相干解调输出",
+      "expression": "y_o(t)=A_c m(t)",
+      "conditions": "理想同步"
+    },
+    {
+      "id": "4.2.8",
+      "name": "AM包络",
+      "expression": "|s_L(t)|=A_c+A'm(t)=A_c[1+am_n(t)]",
+      "conditions": ""
+    },
+    {
+      "id": "4.2.9",
+      "name": "调幅系数",
+      "expression": "a=A'|m(t)|_{max}/A_c ≤ 1",
+      "conditions": ""
+    },
+    {
+      "id": "4.2.12",
+      "name": "AM已调信号",
+      "expression": "s(t)=A_c[1+am_n(t)]cos(2πf_c t)",
+      "conditions": ""
+    },
+    {
+      "id": "4.2.15",
+      "name": "AM调制效率",
+      "expression": "η=(A'²P_m)/(A_c²+A'²P_m)=a²P_{mn}/(1+a²P_{mn})",
+      "conditions": ""
+    },
+    {
+      "id": "4.2.16",
+      "name": "基带信号峰均比",
+      "expression": "C_m=|m(t)|²_{max}/m²(t)=1/P_{mn}",
+      "conditions": ""
+    },
+    {
+      "id": "4.2.17",
+      "name": "调制效率与调幅系数、峰均比的关系",
+      "expression": "η=1/(1+C_m/a²)",
+      "conditions": ""
+    },
+    {
+      "id": "4.2.20",
+      "name": "上边带SSB信号",
+      "expression": "s_{USB}(t)=(A_c/2)[m(t)cos(2πf_c t)-\\hat{m}(t)sin(2πf_c t)]",
+      "conditions": ""
+    },
+    {
+      "id": "4.2.21",
+      "name": "下边带SSB信号",
+      "expression": "s_{LSB}(t)=(A_c/2)[m(t)cos(2πf_c t)+\\hat{m}(t)sin(2πf_c t)]",
+      "conditions": ""
+    },
+    {
+      "id": "4.2.27",
+      "name": "VSB滤波器互补对称条件",
+      "expression": "H(f+f_c)+H(f-f_c)=1, |f|≤f_c",
+      "conditions": ""
+    },
+    {
+      "id": "4.3.1",
+      "name": "调相相位",
+      "expression": "θ(t)=K_p m(t)",
+      "conditions": ""
+    },
+    {
+      "id": "4.3.2",
+      "name": "调频频偏",
+      "expression": "(1/2π)θ'(t)=K_f m(t)",
+      "conditions": ""
+    },
+    {
+      "id": "4.3.3",
+      "name": "PM信号",
+      "expression": "s_{PM}(t)=A_c cos[2πf_c t+K_p m(t)]",
+      "conditions": ""
+    },
+    {
+      "id": "4.3.4",
+      "name": "FM信号",
+      "expression": "s_{FM}(t)=A_c cos[2πf_c t+2πK_f∫_{-∞}^{t}m(τ)dτ]",
+      "conditions": ""
+    },
+    {
+      "id": "4.3.5",
+      "name": "最大频偏",
+      "expression": "Δf_{max}=K_f|m(t)|_{max}=|θ'(t)|_{max}/(2π)",
+      "conditions": ""
+    },
+    {
+      "id": "4.3.6",
+      "name": "调频指数",
+      "expression": "β_f=Δf_{max}/W=K_f|m(t)|_{max}/W",
+      "conditions": ""
+    },
+    {
+      "id": "4.3.13",
+      "name": "卡松公式（FM带宽）",
+      "expression": "B≈2(β_f+1)W=2(Δf_{max}+W)",
+      "conditions": ""
+    },
+    {
+      "id": "4.4.2",
+      "name": "解调器输入信噪比",
+      "expression": "SNR_i=P_R/(N_0 B)",
+      "conditions": ""
+    },
+    {
+      "id": "4.4.5",
+      "name": "DSB-SC输出信噪比",
+      "expression": "SNR_{DSB-SC}=P_R/(N_0 W)",
+      "conditions": "理想相干解调"
+    },
+    {
+      "id": "4.4.7",
+      "name": "DSB-SC相位差输出信噪比",
+      "expression": "SNR_{DSB-SC}=(P_R/(N_0 W))cos²θ_e",
+      "conditions": "存在相位差θ_e"
+    },
+    {
+      "id": "4.4.9",
+      "name": "SSB输出信噪比",
+      "expression": "SNR_{SSB}=P_R/(N_0 W)",
+      "conditions": "理想相干解调"
+    },
+    {
+      "id": "4.4.11",
+      "name": "AM输出信噪比",
+      "expression": "SNR_{AM}=ηP_R/(N_0 W)",
+      "conditions": "相干解调或大信噪比包络检波"
+    },
+    {
+      "id": "4.4.15",
+      "name": "FM解调输出信号功率",
+      "expression": "S=(β_f W)²/C_m",
+      "conditions": "大信噪比"
+    },
+    {
+      "id": "4.4.19",
+      "name": "FM解调输出噪声功率",
+      "expression": "N=N_0 W³/(3P_R)",
+      "conditions": "大信噪比"
+    },
+    {
+      "id": "4.4.20",
+      "name": "FM输出信噪比",
+      "expression": "SNR_{FM}=(3β_f²/C_m)(P_R/(N_0 W))",
+      "conditions": "大信噪比"
+    }
+  ],
+  "examplesAndProblems": [
+    {
+      "id": "例4.2.1",
+      "type": "例题",
+      "problemType": "DSB-SC调制分析",
+      "description": "给定基带信号和载波，写出DSB-SC已调信号、傅氏变换和功率谱密度"
+    },
+    {
+      "id": "例4.2.2",
+      "type": "例题",
+      "problemType": "AM参数计算",
+      "description": "给定AM信号表达式，求调幅系数、峰均比和调制效率"
+    },
+    {
+      "id": "例4.2.3",
+      "type": "例题",
+      "problemType": "SSB信号产生",
+      "description": "给定基带信号和载波，求上边带SSB信号的复包络和时域表达式"
+    },
+    {
+      "id": "例4.3.1",
+      "type": "例题",
+      "problemType": "PM与FM关系",
+      "description": "同一信号可由PM或FM产生，分析相位、最大频偏和调频指数"
+    },
+    {
+      "id": "例4.3.2",
+      "type": "例题",
+      "problemType": "FM参数计算",
+      "description": "给定FM信号相位表达式，求瞬时频偏、最大频偏、调频指数和近似带宽"
+    },
+    {
+      "id": "例4.4.1",
+      "type": "例题",
+      "problemType": "抗噪声性能比较",
+      "description": "给定基带信号参数和信道条件，分别计算DSB-SC、SSB、AM、FM所需发射功率"
+    },
+    {
+      "id": "例4.5.1",
+      "type": "例题",
+      "problemType": "频分复用带宽",
+      "description": "6路4kHz基带信号以SSB调制频分复用，求最小信道带宽"
+    },
+    {
+      "id": "例4.5.2",
+      "type": "例题",
+      "problemType": "复合调制带宽",
+      "description": "FDM后的信号经FM调制，求最小无线信道带宽"
+    },
+    {
+      "id": "习题4.1",
+      "type": "习题",
+      "problemType": "DSB-SC波形与频谱",
+      "description": "画出DSB-SC信号波形图，写出傅氏变换并画振幅频谱图"
+    },
+    {
+      "id": "习题4.2",
+      "type": "习题",
+      "problemType": "AM信号分析",
+      "description": "求AM信号的傅氏变换、复包络、调幅系数和调制效率"
+    },
+    {
+      "id": "习题4.3",
+      "type": "习题",
+      "problemType": "AM参数与解调",
+      "description": "已知基带信号幅度和功率，求AM调幅系数、调制效率及相干解调输出"
+    },
+    {
+      "id": "习题4.4",
+      "type": "习题",
+      "problemType": "调制方式识别",
+      "description": "求已调信号的傅氏变换并判断调制方式"
+    },
+    {
+      "id": "习题4.5",
+      "type": "习题",
+      "problemType": "SSB信号分析",
+      "description": "求基带信号的希尔伯特变换、已调信号时域表达式及单边功率谱密度"
+    },
+    {
+      "id": "习题4.6",
+      "type": "习题",
+      "problemType": "复包络分析",
+      "description": "求复包络实部及频谱在|f|<f_c为零的条件"
+    },
+    {
+      "id": "习题4.7",
+      "type": "习题",
+      "problemType": "FM参数计算",
+      "description": "求FM信号的平均功率、调制指数、最大频偏及近似带宽"
+    },
+    {
+      "id": "习题4.8",
+      "type": "习题",
+      "problemType": "角度调制分析",
+      "description": "求近似带宽；分别按FM和PM求偏移常数及频率加倍后的影响"
+    },
+    {
+      "id": "习题4.9",
+      "type": "习题",
+      "problemType": "正交调制解调与信噪比",
+      "description": "两路正交信号解调方法及输出信噪比计算"
+    },
+    {
+      "id": "习题4.10",
+      "type": "习题",
+      "problemType": "SSB系统信噪比",
+      "description": "求希尔伯特变换、已调信号表达式、傅氏变换及BPF/LPF输出信噪比"
+    },
+    {
+      "id": "习题4.11",
+      "type": "习题",
+      "problemType": "SSB功率设计",
+      "description": "给定带宽、路径损耗和噪声条件，求满足输出信噪比要求的发送功率"
+    },
+    {
+      "id": "习题4.12",
+      "type": "习题",
+      "problemType": "非均匀谱DSB-SC信噪比",
+      "description": "已知功率谱密度和噪声条件，求特定解调框图的输出信噪比"
+    },
+    {
+      "id": "习题4.13",
+      "type": "习题",
+      "problemType": "AM与FM系统信噪比",
+      "description": "给定基带参数和信道条件，分别求AM和FM系统的解调输出信噪比"
+    }
+  ],
+  "examHints": [
+    "复习关注点：掌握DSB-SC、AM、SSB、VSB信号的时域表达式、频谱特点及带宽关系",
+    "复习关注点：AM调幅系数a≤1的物理约束，以及调制效率η与峰均比C_m、调幅系数a的关系",
+    "复习关注点：相干解调与非相干解调的适用条件，DSB-SC和SSB只能相干解调，AM可包络检波",
+    "复习关注点：VSB滤波器互补对称条件H(f+f_c)+H(f-f_c)=1的物理意义",
+    "复习关注点：载波同步三种方法（插入导频、平方环、科斯塔斯环）及相位模糊问题",
+    "复习关注点：FM与PM的关系，卡松公式B≈2(β_f+1)W的应用及窄带调频的近似条件",
+    "复习关注点：四种调制方式（DSB-SC、SSB、AM、FM）抗噪声性能的比较及定量计算",
+    "复习关注点：FM大信噪比输出信噪比公式SNR=(3β_f²/C_m)(P_R/N_0 W)及门限效应",
+    "复习关注点：预加重/去加重技术用于改善FM高频处信噪比",
+    "复习关注点：频分复用FDM及复合调制（FDM/FM）的带宽计算方法"
+  ],
+  "uncertainItems": [
+    "文件OCR中SSB信号的希尔伯特变换符号被识别为\"示(t)\"，JSON中已还原为\\hat{m}(t)，建议人工核对原文",
+    "文件OCR中VSB复包络公式(4.2.22)含有\"m̃(t)\"，可能为OCR识别偏差，已按希尔伯特变换相关符号处理"
+  ],
+  "reviewNotes": [
+    "需人工确认SSB信号希尔伯特变换符号\\hat{m}(t)是否与教材原文一致",
+    "需人工确认VSB复包络公式(4.2.22)中m̃(t)的含义是否为OCR识别偏差"
+  ]
+}

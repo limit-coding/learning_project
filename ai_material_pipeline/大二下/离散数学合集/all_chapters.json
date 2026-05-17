@@ -1,0 +1,112 @@
+[
+  {
+    "file": "chapter_1.json",
+    "no": "1",
+    "title": "命题逻辑",
+    "difficulty": "基础",
+    "keyPoints": 9,
+    "formulas": 8,
+    "examples": 9,
+    "mistakes": 7,
+    "uncertain": 3
+  },
+  {
+    "file": "chapter_2.json",
+    "no": "2",
+    "title": "一阶逻辑",
+    "difficulty": "中等",
+    "keyPoints": 10,
+    "formulas": 6,
+    "examples": 7,
+    "mistakes": 6,
+    "uncertain": 3
+  },
+  {
+    "file": "chapter_3.json",
+    "no": "3",
+    "title": "集合的概念与运算",
+    "difficulty": "基础",
+    "keyPoints": 7,
+    "formulas": 21,
+    "examples": 14,
+    "mistakes": 6,
+    "uncertain": 3
+  },
+  {
+    "file": "chapter_4.json",
+    "no": "4",
+    "title": "二元关系和函数",
+    "difficulty": "中等",
+    "keyPoints": 6,
+    "formulas": 12,
+    "examples": 10,
+    "mistakes": 9,
+    "uncertain": 4
+  },
+  {
+    "file": "chapter_5.json",
+    "no": "5",
+    "title": "图的基本概念",
+    "difficulty": "中等",
+    "keyPoints": 10,
+    "formulas": 7,
+    "examples": 10,
+    "mistakes": 7,
+    "uncertain": 3
+  },
+  {
+    "file": "chapter_6.json",
+    "no": "6",
+    "title": "特殊的图",
+    "difficulty": "中等",
+    "keyPoints": 8,
+    "formulas": 3,
+    "examples": 7,
+    "mistakes": 4,
+    "uncertain": 3
+  },
+  {
+    "file": "chapter_7.json",
+    "no": "7",
+    "title": "树",
+    "difficulty": "中等",
+    "keyPoints": 11,
+    "formulas": 4,
+    "examples": 8,
+    "mistakes": 5,
+    "uncertain": 3
+  },
+  {
+    "file": "chapter_8.json",
+    "no": "8",
+    "title": "组合分析初步",
+    "difficulty": "中等",
+    "keyPoints": 7,
+    "formulas": 6,
+    "examples": 6,
+    "mistakes": 5,
+    "uncertain": 4
+  },
+  {
+    "file": "chapter_9.json",
+    "no": "9",
+    "title": "代数系统简介",
+    "difficulty": "较难",
+    "keyPoints": 10,
+    "formulas": 4,
+    "examples": 8,
+    "mistakes": 6,
+    "uncertain": 4
+  },
+  {
+    "file": "chapter_10.json",
+    "no": "10",
+    "title": "形式语言和自动机初步",
+    "difficulty": "较难",
+    "keyPoints": 6,
+    "formulas": 5,
+    "examples": 8,
+    "mistakes": 6,
+    "uncertain": 4
+  }
+]

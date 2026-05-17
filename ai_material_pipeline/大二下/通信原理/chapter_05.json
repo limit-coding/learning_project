@@ -1,0 +1,720 @@
+{
+  "courseInfo": {
+    "courseName": "通信原理",
+    "courseCode": "BUPT_COMM",
+    "courseSlug": "bupt_communication_principles",
+    "chapterNumber": "第5章",
+    "chapterTitle": "数字基带传输"
+  },
+  "knowledgeStructure": {
+    "sections": [
+      {
+        "sectionNumber": "5.2",
+        "sectionTitle": "常用线路码型",
+        "subsections": [
+          {
+            "subsectionNumber": "5.2.1",
+            "subsectionTitle": "线路码型的设计原则",
+            "keyTopics": [
+              "功率谱密度匹配基带信道频率特性",
+              "减少高频分量以节省频带并避免码间干扰",
+              "便于提取符号同步信号（时钟分量）",
+              "减少误码扩散",
+              "便于误码监测",
+              "尽量提高编码效率"
+            ]
+          },
+          {
+            "subsectionNumber": "5.2.2",
+            "subsectionTitle": "AMI码",
+            "keyTopics": [
+              "传号交替反转码：0编为0，1交替编为+1和-1",
+              "半占空归零脉冲，功率谱无离散直流分量",
+              "经全波整流可提取定时信息",
+              "缺点：长连0时定时提取困难"
+            ]
+          },
+          {
+            "subsectionNumber": "5.2.3",
+            "subsectionTitle": "HDB3码",
+            "keyTopics": [
+              "连0数被限制为不超过3",
+              "4个连0用取代节替代：000V或B00V",
+              "V为破坏符号，极性与前一非0符号同极性",
+              "相邻V符号应极性交替"
+            ]
+          },
+          {
+            "subsectionNumber": "5.2.4",
+            "subsectionTitle": "CMI码",
+            "keyTopics": [
+              "0编码为01，1交替编码为11或00",
+              "功率谱含连续谱、离散时钟分量及奇次谐波",
+              "CCITT建议PCM四次群139.264Mbit/s接口码型"
+            ]
+          },
+          {
+            "subsectionNumber": "5.2.5",
+            "subsectionTitle": "数字双相码（Manchester码）",
+            "keyTopics": [
+              "0编码为01，1编码为10",
+              "主瓣宽度比AMI/HDB3宽1倍",
+              "以太网10Mbit/s五类双绞线接口码型",
+              "提取时钟频率为符号速率的2倍，存在相位不确定"
+            ]
+          }
+        ]
+      },
+      {
+        "sectionNumber": "5.3",
+        "sectionTitle": "在加性白高斯噪声信道条件下数字基带信号的接收",
+        "subsections": [
+          {
+            "subsectionNumber": "5.3.1",
+            "subsectionTitle": "加性白高斯噪声信道",
+            "keyTopics": [
+              "AWGN信道数学模型",
+              "接收信号r(t)=s_i(t)+n_w(t)",
+              "n_w(t)均值为零，双边功率谱密度为N0/2"
+            ]
+          },
+          {
+            "subsectionNumber": "5.3.2",
+            "subsectionTitle": "利用匹配滤波器的最佳接收",
+            "keyTopics": [
+              "匹配滤波器使采样时刻信噪比最大",
+              "双极性2PAM匹配滤波器接收及误比特率",
+              "单极性2PAM匹配滤波器接收及误比特率",
+              "相同误比特率下双极性比单极性节省3dB"
+            ]
+          }
+        ]
+      },
+      {
+        "sectionNumber": "5.4",
+        "sectionTitle": "PAM信号通过限带信道传输",
+        "subsections": [
+          {
+            "subsectionNumber": "5.4.1",
+            "subsectionTitle": "符号间干扰",
+            "keyTopics": [
+              "限带信道导致冲激响应波形延伸",
+              "采样值包含期望符号、码间干扰(ISI)和噪声",
+              "发送滤波器、信道、接收滤波器的级联模型"
+            ]
+          },
+          {
+            "subsectionNumber": "5.4.2",
+            "subsectionTitle": "无ISI传输的奈奎斯特准则",
+            "keyTopics": [
+              "无码间干扰的时域条件：x(nTs)在n=0时为常数，n≠0时为0",
+              "奈奎斯特准则（频域充要条件）",
+              "奈奎斯特速率Rs=2W，最高频带利用率2Baud/Hz",
+              "理想低通不可实现且对定时误差敏感",
+              "升余弦滚降特性及其滚降因子α",
+              "升余弦滚降系统的频带利用率"
+            ]
+          }
+        ]
+      },
+      {
+        "sectionNumber": "5.5",
+        "sectionTitle": "在理想限带及加性白高斯噪声信道条件下数字PAM信号的最佳基带传输",
+        "subsections": [
+          {
+            "subsectionNumber": "5.5",
+            "subsectionTitle": "最佳基带传输设计",
+            "keyTopics": [
+              "总体传递函数满足奈奎斯特准则",
+              "接收滤波器与发送滤波器共轭匹配",
+              "发送和接收滤波器采用升余弦平方根特性",
+              "双极性序列平均误比特率公式"
+            ]
+          }
+        ]
+      },
+      {
+        "sectionNumber": "5.6",
+        "sectionTitle": "眼图",
+        "subsections": [
+          {
+            "subsectionNumber": "5.6",
+            "subsectionTitle": "眼图原理与信息",
+            "keyTopics": [
+              "用眼图观察码间干扰和噪声影响",
+              "眼睛张开最大时刻为最佳采样时刻",
+              "斜边斜率决定定时误差灵敏度",
+              "眼睛张开度决定噪声容限",
+              "中央横轴对应判决门限",
+              "眼睛闭合表示码间干扰严重"
+            ]
+          }
+        ]
+      },
+      {
+        "sectionNumber": "5.7",
+        "sectionTitle": "信道均衡",
+        "subsections": [
+          {
+            "subsectionNumber": "5.7.1",
+            "subsectionTitle": "线性均衡器",
+            "keyTopics": [
+              "横向滤波器结构",
+              "迫零算法（最小峰值畸变准则）",
+              "峰值畸变定义D",
+              "迫零算法忽略噪声，在传输零点处会放大噪声",
+              "均方误差算法（MMSE）",
+              "正交原理：误差与输入序列正交时均方误差最小"
+            ]
+          },
+          {
+            "subsectionNumber": "5.7.2",
+            "subsectionTitle": "判决反馈均衡器",
+            "keyTopics": [
+              "前馈滤波器与反馈滤波器组成",
+              "利用已判决符号估计并减去当前符号的码间干扰"
+            ]
+          },
+          {
+            "subsectionNumber": "5.7.3",
+            "subsectionTitle": "自适应均衡器",
+            "keyTopics": [
+              "跟踪信道响应的时变性",
+              "最陡下降法（LMS算法）",
+              "训练模式与跟踪模式",
+              "步长参数影响收敛速度与稳态误差"
+            ]
+          }
+        ]
+      },
+      {
+        "sectionNumber": "5.8",
+        "sectionTitle": "部分响应系统",
+        "subsections": [
+          {
+            "subsectionNumber": "5.8",
+            "subsectionTitle": "第一类部分响应系统",
+            "keyTopics": [
+              "人为引入受控码间干扰以提高频带利用率",
+              "相关编码：cn = an + an-1",
+              "双二进信号脉冲",
+              "频带利用率可达2Baud/Hz且滤波器可实现",
+              "逐符号检测存在误码传播",
+              "预编码解决误码传播问题",
+              "判决规则"
+            ]
+          }
+        ]
+      },
+      {
+        "sectionNumber": "5.9",
+        "sectionTitle": "符号同步",
+        "subsections": [
+          {
+            "subsectionNumber": "5.9.1",
+            "subsectionTitle": "线谱法",
+            "keyTopics": [
+              "通过非线性变换产生时钟线谱分量",
+              "用窄带滤波器或锁相环提取时钟",
+              "应用条件是信号带宽大于1/(2Ts)"
+            ]
+          },
+          {
+            "subsectionNumber": "5.9.2",
+            "subsectionTitle": "超前-滞后门同步器",
+            "keyTopics": [
+              "闭环同步，性能优于开环",
+              "利用信号脉冲波形对称性",
+              "超前采样与滞后采样之差控制VCO频率"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "mindMap": {
+    "rootNode": {
+      "id": "ch5_root",
+      "label": "数字基带传输",
+      "children": [
+        {
+          "id": "ch5_line_codes",
+          "label": "线路码型",
+          "children": [
+            {
+              "id": "ch5_ami",
+              "label": "AMI码"
+            },
+            {
+              "id": "ch5_hdb3",
+              "label": "HDB3码"
+            },
+            {
+              "id": "ch5_cmi",
+              "label": "CMI码"
+            },
+            {
+              "id": "ch5_manchester",
+              "label": "Manchester码"
+            }
+          ]
+        },
+        {
+          "id": "ch5_awgn_rx",
+          "label": "AWGN信道接收",
+          "children": [
+            {
+              "id": "ch5_mf",
+              "label": "匹配滤波器最佳接收"
+            },
+            {
+              "id": "ch5_ber",
+              "label": "误比特率计算"
+            }
+          ]
+        },
+        {
+          "id": "ch5_bandlimited",
+          "label": "限带信道传输",
+          "children": [
+            {
+              "id": "ch5_isi",
+              "label": "码间干扰(ISI)"
+            },
+            {
+              "id": "ch5_nyquist",
+              "label": "奈奎斯特准则"
+            },
+            {
+              "id": "ch5_rcos",
+              "label": "升余弦滚降"
+            }
+          ]
+        },
+        {
+          "id": "ch5_optimal_baseband",
+          "label": "最佳基带传输",
+          "children": [
+            {
+              "id": "ch5_matched_txrx",
+              "label": "收发滤波器匹配设计"
+            }
+          ]
+        },
+        {
+          "id": "ch5_eye",
+          "label": "眼图",
+          "children": [
+            {
+              "id": "ch5_eye_info",
+              "label": "采样时刻/定时灵敏度/噪声容限/判决门限"
+            }
+          ]
+        },
+        {
+          "id": "ch5_equalization",
+          "label": "信道均衡",
+          "children": [
+            {
+              "id": "ch5_zf",
+              "label": "迫零算法"
+            },
+            {
+              "id": "ch5_mmse",
+              "label": "均方误差算法"
+            },
+            {
+              "id": "ch5_dfe",
+              "label": "判决反馈均衡器"
+            },
+            {
+              "id": "ch5_adaptive",
+              "label": "自适应均衡器"
+            }
+          ]
+        },
+        {
+          "id": "ch5_partial_response",
+          "label": "部分响应系统",
+          "children": [
+            {
+              "id": "ch5_correlative_coding",
+              "label": "相关编码"
+            },
+            {
+              "id": "ch5_precoding",
+              "label": "预编码"
+            }
+          ]
+        },
+        {
+          "id": "ch5_sync",
+          "label": "符号同步",
+          "children": [
+            {
+              "id": "ch5_line_spectrum",
+              "label": "线谱法"
+            },
+            {
+              "id": "ch5_early_late",
+              "label": "超前-滞后门同步器"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "keyPoints": [
+    "线路码型设计的六大原则：功率谱匹配、减少高频、便于提取时钟、减少误码扩散、便于误码监测、提高编码效率",
+    "AMI码将1交替编为+A和-A，0编为0电平；无直流但长连0导致定时提取困难",
+    "HDB3码限制连0数≤3，用000V或B00V取代节替代4连0，V符号破坏极性交替规律但相邻V极性交替",
+    "CMI码：0→01，1→交替11/00；含离散时钟分量，适合四次群接口",
+    "Manchester码：0→01，1→10；主瓣宽度为AMI/HDB3的两倍，以太网10Mbit/s接口码型",
+    "AWGN信道中，匹配滤波器最佳接收使采样时刻信噪比最大",
+    "双极性2PAM误比特率：Pb = 1/2 erfc(sqrt(Eb/N0))；单极性：Pb = 1/2 erfc(sqrt(Eb/(2N0)))",
+    "相同误比特率下，双极性信号比单极性信号节省3dB发送功率",
+    "限带信道引起码间干扰(ISI)，因为冲激响应波形延伸至相邻符号间隔",
+    "无码间干扰的时域条件：x(nTs)在n=0时为常数，n≠0时为0",
+    "奈奎斯特准则：频域周期搬移叠加恒等于Ts是无ISI的充要条件",
+    "奈奎斯特速率Rs=2W，理想情况下最高频带利用率为2Baud/Hz",
+    "升余弦滚降特性用滚降因子α描述，α=0为理想低通（不可实现），α=1时频带利用率为1Baud/Hz",
+    "最佳基带传输设计需同时满足：总体传递函数符合奈奎斯特准则，接收滤波器与发送滤波器共轭匹配",
+    "眼图张开最大处是最佳采样时刻；斜边越陡对定时误差越敏感；张开度决定噪声容限",
+    "迫零算法以最小峰值畸变为准则，但忽略噪声，在信道传输零点处会放大噪声",
+    "均方误差算法的正交原理：当误差与输入序列正交时，均方误差达到最小",
+    "部分响应系统通过相关编码人为引入受控ISI，使频带利用率达到2Baud/Hz且滤波器可实现",
+    "部分响应系统需加预编码以避免误码传播",
+    "符号同步可用线谱法（开环）或超前-滞后门同步器（闭环）"
+  ],
+  "formulas": [
+    {
+      "formulaId": "5.3.1",
+      "description": "AWGN信道接收信号",
+      "latex": "r(t) = s_i(t) + n_w(t), \\quad i=1 \\text{ 或 } 2, \\quad 0 \\leq t \\leq T_b",
+      "context": "加性白高斯噪声信道模型"
+    },
+    {
+      "formulaId": "5.3.4",
+      "description": "匹配滤波器冲激响应",
+      "latex": "h(t) = s_1(T_b - t), \\quad 0 \\leq t \\leq T_b",
+      "context": "2PAM信号匹配滤波器设计"
+    },
+    {
+      "formulaId": "5.3.9",
+      "description": "双极性2PAM平均误比特率",
+      "latex": "P_b = \\frac{1}{2}\\text{erfc}\\left(\\sqrt{\\frac{E_b}{N_0}}\\right)",
+      "context": "利用匹配滤波器最佳接收，发送S1和S2等概率"
+    },
+    {
+      "formulaId": "5.3.12",
+      "description": "单极性2PAM平均误比特率",
+      "latex": "P_b = \\frac{1}{2}\\text{erfc}\\left(\\sqrt{\\frac{E_b}{2N_0}}\\right)",
+      "context": "单极性不归零码匹配滤波器接收，Eb=E1/2"
+    },
+    {
+      "formulaId": "5.4.16",
+      "description": "无码间干扰时域条件",
+      "latex": "x(nT_s) = \\begin{cases} \\text{常数} & n=0 \\\\ 0 & n \\neq 0 \\end{cases}",
+      "context": "系统总体冲激响应必须满足的条件"
+    },
+    {
+      "formulaId": "5.4.17",
+      "description": "奈奎斯特准则（频域充要条件）",
+      "latex": "\\sum_{m=-\\infty}^{\\infty} X\\left(f + \\frac{m}{T_s}\\right) = T_s",
+      "context": "无码间干扰基带传输的频域条件"
+    },
+    {
+      "formulaId": "5.4.24",
+      "description": "理想低通冲激响应",
+      "latex": "x(t) = \\text{sinc}(2Wt)",
+      "context": "奈奎斯特速率下的理想低通响应"
+    },
+    {
+      "formulaId": "5.4.25",
+      "description": "升余弦滚降传递函数",
+      "latex": "X(f) = \\begin{cases} T_s & |f| \\leq \\frac{1-\\alpha}{2T_s} \\\\ \\frac{T_s}{2}\\left[1 + \\cos\\frac{\\pi T_s}{\\alpha}\\left(|f| - \\frac{1-\\alpha}{2T_s}\\right)\\right] & \\frac{1-\\alpha}{2T_s} < |f| \\leq \\frac{1+\\alpha}{2T_s} \\\\ 0 & |f| > \\frac{1+\\alpha}{2T_s} \\end{cases}",
+      "context": "升余弦滤波器频率响应，α为滚降因子"
+    },
+    {
+      "formulaId": "5.4.26",
+      "description": "升余弦滚降冲激响应",
+      "latex": "x(t) = \\text{sinc}\\left(\\frac{t}{T_s}\\right) \\cdot \\frac{\\cos\\left(\\frac{\\pi\\alpha t}{T_s}\\right)}{1 - \\left(\\frac{2\\alpha t}{T_s}\\right)^2}",
+      "context": "升余弦滚降系统的总体冲激响应"
+    },
+    {
+      "formulaId": "5.5.7",
+      "description": "最佳基带传输收发滤波器设计",
+      "latex": "G_T(f) = G_R(f) = \\sqrt{X_{\\text{rcos}}(f)}",
+      "context": "既满足无ISI又使误符号率最低的设计"
+    },
+    {
+      "formulaId": "5.5.9",
+      "description": "最佳基带传输平均误比特率",
+      "latex": "P_b = \\frac{1}{2}\\text{erfc}\\left(\\sqrt{\\frac{E_b}{N_0}}\\right) = Q\\left(\\sqrt{\\frac{2E_b}{N_0}}\\right)",
+      "context": "双极性序列在理想限带及AWGN条件下的误比特率"
+    },
+    {
+      "formulaId": "5.7.14",
+      "description": "迫零均衡器Z域关系",
+      "latex": "G_E(Z) = \\frac{1}{X(Z)}",
+      "context": "理想均衡时横向滤波器Z域表示式与原系统相逆"
+    },
+    {
+      "formulaId": "5.7.15",
+      "description": "峰值畸变定义",
+      "latex": "D = \\frac{1}{|h_0|}\\sum_{k \\neq 0}|h_k| = \\frac{1}{|h_0|}\\sum_{k \\neq 0}\\left|\\sum_{n=-\\infty}^{\\infty} w_n x_{k-n}\\right|",
+      "context": "衡量均衡效果的峰值畸变准则"
+    },
+    {
+      "formulaId": "5.8.2",
+      "description": "第一类部分响应相关编码",
+      "latex": "c_n = a_n + a_{n-1}",
+      "context": "算术加，输出为三电平序列"
+    },
+    {
+      "formulaId": "5.8.9",
+      "description": "预编码器定义",
+      "latex": "d_n = b_n \\oplus d_{n-1}",
+      "context": "模二加，避免误码传播"
+    }
+  ],
+  "examplesAndProblems": [
+    {
+      "problemId": "ex_5.2.11",
+      "problemType": "编码题",
+      "description": "AMI码编码及其信号波形绘制",
+      "relatedConcepts": [
+        "AMI码",
+        "线路码型"
+      ]
+    },
+    {
+      "problemId": "ex_5.2.12",
+      "problemType": "编码题",
+      "description": "HDB3编码及其信号波形绘制，含V符号和B符号的极性判断",
+      "relatedConcepts": [
+        "HDB3码",
+        "取代节",
+        "破坏点"
+      ]
+    },
+    {
+      "problemId": "ex_5.2.13",
+      "problemType": "编码题",
+      "description": "CMI码编码及其信号波形绘制",
+      "relatedConcepts": [
+        "CMI码"
+      ]
+    },
+    {
+      "problemId": "ex_5.2.14",
+      "problemType": "编码题",
+      "description": "数字分相码（Manchester码）编码及其信号波形绘制",
+      "relatedConcepts": [
+        "数字双相码",
+        "Manchester码"
+      ]
+    },
+    {
+      "problemId": "ex_5.7.1",
+      "problemType": "计算题",
+      "description": "三抽头迫零均衡器抽头系数计算及均衡前后峰值畸变值计算",
+      "relatedConcepts": [
+        "迫零算法",
+        "峰值畸变",
+        "横向滤波器"
+      ]
+    },
+    {
+      "problemId": "ex_5.8.1",
+      "problemType": "编码题",
+      "description": "第一类部分响应系统相关编码示例，展示输入序列经电平变换和相关编码后的三电平输出",
+      "relatedConcepts": [
+        "部分响应系统",
+        "相关编码"
+      ]
+    },
+    {
+      "problemId": "ex_5.8.2",
+      "problemType": "编码题",
+      "description": "加有预编码的第一类部分响应系统完整示例，含预编码、电平变换、相关编码和判决输出",
+      "relatedConcepts": [
+        "部分响应系统",
+        "预编码",
+        "误码传播"
+      ]
+    },
+    {
+      "problemId": "hw_5.1",
+      "problemType": "计算题",
+      "description": "八进制符号速率与二进制数据速率的换算",
+      "relatedConcepts": [
+        "符号速率",
+        "信息速率"
+      ]
+    },
+    {
+      "problemId": "hw_5.2",
+      "problemType": "编码题",
+      "description": "绝对码与相对码转换及波形图绘制",
+      "relatedConcepts": [
+        "相对码",
+        "差分编码"
+      ]
+    },
+    {
+      "problemId": "hw_5.3",
+      "problemType": "计算题",
+      "description": "基带信号双边功率谱密度计算及作图（双极性和单极性两种情况）",
+      "relatedConcepts": [
+        "功率谱密度",
+        "基带信号"
+      ]
+    },
+    {
+      "problemId": "hw_5.5",
+      "problemType": "编码题",
+      "description": "给定信息代码，分别完成AMI码、HDB3码、Manchester码编码并画波形图",
+      "relatedConcepts": [
+        "AMI码",
+        "HDB3码",
+        "Manchester码",
+        "线路码型"
+      ]
+    },
+    {
+      "problemId": "hw_5.6",
+      "problemType": "计算题",
+      "description": "单极性2PAM在AWGN信道下的接收分析：条件均值、方差、概率密度、最佳门限、误比特率",
+      "relatedConcepts": [
+        "AWGN信道",
+        "误比特率",
+        "最佳判决门限"
+      ]
+    },
+    {
+      "problemId": "hw_5.7",
+      "problemType": "计算题",
+      "description": "匹配滤波器最佳接收：冲激响应、采样信号功率、噪声功率、条件概率密度、误比特率推导",
+      "relatedConcepts": [
+        "匹配滤波器",
+        "最佳接收",
+        "误比特率"
+      ]
+    },
+    {
+      "problemId": "hw_5.8",
+      "problemType": "计算题",
+      "description": "给定系统总传递函数H(f)，求无ISI最高符号速率及频带利用率",
+      "relatedConcepts": [
+        "奈奎斯特准则",
+        "频带利用率"
+      ]
+    },
+    {
+      "problemId": "hw_5.9",
+      "problemType": "判断题",
+      "description": "给定三种H(f)图形和2000Baud码元速率，判断是否满足采样点无码间干扰条件",
+      "relatedConcepts": [
+        "奈奎斯特准则",
+        "升余弦滚降"
+      ]
+    },
+    {
+      "problemId": "hw_5.10",
+      "problemType": "计算题",
+      "description": "α=1升余弦滚降系统：截止频率、频带利用率、数据速率计算（十六进制码元）",
+      "relatedConcepts": [
+        "升余弦滚降",
+        "频带利用率",
+        "多进制传输"
+      ]
+    },
+    {
+      "problemId": "hw_5.11",
+      "problemType": "计算题",
+      "description": "16PAM信号的功率谱密度计算（升余弦滚降α=0.5）",
+      "relatedConcepts": [
+        "功率谱密度",
+        "升余弦滚降",
+        "PAM信号"
+      ]
+    },
+    {
+      "problemId": "hw_5.12",
+      "problemType": "计算题",
+      "description": "存在码间干扰时的平均误比特率计算（ISI取离散随机值）",
+      "relatedConcepts": [
+        "码间干扰",
+        "误比特率"
+      ]
+    },
+    {
+      "problemId": "hw_5.14",
+      "problemType": "计算题",
+      "description": "不同滚降系数α（0、0.5、1）下无ISI基带传输的符号速率和二进制信息速率计算",
+      "relatedConcepts": [
+        "升余弦滚降",
+        "奈奎斯特准则",
+        "多进制传输"
+      ]
+    },
+    {
+      "problemId": "hw_5.15",
+      "problemType": "设计题",
+      "description": "设计M进制PAM最佳基带传输系统框图（给定带宽和比特速率）",
+      "relatedConcepts": [
+        "最佳基带传输",
+        "根升余弦",
+        "多进制PAM"
+      ]
+    }
+  ],
+  "commonMistakes": [
+    "HDB3编码时混淆V符号和B符号的极性判断规则",
+    "忽略相邻V符号必须极性交替的条件",
+    "双极性和单极性误比特率公式混用（注意差3dB）",
+    "奈奎斯特速率Rs=2W与奈奎斯特带宽W=Rs/2混淆",
+    "升余弦滚降因子α变化时截止频率和频带利用率的计算错误",
+    "匹配滤波器冲激响应写错时间反转关系",
+    "迫零均衡器设计时忽略其对噪声的放大效应",
+    "部分响应系统未加预编码导致误码传播",
+    "符号同步中提取的时钟频率与符号速率关系混淆（如Manchester码为2倍）"
+  ],
+  "examHints": [
+    "复习关注点：AMI/HDB3/CMI/Manchester编码规则对比，各码型优缺点及应用场景",
+    "复习关注点：匹配滤波器冲激响应与发送信号的关系，双极性/单极性误比特率公式推导",
+    "复习关注点：频域周期叠加条件的理解，给定H(f)图形判断是否能无ISI传输",
+    "复习关注点：滚降因子α对带宽和频带利用率的影响，α=0、0.5、1时的具体数值",
+    "复习关注点：收发滤波器平方根升余弦分配原则，总体传递函数与功率谱密度",
+    "复习关注点：眼图各特征（最佳采样时刻、定时灵敏度、噪声容限、判决门限）的物理意义",
+    "复习关注点：迫零算法与MMSE算法的原理差异，迫零算法的固有缺陷",
+    "复习关注点：相关编码引入受控ISI的原理，预编码的必要性及判决规则",
+    "复习关注点：线谱法与超前-滞后门同步器的基本原理对比"
+  ],
+  "uncertainItems": [
+    {
+      "item": "章节完整性",
+      "description": "文件内容从5.2节线路码型开始，缺少5.1节引言及数字基带信号基本概念的内容",
+      "reviewNote": "需人工确认：第5章前半部分（引言、数字基带信号定义、功率谱一般公式推导）是否在教学范围内"
+    },
+    {
+      "item": "公式OCR识别",
+      "description": "文件中部分公式因OCR质量出现乱码字符（如式5.2.23、式5.3.6、式5.3.8等），已尽量根据上下文和标准教材公式还原",
+      "reviewNote": "需人工确认：formulas中部分公式的latex表达是否与教材原文一致"
+    },
+    {
+      "item": "习题5.4",
+      "description": "文件中习题5.4要求推导数字分相码功率谱密度，但该推导过程在正文中未出现",
+      "reviewNote": "需人工确认：数字分相码功率谱密度推导是否在本章讲授范围内"
+    },
+    {
+      "item": "习题5.16",
+      "description": "习题5.16涉及给定h(t)傅氏变换求x(t)及X(f)，属于较复杂的频域运算",
+      "reviewNote": "需人工确认：此类频域反变换计算是否为考试重点"
+    }
+  ],
+  "reviewNotes": [
+    "需人工确认：第5章开头（5.1节）内容在文件中缺失，知识结构基于文件实际可获取内容构建"
+  ]
+}

@@ -1,0 +1,16 @@
+[Unit]
+Description=Zhinan FastAPI Backend
+After=network.target docker.service
+Wants=docker.service
+
+[Service]
+User=YOUR_USER
+Group=YOUR_USER
+WorkingDirectory=/srv/zhinan/backend
+Environment="PATH=/srv/zhinan/backend/venv/bin"
+ExecStart=/srv/zhinan/backend/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
