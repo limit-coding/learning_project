@@ -5,7 +5,6 @@ from app.database import engine, Base
 from app.api.course_graph import router as course_graph_router
 from app.api.resource import router as resource_router
 from app.api.roadmap import router as roadmap_router
-from app.api.rag import router as rag_router
 from app.api.review import router as review_router
 from app.api.chat import router as chat_router
 
@@ -30,7 +29,6 @@ app.add_middleware(
 app.include_router(course_graph_router, prefix="/api", tags=["course-graph"])
 app.include_router(resource_router, prefix="/api", tags=["resources"])
 app.include_router(roadmap_router, prefix="/api", tags=["roadmap"])
-app.include_router(rag_router, prefix="/api", tags=["rag"])
 app.include_router(review_router, prefix="/api", tags=["review"])
 app.include_router(chat_router, prefix="/api", tags=["chat"])
 

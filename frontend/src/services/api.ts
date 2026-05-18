@@ -1,6 +1,5 @@
 import axios from 'axios';
 import type {
-  ChatRetrieveResponse,
   CourseNode,
   CourseNodeDetail,
   Resource,
@@ -45,11 +44,6 @@ export const getResources = async (params?: {
   limit?: number;
 }): Promise<Resource[]> => {
   const response = await api.get('/resources', { params });
-  return response.data;
-};
-
-export const chatRetrieve = async (question: string): Promise<ChatRetrieveResponse> => {
-  const response = await api.post('/chat/retrieve', { question });
   return response.data;
 };
 

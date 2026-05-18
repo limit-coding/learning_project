@@ -56,17 +56,3 @@ export interface Resource {
   created_at: string;
   course_node_ids: number[];
 }
-
-export interface SearchResult {
-  chunk_id: number;
-  resource_id: number;
-  resource_title: string;
-  content: string;
-  score: number;
-}
-
-export interface ChatRetrieveResponse {
-  answer: string;
-  sources: SearchResult[];
-  has_enough_context: boolean;
-}

@@ -13,8 +13,6 @@ from app.models.models import (
     CourseEdge,
     Resource,
     ResourceCourseMapping,
-    DocumentChunk,
-    Embedding,
     Roadmap,
 )
 
@@ -28,7 +26,7 @@ def drop_legacy_tables():
     """删除旧个性化推荐版本遗留的数据表。"""
     db = SessionLocal()
     try:
-        for table_name in ["recommendations", "user_profiles", "courses"]:
+        for table_name in ["embeddings", "document_chunks", "recommendations", "user_profiles", "courses"]:
             db.execute(text(f"DROP TABLE IF EXISTS {table_name}"))
         db.commit()
         print("  已删除旧推荐系统遗留表")
@@ -44,8 +42,6 @@ def reset_seed_tables():
     db = SessionLocal()
     try:
         for model in [
-            Embedding,
-            DocumentChunk,
             ResourceCourseMapping,
             Resource,
             CourseEdge,
@@ -107,7 +103,7 @@ def load_course_graph():
 
 
 def load_resources():
-    """加载人工整理/AI 辅助整理的资源卡片和检索切片。"""
+    """加载人工整理/AI 辅助整理的资源卡片。"""
     db = SessionLocal()
     try:
         seed_file = DATA_DIR / "resources_seed.json"
@@ -120,7 +116,6 @@ def load_resources():
 
         slug_to_node = {n.slug: n for n in db.query(CourseNode).all()}
         count = 0
-        chunk_count = 0
         for group in data:
             node = slug_to_node.get(group["slug"])
             if not node:
@@ -140,16 +135,9 @@ def load_resources():
                 db.add(resource)
                 db.flush()
                 db.add(ResourceCourseMapping(resource_id=resource.id, course_node_id=node.id))
-                db.add(DocumentChunk(
-                    resource_id=resource.id,
-                    chunk_index=0,
-                    content=f"{node.title}：{item['title']}。{item.get('summary', '')}",
-                    token_count=120,
-                ))
                 count += 1
-                chunk_count += 1
         db.commit()
-        print(f"  导入 {count} 条资源，{chunk_count} 条检索切片")
+        print(f"  导入 {count} 条资源")
     except Exception as e:
         print(f"  失败: {e}")
         db.rollback()

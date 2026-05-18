@@ -76,27 +76,6 @@ class Roadmap(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
-class DocumentChunk(Base):
-    __tablename__ = "document_chunks"
-
-    id = Column(Integer, primary_key=True, index=True)
-    resource_id = Column(Integer, ForeignKey("resources.id"), nullable=False, index=True)
-    chunk_index = Column(Integer, nullable=False)
-    content = Column(Text, nullable=False)
-    token_count = Column(Integer, default=0)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-
-
-class Embedding(Base):
-    __tablename__ = "embeddings"
-
-    id = Column(Integer, primary_key=True, index=True)
-    chunk_id = Column(Integer, ForeignKey("document_chunks.id"), nullable=False, index=True)
-    embedding = Column(Text, nullable=False)  # JSON encoded vector, 后续可迁移到 pgvector
-    model_name = Column(String(100), default="text-embedding-3-small")
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-
-
 class ReviewLog(Base):
     __tablename__ = "review_logs"
 
