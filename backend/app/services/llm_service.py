@@ -1,3 +1,4 @@
+import asyncio
 import json
 import httpx
 from typing import Dict, List, Optional, Any
@@ -5,6 +6,9 @@ from app.config import get_settings
 from app.services.search_service import get_search_service
 
 settings = get_settings()
+
+# 最多同时 10 个并发请求发给 LLM API
+_llm_semaphore = asyncio.Semaphore(10)
 
 # 搜索工具定义
 SEARCH_TOOL = {
@@ -49,52 +53,62 @@ class LLMService:
         max_tokens: int = 1000,
         tools: Optional[List[Dict]] = None,
         messages: Optional[List[Dict]] = None,
+        max_retries: int = 3,
     ) -> Dict[str, Any]:
-        """调用 LLM，支持 function calling"""
+        """调用 LLM，支持 function calling，自动限流和重试"""
         if not self.api_key or self.api_key.startswith("your_"):
             return {"content": None, "tool_calls": None}
 
-        try:
-            # 构建消息列表
-            if messages is None:
-                messages = [
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ]
+        if messages is None:
+            messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ]
 
-            payload = {
-                "model": self.model,
-                "messages": messages,
-                "max_tokens": max_tokens,
-                "temperature": 0.5
-            }
+        payload = {
+            "model": self.model,
+            "messages": messages,
+            "max_tokens": max_tokens,
+            "temperature": 0.5
+        }
 
-            if tools:
-                payload["tools"] = tools
+        if tools:
+            payload["tools"] = tools
 
-            async with httpx.AsyncClient(timeout=30.0) as client:
-                response = await client.post(
-                    f"{self.api_base}/chat/completions",
-                    headers={
-                        "Authorization": f"Bearer {self.api_key}",
-                        "Content-Type": "application/json"
-                    },
-                    json=payload
-                )
-                if response.status_code == 200:
-                    data = response.json()
-                    choice = data["choices"][0]["message"]
-                    result = {
-                        "content": choice.get("content", "").strip() if choice.get("content") else None,
-                        "tool_calls": choice.get("tool_calls"),
-                        "reasoning_content": choice.get("reasoning_content")
-                    }
-                    return result
-                else:
-                    print(f"LLM 返回非 200: {response.status_code}")
-                    print(f"响应内容: {response.text[:500]}")
-        except Exception as e:
-            print(f"LLM 调用失败: {e}")
+        async with _llm_semaphore:
+            for attempt in range(max_retries):
+                try:
+                    async with httpx.AsyncClient(timeout=30.0) as client:
+                        response = await client.post(
+                            f"{self.api_base}/chat/completions",
+                            headers={
+                                "Authorization": f"Bearer {self.api_key}",
+                                "Content-Type": "application/json"
+                            },
+                            json=payload
+                        )
+                    if response.status_code == 200:
+                        data = response.json()
+                        choice = data["choices"][0]["message"]
+                        return {
+                            "content": choice.get("content", "").strip() if choice.get("content") else None,
+                            "tool_calls": choice.get("tool_calls"),
+                            "reasoning_content": choice.get("reasoning_content")
+                        }
+                    elif response.status_code == 429:
+                        # 触发限流，等待后重试
+                        wait = 2 ** attempt
+                        print(f"LLM 限流，{wait}s 后重试（第 {attempt + 1} 次）")
+                        await asyncio.sleep(wait)
+                    else:
+                        print(f"LLM 返回非 200: {response.status_code}, {response.text[:200]}")
+                        break
+                except Exception as e:
+                    wait = 2 ** attempt
+                    print(f"LLM 调用异常: {e}，{wait}s 后重试（第 {attempt + 1} 次）")
+                    if attempt < max_retries - 1:
+                        await asyncio.sleep(wait)
+
         return {"content": None, "tool_calls": None}
 
     async def chat_with_search(
