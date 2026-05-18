@@ -12,7 +12,7 @@ export interface MindMapBranch {
   children: string[];
 }
 
-export interface ResourceRecommendation {
+export interface CourseResource {
   title: string;
   type: string;
   description: string;
@@ -35,8 +35,8 @@ export interface CourseGuide {
   mindMap: MindMapBranch[];
   studySummary: StudySummarySection[];
   outcomes: string[];
-  resources: ResourceRecommendation[];
-  publicMaterials: ResourceRecommendation[];
+  resources: CourseResource[];
+  publicMaterials: CourseResource[];
 }
 
 const manualCourseGuides: CourseGuide[] = [
@@ -435,7 +435,7 @@ const withManualMaterials = (guide: CourseGuide | undefined): CourseGuide | unde
     return guide;
   }
 
-  const materialMap = new Map<string, ResourceRecommendation>();
+  const materialMap = new Map<string, CourseResource>();
   [...guide.publicMaterials, ...manualGuide.publicMaterials].forEach((item) => {
     materialMap.set(`${item.type}-${item.title}`, item);
   });

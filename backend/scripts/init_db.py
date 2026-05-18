@@ -5,16 +5,16 @@ from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent))
 
+from sqlalchemy import text
+
 from app.database import SessionLocal, engine, Base
 from app.models.models import (
-    Course,
     CourseNode,
     CourseEdge,
     Resource,
     ResourceCourseMapping,
     DocumentChunk,
     Embedding,
-    Recommendation,
     Roadmap,
 )
 
@@ -22,6 +22,21 @@ from app.models.models import (
 Base.metadata.create_all(bind=engine)
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+
+
+def drop_legacy_tables():
+    """删除旧个性化推荐版本遗留的数据表。"""
+    db = SessionLocal()
+    try:
+        for table_name in ["recommendations", "user_profiles", "courses"]:
+            db.execute(text(f"DROP TABLE IF EXISTS {table_name}"))
+        db.commit()
+        print("  已删除旧推荐系统遗留表")
+    except Exception as e:
+        print(f"  失败: {e}")
+        db.rollback()
+    finally:
+        db.close()
 
 
 def reset_seed_tables():
@@ -35,37 +50,11 @@ def reset_seed_tables():
             Resource,
             CourseEdge,
             Roadmap,
-            Recommendation,
             CourseNode,
-            Course,
         ]:
             db.query(model).delete()
         db.commit()
-        print("  已清理旧课程、路线图、资源和推荐数据")
-    except Exception as e:
-        print(f"  失败: {e}")
-        db.rollback()
-    finally:
-        db.close()
-
-
-def load_courses():
-    """加载北邮大二下课程种子数据（推荐系统用）"""
-    db = SessionLocal()
-    try:
-
-        seed_file = DATA_DIR / "courses_seed.json"
-        if not seed_file.exists():
-            print("  未找到 courses_seed.json，跳过")
-            return
-
-        with open(seed_file, "r", encoding="utf-8") as f:
-            data = json.load(f)
-
-        for item in data:
-            db.add(Course(**item))
-        db.commit()
-        print(f"  导入 {len(data)} 门课程")
+        print("  已清理旧路线图、资源和课程图谱数据")
     except Exception as e:
         print(f"  失败: {e}")
         db.rollback()
@@ -171,10 +160,10 @@ def load_resources():
 if __name__ == "__main__":
     print("开始初始化数据库...")
     print("1. 创建表结构")
-    print("2. 清理旧演示数据")
+    print("2. 删除旧推荐系统遗留表")
+    drop_legacy_tables()
+    print("3. 清理旧演示数据")
     reset_seed_tables()
-    print("3. 导入北邮大二下课程数据")
-    load_courses()
     print("4. 导入课程图谱数据")
     load_course_graph()
     print("5. 导入人工整理资源数据")

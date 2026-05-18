@@ -1,53 +1,7 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text, Numeric, JSON, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Text, JSON, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
-
-
-class UserProfile(Base):
-    __tablename__ = "user_profiles"
-
-    id = Column(Integer, primary_key=True, index=True)
-    current_knowledge = Column(JSON, nullable=False)
-    learning_goals = Column(JSON, nullable=False)
-    career_direction = Column(JSON, nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-
-
-class Course(Base):
-    __tablename__ = "courses"
-
-    id = Column(Integer, primary_key=True, index=True)
-    course_code = Column(String(20), unique=True, nullable=False, index=True)
-    title = Column(String(200), nullable=False)
-    institution = Column(String(100))
-    description = Column(Text)
-    difficulty_level = Column(String(20), nullable=False)
-    estimated_hours = Column(Integer)
-    programming_languages = Column(JSON, nullable=False)
-    topics = Column(JSON, nullable=False)
-    prerequisites = Column(JSON)
-    domain = Column(String(50), nullable=False)
-    suitable_for_careers = Column(JSON)
-    url = Column(Text)
-    platform = Column(String(50))
-    rating = Column(Numeric(3, 2))
-    num_reviews = Column(Integer)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-
-
-class Recommendation(Base):
-    __tablename__ = "recommendations"
-
-    id = Column(Integer, primary_key=True, index=True)
-    profile_id = Column(Integer, nullable=False, index=True)
-    course_id = Column(Integer, nullable=False, index=True)
-    match_score = Column(Numeric(5, 2), nullable=False)
-    recommendation_reason = Column(Text)
-    score_breakdown = Column(JSON)
-    recommended_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
 class CourseNode(Base):
