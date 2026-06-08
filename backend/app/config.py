@@ -18,6 +18,13 @@ class Settings(BaseSettings):
     openai_api_base: str = "https://api.openai.com/v1"
     custom_api_base: str = ""
 
+    # Email (SMTP)
+    smtp_host: str = "smtp.qq.com"
+    smtp_port: int = 465
+    smtp_user: str = ""        # 发件邮箱地址
+    smtp_password: str = ""    # 邮箱授权码（不是登录密码）
+    smtp_from_name: str = "知南课程助手"
+
     # Application
     secret_key: str = "your-secret-key-change-in-production"
     debug: bool = True

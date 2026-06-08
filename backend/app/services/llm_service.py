@@ -111,6 +111,59 @@ class LLMService:
 
         return {"content": None, "tool_calls": None}
 
+    async def stream_chat(
+        self,
+        question: str,
+        course_context: str,
+    ):
+        """流式输出课程问答，逐 token yield SSE 行"""
+        if not self.api_key or self.api_key.startswith("your_"):
+            yield "data: [DONE]\n\n"
+            return
+
+        system_prompt = f"""你是 BUPT 课程学习助手。基于以下课程资料回答用户问题。
+如果用户问到课程内容、考试重点等，优先使用课程资料回答。
+
+课程资料：
+{course_context}"""
+
+        payload = {
+            "model": self.model,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": question},
+            ],
+            "max_tokens": 1500,
+            "temperature": 0.5,
+            "stream": True,
+        }
+
+        try:
+            async with httpx.AsyncClient(timeout=60.0) as client:
+                async with client.stream(
+                    "POST",
+                    f"{self.api_base}/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {self.api_key}",
+                        "Content-Type": "application/json",
+                    },
+                    json=payload,
+                ) as response:
+                    if response.status_code != 200:
+                        yield f"data: {json.dumps({'error': f'API error {response.status_code}'})}\n\n"
+                        yield "data: [DONE]\n\n"
+                        return
+                    async for line in response.aiter_lines():
+                        if not line:
+                            continue
+                        if line.startswith("data: "):
+                            yield f"{line}\n\n"
+                            if line == "data: [DONE]":
+                                return
+        except Exception as e:
+            yield f"data: {json.dumps({'error': str(e)})}\n\n"
+            yield "data: [DONE]\n\n"
+
     async def chat_with_search(
         self,
         question: str,
