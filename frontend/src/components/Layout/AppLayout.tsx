@@ -8,6 +8,7 @@ import {
   UserOutlined,
   LogoutOutlined,
   LoginOutlined,
+  TeamOutlined,
 } from '@ant-design/icons';
 import { useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -19,6 +20,7 @@ const navItems = [
   { key: '/', icon: <HomeOutlined />, label: '首页' },
   { key: '/courses', icon: <BookOutlined />, label: '课程库' },
   { key: '/mindmap', icon: <ApartmentOutlined />, label: '知识图谱' },
+  { key: '/community', icon: <TeamOutlined />, label: '社区' },
   { key: '/ai', icon: <RobotOutlined />, label: 'AI 助手' },
 ];
 
@@ -64,6 +66,7 @@ const AppLayout: React.FC = () => {
                 items: [
                   { key: 'name', label: <span style={{ color: '#94a3b8' }}>{user.display_name || user.username}</span>, disabled: true },
                   { type: 'divider' },
+                  ...(user.role === 'admin' ? [{ key: 'review', label: '资源审核', onClick: () => navigate('/admin/review') }] : []),
                   { key: 'logout', label: '退出登录', icon: <LogoutOutlined />, danger: true, onClick: () => { logout(); navigate('/'); } },
                 ],
               }}

@@ -81,6 +81,42 @@ class ResourceCourseMapping(Base):
     course_node = relationship("CourseNode", back_populates="resource_mappings")
 
 
+class Post(Base):
+    __tablename__ = "posts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(200), nullable=False)
+    content = Column(Text, nullable=False)
+    author_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    course_tag = Column(String(100))          # 关联课程（可选）
+    needs_ai = Column(Boolean, default=False) # 发帖时勾选「需要AI解答」
+    ai_answered = Column(Boolean, default=False)
+    view_count = Column(Integer, default=0)
+    share_url = Column(String(500))           # 用户分享的资源链接（外部URL或上传文件路径）
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    author = relationship("User", foreign_keys=[author_id])
+    comments = relationship("Comment", back_populates="post", cascade="all, delete-orphan")
+
+
+class Comment(Base):
+    __tablename__ = "comments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False, index=True)
+    parent_id = Column(Integer, ForeignKey("comments.id"), nullable=True, index=True)
+    author_id = Column(Integer, ForeignKey("users.id"), nullable=True)  # AI回复时可为空
+    content = Column(Text, nullable=False)
+    is_ai = Column(Boolean, default=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    post = relationship("Post", back_populates="comments")
+    author = relationship("User", foreign_keys=[author_id])
+    replies = relationship("Comment", foreign_keys=[parent_id], back_populates="parent")
+    parent = relationship("Comment", foreign_keys=[parent_id], back_populates="replies", remote_side="Comment.id")
+
+
 class Roadmap(Base):
     __tablename__ = "roadmaps"
 

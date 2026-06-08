@@ -1,0 +1,170 @@
+/* ── Ant Design 深色主题覆盖 ─────────────────────────────── */
+
+/* Select 触发框 */
+.ant-select:not(.ant-select-disabled) .ant-select-selector {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border-color: rgba(71, 85, 105, 0.45) !important;
+  color: #e2e8f0 !important;
+  border-radius: 10px !important;
+}
+.ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: rgba(125, 211, 252, 0.5) !important;
+}
+.ant-select-focused .ant-select-selector {
+  border-color: #0891b2 !important;
+  box-shadow: 0 0 0 2px rgba(8, 145, 178, 0.2) !important;
+}
+.ant-select-selection-placeholder {
+  color: #64748b !important;
+}
+.ant-select-arrow {
+  color: #64748b !important;
+}
+.ant-select-clear {
+  background: transparent !important;
+  color: #64748b !important;
+}
+
+/* Select 下拉弹窗 */
+.ant-select-dropdown {
+  background: #0f172a !important;
+  border: 1px solid rgba(71, 85, 105, 0.4) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(2, 6, 23, 0.6) !important;
+  padding: 4px !important;
+}
+.ant-select-item {
+  color: #cbd5e1 !important;
+  border-radius: 8px !important;
+}
+.ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background: rgba(8, 145, 178, 0.15) !important;
+  color: #7dd3fc !important;
+}
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background: rgba(8, 145, 178, 0.25) !important;
+  color: #38bdf8 !important;
+  font-weight: 600;
+}
+
+/* Input / TextArea */
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-input-password {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border-color: rgba(71, 85, 105, 0.45) !important;
+  color: #e2e8f0 !important;
+  border-radius: 10px !important;
+}
+.ant-input::placeholder,
+.ant-input-affix-wrapper input::placeholder {
+  color: #64748b !important;
+}
+.ant-input:hover,
+.ant-input-affix-wrapper:hover {
+  border-color: rgba(125, 211, 252, 0.5) !important;
+}
+.ant-input:focus,
+.ant-input-affix-wrapper-focused {
+  border-color: #0891b2 !important;
+  box-shadow: 0 0 0 2px rgba(8, 145, 178, 0.2) !important;
+}
+
+/* Switch */
+.ant-switch {
+  background: rgba(51, 65, 85, 0.8) !important;
+}
+.ant-switch-checked {
+  background: linear-gradient(90deg, #0891b2, #4f46e5) !important;
+}
+
+/* Tabs（弹窗内分享区域） */
+.ant-tabs-tab {
+  color: #64748b !important;
+}
+.ant-tabs-tab:hover {
+  color: #94a3b8 !important;
+}
+.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #38bdf8 !important;
+}
+.ant-tabs-ink-bar {
+  background: #0891b2 !important;
+}
+.ant-tabs-nav::before {
+  border-bottom-color: rgba(71, 85, 105, 0.3) !important;
+}
+
+/* Upload */
+.ant-upload-list-item {
+  color: #94a3b8 !important;
+}
+.ant-upload-list-item-name {
+  color: #7dd3fc !important;
+}
+.ant-upload-list-item-action .anticon {
+  color: #64748b !important;
+}
+
+/* Form label */
+.ant-form-item-explain-error {
+  color: #f87171 !important;
+}
+.ant-form-item-extra {
+  color: #475569 !important;
+}
+
+/* Card hover（社区列表） */
+.ant-card-hoverable:hover {
+  border-color: rgba(125, 211, 252, 0.3) !important;
+  box-shadow: 0 4px 24px rgba(8, 145, 178, 0.12) !important;
+}
+
+/* Popconfirm / Dropdown 弹窗 */
+.ant-popover-inner {
+  background: #0f172a !important;
+  border: 1px solid rgba(71, 85, 105, 0.4) !important;
+  border-radius: 12px !important;
+}
+.ant-popover-message-title,
+.ant-popover-inner-content {
+  color: #cbd5e1 !important;
+}
+.ant-dropdown-menu {
+  background: #0f172a !important;
+  border: 1px solid rgba(71, 85, 105, 0.35) !important;
+  border-radius: 12px !important;
+}
+.ant-dropdown-menu-item {
+  color: #cbd5e1 !important;
+  border-radius: 8px !important;
+}
+.ant-dropdown-menu-item:hover {
+  background: rgba(8, 145, 178, 0.15) !important;
+  color: #7dd3fc !important;
+}
+
+/* Tooltip */
+.ant-tooltip-inner {
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+  border: 1px solid rgba(71, 85, 105, 0.35) !important;
+  border-radius: 8px !important;
+}
+.ant-tooltip-arrow-content {
+  background: #1e293b !important;
+}
+
+/* Tag */
+.ant-tag {
+  border-radius: 6px !important;
+}
+
+/* Modal 内部关闭按钮 */
+.ant-modal-close {
+  color: #64748b !important;
+}
+.ant-modal-close:hover {
+  color: #94a3b8 !important;
+  background: rgba(71, 85, 105, 0.2) !important;
+}

@@ -25,6 +25,9 @@ class Settings(BaseSettings):
     smtp_password: str = ""    # 邮箱授权码（不是登录密码）
     smtp_from_name: str = "知南课程助手"
 
+    # 阿里云百炼（千问视觉模型 OCR）
+    qwen_api_key: str = ""
+
     # Application
     secret_key: str = "your-secret-key-change-in-production"
     debug: bool = True

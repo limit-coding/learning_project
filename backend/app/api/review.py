@@ -1,11 +1,41 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List
 from app.database import get_db
 from app.models.models import Resource, ReviewLog
 from app.schemas.review import ReviewAction, ReviewLogResponse
+from app.core.deps import get_current_user
+from app.models.models import User
 
 router = APIRouter()
+
+
+@router.get("/resources/pending")
+def list_pending_resources(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """管理员查看待审核资源列表"""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="仅管理员可访问")
+    resources = (
+        db.query(Resource)
+        .filter(Resource.status == "pending")
+        .order_by(Resource.created_at.desc())
+        .all()
+    )
+    return [
+        {
+            "id": r.id,
+            "title": r.title,
+            "url": r.url,
+            "resource_type": r.resource_type,
+            "summary": r.summary,
+            "submitted_by": r.submitted_by,
+            "created_at": r.created_at,
+        }
+        for r in resources
+    ]
 
 
 @router.post("/resources/{resource_id}/review")
@@ -24,6 +54,10 @@ def review_resource(
 
     resource.status = "approved" if action.action == "approve" else "rejected"
     resource.reviewed_by = action.reviewer
+    if action.summary:
+        resource.summary = action.summary
+    if action.resource_type:
+        resource.resource_type = action.resource_type
 
     log = ReviewLog(
         resource_id=resource_id,

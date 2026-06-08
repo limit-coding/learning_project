@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Card, Form, Input, message, Typography } from 'antd';
 import { LockOutlined, RobotOutlined, UserOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { authApi } from '../services/authApi';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -11,6 +11,8 @@ const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as any)?.from?.pathname || '/';
 
   const handleSubmit = async (values: { username: string; password: string }) => {
     setLoading(true);
@@ -18,7 +20,7 @@ const LoginPage: React.FC = () => {
       const res = await authApi.login(values);
       login(res.access_token, res.user);
       message.success(`欢迎回来，${res.user.display_name || res.user.username}！`);
-      navigate('/');
+      navigate(from, { replace: true });
     } catch (err: any) {
       message.error(err?.response?.data?.detail || '登录失败，请检查用户名和密码');
     } finally {
