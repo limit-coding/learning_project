@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button, Input, Select, Space, Tag, Typography } from 'antd';
 import {
+  LeftOutlined,
+  MenuOutlined,
   RobotOutlined,
   SendOutlined,
   UserOutlined,
@@ -38,6 +40,7 @@ const AIChatPage: React.FC = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<string>('');
+  const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth >= 768);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -127,17 +130,24 @@ const AIChatPage: React.FC = () => {
   return (
     <div style={pageStyle}>
       {/* Left sidebar */}
-      <div style={sidebarStyle}>
+      <div style={{ ...sidebarStyle, width: sidebarOpen ? 260 : 0, marginRight: sidebarOpen ? 20 : 0, opacity: sidebarOpen ? 1 : 0, overflow: 'hidden', transition: 'width 0.25s ease, margin 0.25s ease, opacity 0.2s ease' }}>
         <div style={sidebarHeaderStyle}>
           <div style={avatarStyle}>
             <RobotOutlined style={{ fontSize: 22 }} />
           </div>
-          <div>
+          <div style={{ flex: 1 }}>
             <Title level={5} style={{ color: '#f8fafc', margin: 0 }}>
               AI 课程助手
             </Title>
             <Text style={{ color: '#64748b', fontSize: 12 }}>基于北邮课程内容</Text>
           </div>
+          <Button
+            type="text"
+            icon={<LeftOutlined />}
+            size="small"
+            onClick={() => setSidebarOpen(false)}
+            style={{ color: '#64748b', flexShrink: 0 }}
+          />
         </div>
 
         <div style={sidebarSectionStyle}>
@@ -189,6 +199,14 @@ const AIChatPage: React.FC = () => {
 
       {/* Chat area */}
       <div style={chatAreaStyle}>
+        {!sidebarOpen && (
+          <Button
+            type="text"
+            icon={<MenuOutlined />}
+            onClick={() => setSidebarOpen(true)}
+            style={{ position: 'absolute', top: 14, left: 14, zIndex: 10, color: '#64748b', background: 'rgba(15,23,42,0.8)', border: '1px solid rgba(71,85,105,0.3)', borderRadius: 10, width: 36, height: 36 }}
+          />
+        )}
         <div style={messageListStyle}>
           {isEmpty && (
             <div style={emptyStateStyle}>
@@ -404,6 +422,7 @@ const chatAreaStyle: React.CSSProperties = {
   border: '1px solid rgba(71, 85, 105, 0.2)',
   overflow: 'hidden',
   minWidth: 0,
+  position: 'relative',
 };
 
 const messageListStyle: React.CSSProperties = {
