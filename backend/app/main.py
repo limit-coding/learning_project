@@ -32,9 +32,9 @@ app.add_middleware(
 
 # 注册路由
 app.include_router(course_graph_router, prefix="/api", tags=["course-graph"])
+app.include_router(review_router, prefix="/api", tags=["review"])
 app.include_router(resource_router, prefix="/api", tags=["resources"])
 app.include_router(roadmap_router, prefix="/api", tags=["roadmap"])
-app.include_router(review_router, prefix="/api", tags=["review"])
 app.include_router(chat_router, prefix="/api", tags=["chat"])
 app.include_router(auth_router, prefix="/api", tags=["auth"])
 app.include_router(community_router, prefix="/api", tags=["community"])
