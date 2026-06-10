@@ -55,7 +55,7 @@ const CommunityPage: React.FC = () => {
 
   useEffect(() => {
     fetchPost();
-  }, [id]);
+  }, [id, token]);
 
   const handleReply = (commentId: number, authorName: string) => {
     setReplyTo({ id: commentId, name: authorName });
@@ -143,33 +143,43 @@ const CommunityPage: React.FC = () => {
           <ReactMarkdown>{post.content}</ReactMarkdown>
         </div>
 
-        {post.share_url && (
-          <div style={{
-            marginBottom: 16,
-            padding: '10px 14px',
-            background: 'rgba(6,182,212,0.08)',
-            border: '1px solid rgba(6,182,212,0.25)',
-            borderRadius: 10,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-          }}>
-            <LinkOutlined style={{ color: '#22d3ee', flexShrink: 0 }} />
-            <Text style={{ color: '#7dd3fc', fontSize: 13, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {post.share_url}
-            </Text>
-            <Button
-              size="small"
-              icon={post.share_url.startsWith('/uploads') ? <DownloadOutlined /> : <LinkOutlined />}
-              href={post.share_url}
-              target="_blank"
-              download={post.share_url.startsWith('/uploads') ? true : undefined}
-              style={{ flexShrink: 0, borderRadius: 8, background: 'rgba(6,182,212,0.15)', border: '1px solid rgba(6,182,212,0.3)', color: '#22d3ee' }}
-            >
-              {post.share_url.startsWith('/uploads') ? '下载' : '访问链接'}
-            </Button>
-          </div>
-        )}
+        {post.share_url && (() => {
+          let urls: string[];
+          try {
+            const parsed = JSON.parse(post.share_url!);
+            urls = Array.isArray(parsed) ? parsed : [post.share_url!];
+          } catch { urls = [post.share_url!]; }
+          return (
+            <div style={{ marginBottom: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {urls.map((url, urlIdx) => (
+                <div key={urlIdx} style={{
+                  padding: '10px 14px',
+                  background: 'rgba(6,182,212,0.08)',
+                  border: '1px solid rgba(6,182,212,0.25)',
+                  borderRadius: 10,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                }}>
+                  <LinkOutlined style={{ color: '#22d3ee', flexShrink: 0 }} />
+                  <Text style={{ color: '#7dd3fc', fontSize: 13, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {url.startsWith('/uploads') ? url.split('/').pop() : url}
+                  </Text>
+                  <Button
+                    size="small"
+                    icon={url.startsWith('/uploads') ? <DownloadOutlined /> : <LinkOutlined />}
+                    href={url}
+                    target="_blank"
+                    download={url.startsWith('/uploads') ? true : undefined}
+                    style={{ flexShrink: 0, borderRadius: 8, background: 'rgba(6,182,212,0.15)', border: '1px solid rgba(6,182,212,0.3)', color: '#22d3ee' }}
+                  >
+                    {url.startsWith('/uploads') ? '下载' : '访问链接'}
+                  </Button>
+                </div>
+              ))}
+            </div>
+          );
+        })()}
 
         <div style={{ display: 'flex', gap: 16, color: '#64748b', fontSize: 13, flexWrap: 'wrap' }}>
           <span>{post.author.display_name || post.author.username}</span>

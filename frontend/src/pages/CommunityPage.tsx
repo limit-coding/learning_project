@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Button,
   Card,
@@ -47,7 +47,7 @@ const CommunityPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const [uploadedUrl, setUploadedUrl] = useState<string>('');
+  const uploadedUrlMapRef = useRef<Map<string, string>>(new Map());
   const [shareMode, setShareMode] = useState<'url' | 'file'>('url');
   const [form] = Form.useForm();
 
@@ -75,7 +75,9 @@ const CommunityPage: React.FC = () => {
     }
     setSubmitting(true);
     try {
-      const finalUrl = shareMode === 'file' ? uploadedUrl : (values.share_url?.trim() || undefined);
+      const finalUrl = shareMode === 'file'
+        ? (uploadedUrlMapRef.current.size > 0 ? JSON.stringify([...uploadedUrlMapRef.current.values()]) : undefined)
+        : (values.share_url?.trim() || undefined);
       await communityApi.createPost(
         {
           title: values.title,
@@ -90,7 +92,7 @@ const CommunityPage: React.FC = () => {
       setModalOpen(false);
       form.resetFields();
       setFileList([]);
-      setUploadedUrl('');
+      uploadedUrlMapRef.current = new Map();
       setShareMode('url');
       fetchPosts();
     } catch (err: any) {
@@ -253,13 +255,14 @@ const CommunityPage: React.FC = () => {
                   children: (
                     <Upload
                       fileList={fileList}
-                      maxCount={1}
+                      maxCount={5}
+                      multiple
                       accept=".pdf,.jpg,.jpeg,.png,.txt,.zip"
                       customRequest={async ({ file, onSuccess, onError }) => {
                         if (!token) { message.warning('请先登录'); return; }
                         try {
                           const url = await communityApi.uploadFile(file as File, token);
-                          setUploadedUrl(url);
+                          uploadedUrlMapRef.current.set((file as any).uid, url);
                           onSuccess?.({});
                           message.success('文件上传成功');
                         } catch (e: any) {
@@ -268,7 +271,7 @@ const CommunityPage: React.FC = () => {
                         }
                       }}
                       onChange={({ fileList: fl }) => setFileList(fl)}
-                      onRemove={() => { setUploadedUrl(''); }}
+                      onRemove={(file) => { uploadedUrlMapRef.current.delete(file.uid); }}
                     >
                       <Button icon={<PaperClipOutlined />} style={ghostBtnStyle}>
                         选择文件（PDF / 图片 / ZIP，最大 50MB）
