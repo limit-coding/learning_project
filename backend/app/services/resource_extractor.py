@@ -102,22 +102,31 @@ def _save_pending_resource(
     db.commit()
 
 
-def trigger_resource_extraction(url: str, course_tag: str | None, submitted_by: str):
+def trigger_resource_extraction(url: str, course_tag: str | None, submitted_by: str, filename: str | None = None):
     """BackgroundTask 入口：合规检查 → 通过则存为 pending"""
     async def _run():
         db = SessionLocal()
         try:
-            # Step 1：轻量抓取标题（不下载全文）
-            resource_info = await asyncio.get_event_loop().run_in_executor(
-                None, _fetch_title, url
-            )
+            is_local = url.startswith("/uploads/")
+            if is_local:
+                # 本地上传文件：直接用原始文件名，跳过 HTTP 抓取
+                display_name = filename or url.split("/")[-1]
+                resource_info = f"上传文件：{display_name}  URL：{url}"
+            else:
+                # 外部链接：轻量抓取标题
+                resource_info = await asyncio.get_event_loop().run_in_executor(
+                    None, _fetch_title, url
+                )
             # Step 2：AI 合规判断（~100 tokens）
             relevant, reason = await _check_compliance(resource_info)
             if not relevant:
                 print(f"[resource_extractor] 不相关，跳过入库: {url} | {reason}")
                 return
-            # Step 3：提取页面标题作为资源标题
-            title = resource_info.split("标题：")[-1].split("  ")[0].strip() or url[:100]
+            # Step 3：用文件名或页面标题作为资源标题
+            if is_local:
+                title = filename or url.split("/")[-1]
+            else:
+                title = resource_info.split("标题：")[-1].split("  ")[0].strip() or url[:100]
             _save_pending_resource(db, url, title, course_tag, submitted_by)
             print(f"[resource_extractor] 已入待审队列: {title}")
         except Exception as e:

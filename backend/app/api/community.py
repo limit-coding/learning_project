@@ -81,12 +81,21 @@ def create_post(
         )
 
     if req.share_url:
-        background_tasks.add_task(
-            trigger_resource_extraction,
-            req.share_url,
-            req.course_tag,
-            current_user.username,
-        )
+        import json as _json
+        try:
+            entries = _json.loads(req.share_url)
+            if not isinstance(entries, list):
+                entries = [{"url": req.share_url, "name": None}]
+        except Exception:
+            entries = [{"url": req.share_url, "name": None}]
+        for entry in entries:
+            url = entry.get("url") if isinstance(entry, dict) else entry
+            name = entry.get("name") if isinstance(entry, dict) else None
+            if url:
+                background_tasks.add_task(
+                    trigger_resource_extraction,
+                    url, req.course_tag, current_user.username, name,
+                )
 
     return PostListItem(
         id=post.id,
