@@ -136,7 +136,10 @@ const AdminReviewPage: React.FC = () => {
                   rel="noreferrer"
                   style={{ color: '#38bdf8', fontSize: 13, display: 'flex', alignItems: 'center', gap: 4 }}
                 >
-                  <LinkOutlined /> {r.url.length > 60 ? r.url.slice(0, 60) + '…' : r.url}
+                  <LinkOutlined />
+                  {r.url.startsWith('/uploads/')
+                    ? r.title
+                    : (r.url.length > 60 ? r.url.slice(0, 60) + '…' : r.url)}
                 </a>
                 {r.summary && r.summary !== '（待管理员审核后填写摘要）' && (
                   <Text style={{ color: '#94a3b8', fontSize: 13, display: 'block', marginTop: 6 }}>
