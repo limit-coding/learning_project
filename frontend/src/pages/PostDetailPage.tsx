@@ -181,7 +181,7 @@ const CommunityPage: React.FC = () => {
                     icon={entry.url.startsWith('/uploads') ? <DownloadOutlined /> : <LinkOutlined />}
                     href={entry.url}
                     target="_blank"
-                    download={entry.url.startsWith('/uploads') ? true : undefined}
+                    download={entry.url.startsWith('/uploads') ? entry.name : undefined}
                     style={{ flexShrink: 0, borderRadius: 8, background: 'rgba(6,182,212,0.15)', border: '1px solid rgba(6,182,212,0.3)', color: '#22d3ee' }}
                   >
                     {entry.url.startsWith('/uploads') ? '下载' : '访问链接'}
