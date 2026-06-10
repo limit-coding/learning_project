@@ -73,6 +73,14 @@ const CommunityPage: React.FC = () => {
       message.warning('请先登录');
       return;
     }
+    if (shareMode === 'file' && fileList.some((f) => f.status === 'uploading')) {
+      message.warning('文件还在上传中，请稍等…');
+      return;
+    }
+    if (shareMode === 'file' && fileList.length > 0 && uploadedUrlMapRef.current.size === 0) {
+      message.warning('文件上传失败，请重新选择');
+      return;
+    }
     setSubmitting(true);
     try {
       const finalUrl = shareMode === 'file'
