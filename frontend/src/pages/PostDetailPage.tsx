@@ -144,15 +144,26 @@ const CommunityPage: React.FC = () => {
         </div>
 
         {post.share_url && (() => {
-          let urls: string[];
+          type FileEntry = { url: string; name: string };
+          let entries: FileEntry[];
           try {
             const parsed = JSON.parse(post.share_url!);
-            urls = Array.isArray(parsed) ? parsed : [post.share_url!];
-          } catch { urls = [post.share_url!]; }
+            if (Array.isArray(parsed)) {
+              entries = parsed.map((item) =>
+                typeof item === 'string'
+                  ? { url: item, name: item.split('/').pop() || item }
+                  : item as FileEntry
+              );
+            } else {
+              entries = [{ url: post.share_url!, name: post.share_url!.split('/').pop() || post.share_url! }];
+            }
+          } catch {
+            entries = [{ url: post.share_url!, name: post.share_url!.split('/').pop() || post.share_url! }];
+          }
           return (
             <div style={{ marginBottom: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {urls.map((url, urlIdx) => (
-                <div key={urlIdx} style={{
+              {entries.map((entry, entryIdx) => (
+                <div key={entryIdx} style={{
                   padding: '10px 14px',
                   background: 'rgba(6,182,212,0.08)',
                   border: '1px solid rgba(6,182,212,0.25)',
@@ -163,17 +174,17 @@ const CommunityPage: React.FC = () => {
                 }}>
                   <LinkOutlined style={{ color: '#22d3ee', flexShrink: 0 }} />
                   <Text style={{ color: '#7dd3fc', fontSize: 13, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {url.startsWith('/uploads') ? url.split('/').pop() : url}
+                    {entry.name}
                   </Text>
                   <Button
                     size="small"
-                    icon={url.startsWith('/uploads') ? <DownloadOutlined /> : <LinkOutlined />}
-                    href={url}
+                    icon={entry.url.startsWith('/uploads') ? <DownloadOutlined /> : <LinkOutlined />}
+                    href={entry.url}
                     target="_blank"
-                    download={url.startsWith('/uploads') ? true : undefined}
+                    download={entry.url.startsWith('/uploads') ? true : undefined}
                     style={{ flexShrink: 0, borderRadius: 8, background: 'rgba(6,182,212,0.15)', border: '1px solid rgba(6,182,212,0.3)', color: '#22d3ee' }}
                   >
-                    {url.startsWith('/uploads') ? '下载' : '访问链接'}
+                    {entry.url.startsWith('/uploads') ? '下载' : '访问链接'}
                   </Button>
                 </div>
               ))}

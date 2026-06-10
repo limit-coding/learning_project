@@ -66,12 +66,12 @@ export const communityApi = {
   deletePost: (id: number, token: string) =>
     api.delete(`/community/posts/${id}`, { headers: authHeader(token) }),
 
-  uploadFile: async (file: File, token: string): Promise<string> => {
+  uploadFile: async (file: File, token: string): Promise<{ url: string; name: string }> => {
     const form = new FormData();
     form.append('file', file);
-    const res = await api.post<{ url: string }>('/upload', form, {
+    const res = await api.post<{ url: string; filename: string }>('/upload', form, {
       headers: { ...authHeader(token), 'Content-Type': 'multipart/form-data' },
     });
-    return res.data.url;
+    return { url: res.data.url, name: res.data.filename || file.name };
   },
 };

@@ -47,7 +47,7 @@ const CommunityPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const uploadedUrlMapRef = useRef<Map<string, string>>(new Map());
+  const uploadedUrlMapRef = useRef<Map<string, { url: string; name: string }>>(new Map());
   const [shareMode, setShareMode] = useState<'url' | 'file'>('url');
   const [form] = Form.useForm();
 
@@ -76,7 +76,7 @@ const CommunityPage: React.FC = () => {
     setSubmitting(true);
     try {
       const finalUrl = shareMode === 'file'
-        ? (uploadedUrlMapRef.current.size > 0 ? JSON.stringify([...uploadedUrlMapRef.current.values()]) : undefined)
+        ? (uploadedUrlMapRef.current.size > 0 ? JSON.stringify([...uploadedUrlMapRef.current.values()]) : undefined)  // [{url, name}]
         : (values.share_url?.trim() || undefined);
       await communityApi.createPost(
         {
@@ -261,8 +261,8 @@ const CommunityPage: React.FC = () => {
                       customRequest={async ({ file, onSuccess, onError }) => {
                         if (!token) { message.warning('请先登录'); return; }
                         try {
-                          const url = await communityApi.uploadFile(file as File, token);
-                          uploadedUrlMapRef.current.set((file as any).uid, url);
+                          const result = await communityApi.uploadFile(file as File, token);
+                          uploadedUrlMapRef.current.set((file as any).uid, result);
                           onSuccess?.({});
                           message.success('文件上传成功');
                         } catch (e: any) {
