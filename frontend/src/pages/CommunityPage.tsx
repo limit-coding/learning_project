@@ -6,12 +6,12 @@ import {
   Input,
   message,
   Modal,
-  Select,
   Space,
   Switch,
   Tag,
   Tabs,
   Tooltip,
+  TreeSelect,
   Typography,
   Upload,
 } from 'antd';
@@ -32,24 +32,65 @@ import { communityApi, PostListItem } from '../services/communityApi';
 const { Title, Text, Paragraph } = Typography;
 const { TextArea } = Input;
 
-const COURSE_TAGS = [
-  // 数学
-  '数学分析上', '数学分析下', '线性代数', '工程数学', '概率论与数理统计', '离散数学',
-  // 物理 & 电路
-  '大学物理上', '大学物理下', '电子电路基础', '数字电子电路',
-  // 计算机基础
-  '计算机基础C++', '程序设计基础实训', '数据结构与算法',
-  '计算机原理与组成（微机原理）', '计算机图形学',
-  // 通信与信号
-  '通信原理', '信号分析与处理', '通信电子电路', '通信系统建模与仿真',
-  '通信网理论基础B', '随机信号分析B', '信息论基础', '信息论与编码基础B',
-  '电磁场与微波',
-  // AI / ML
-  '深度学习（PyTorch）',
-  // 专业方向
-  '空间信息通信', '卫星设计与开发', '卫星通信创新实践', '反射通信实践',
-  '地理信息系统', '地理信息系统实践', '数字音视频原理', '媒体与认知',
-  '其他',
+const COURSE_TREE = [
+  {
+    title: '大一上', value: '__大一上__', selectable: false,
+    children: [
+      { title: '数学分析上', value: '数学分析上' },
+      { title: '线性代数', value: '线性代数' },
+      { title: '计算机基础C++', value: '计算机基础C++' },
+    ],
+  },
+  {
+    title: '大一下', value: '__大一下__', selectable: false,
+    children: [
+      { title: '数学分析下', value: '数学分析下' },
+      { title: '大学物理上', value: '大学物理上' },
+      { title: '电子电路基础', value: '电子电路基础' },
+    ],
+  },
+  {
+    title: '大二上', value: '__大二上__', selectable: false,
+    children: [
+      { title: '大学物理下', value: '大学物理下' },
+      { title: '工程数学', value: '工程数学' },
+      { title: '数字电子电路', value: '数字电子电路' },
+      { title: '数据结构与算法', value: '数据结构与算法' },
+      { title: '概率论与数理统计', value: '概率论与数理统计' },
+      { title: '离散数学', value: '离散数学' },
+      { title: '信号分析与处理', value: '信号分析与处理' },
+      { title: '计算机原理与组成（微机原理）', value: '计算机原理与组成（微机原理）' },
+    ],
+  },
+  {
+    title: '大二下', value: '__大二下__', selectable: false,
+    children: [
+      { title: '深度学习（PyTorch）', value: '深度学习（PyTorch）' },
+      { title: '计算机图形学', value: '计算机图形学' },
+      { title: '通信原理', value: '通信原理' },
+    ],
+  },
+  {
+    title: '大三上', value: '__大三上__', selectable: false,
+    children: [
+      { title: '信息论与编码基础B', value: '信息论与编码基础B' },
+      { title: '信息论基础', value: '信息论基础' },
+      { title: '随机信号分析B', value: '随机信号分析B' },
+      { title: '通信电子电路', value: '通信电子电路' },
+      { title: '通信系统建模与仿真', value: '通信系统建模与仿真' },
+      { title: '通信网理论基础B', value: '通信网理论基础B' },
+      { title: '电磁场与微波', value: '电磁场与微波' },
+      { title: '空间信息通信', value: '空间信息通信' },
+      { title: '卫星设计与开发', value: '卫星设计与开发' },
+      { title: '卫星通信创新实践', value: '卫星通信创新实践' },
+      { title: '反射通信实践', value: '反射通信实践' },
+      { title: '地理信息系统', value: '地理信息系统' },
+      { title: '地理信息系统实践', value: '地理信息系统实践' },
+      { title: '数字音视频原理', value: '数字音视频原理' },
+      { title: '媒体与认知', value: '媒体与认知' },
+    ],
+  },
+  { title: '其他', value: '其他' },
 ];
 
 const CommunityPage: React.FC = () => {
@@ -151,13 +192,15 @@ const CommunityPage: React.FC = () => {
       </div>
 
       <div style={filtersStyle}>
-        <Select
+        <TreeSelect
           placeholder="按课程筛选"
           allowClear
           value={filterTag}
           onChange={setFilterTag}
-          style={{ width: 160 }}
-          options={COURSE_TAGS.map((t) => ({ value: t, label: t }))}
+          style={{ width: 180 }}
+          treeData={COURSE_TREE}
+          treeDefaultExpandAll={false}
+          dropdownStyle={{ maxHeight: 400, overflow: 'auto', background: '#0f172a' }}
         />
         <Select
           value={sort}
@@ -242,11 +285,13 @@ const CommunityPage: React.FC = () => {
             <TextArea rows={5} placeholder="详细描述你的问题或分享…" style={inputStyle} />
           </Form.Item>
           <Form.Item name="course_tag" label={<span style={{ color: '#94a3b8' }}>关联课程（可选）</span>}>
-            <Select
+            <TreeSelect
               allowClear
               placeholder="选择课程"
               style={{ ...inputStyle, height: undefined }}
-              options={COURSE_TAGS.map((t) => ({ value: t, label: t }))}
+              treeData={COURSE_TREE}
+              treeDefaultExpandAll={false}
+              dropdownStyle={{ maxHeight: 400, overflow: 'auto', background: '#0f172a' }}
             />
           </Form.Item>
           <Form.Item label={<span style={{ color: '#94a3b8' }}>分享资源（可选）</span>}>
